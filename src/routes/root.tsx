@@ -36,9 +36,9 @@ export const Root = () => {
           </div>
         </div>
         <div className="pt-2">
-          <ul className="flex flex-col gap-3">
+          <ul className="flex flex-col gap-1">
             <li className="hover:bg-[#e1e1e1] hover:rounded-md group ">
-              <a href="" className="flex items-center gap-2 pl-6 h-7">
+              <a href="" className="flex items-center gap-3 pl-6 h-7">
                 <InboxSVG
                   name="Inbox"
                   width={16}
@@ -48,14 +48,16 @@ export const Root = () => {
                 Issues
               </a>
             </li>
-            <div className="ml-8 pl-4 border-0 border-l border-solid border-gray-300 flex flex-col gap-3">
+            <div className="ml-8 pl-4 border-0 border-l border-solid border-gray-300 flex flex-col gap-1">
               <li className=" hover:bg-[#e1e1e1] hover:rounded-md">
-                <span className="flex items-center gap-2 h-7 pl-1">
-                  <a href="">Active</a>
-                </span>
+                <a href="" className="flex items-center gap-2 h-7 pl-1">
+                  Active
+                </a>
               </li>
-              <li className="flex items-center gap-2">
-                <a href="">Backlog</a>
+              <li className=" hover:bg-[#e1e1e1] hover:rounded-md">
+                <a href="" className="flex items-center gap-2 h-7 pl-1">
+                  Backlog
+                </a>
               </li>
             </div>
           </ul>
