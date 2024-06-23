@@ -5,9 +5,7 @@ import {
   UserSquare,
   Plus,
 } from '@phosphor-icons/react';
-import { CirclePlus, Search, SquareUser, Workflow } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
-
 import { UserSVG } from './components/user-svg';
 import { InboxSVG } from './components/inbox-svg';
 
@@ -15,7 +13,7 @@ export const Root = () => {
   return (
     <>
       <nav className="w-[220px] h-dvh border-0 border-r border-solid border-gray-300 text-sm px-3 pt-3">
-        <div className="flex gap-1 justify-between pr-3">
+        <div className="flex gap-1 justify-between">
           <div>
             <header className="flex items-center gap-2 w-5 h-5 bg-[#d5e5d6] justify-center">
               <UserSVG
@@ -26,11 +24,11 @@ export const Root = () => {
               />
             </header>
           </div>
-          <div className="flex gap-3">
-            <button>
+          <div className="flex gap-1">
+            <button className="h-7 min-w-7 flex items-center justify-center hover:bg-[#e1e1e1] hover:rounded-md">
               <MagnifyingGlass size={16} color="#575859" />
             </button>
-            <button>
+            <button className="h-7 min-w-7 flex items-center justify-center hover:bg-[#e1e1e1] hover:rounded-md">
               <Plus size={16} color="#575859" />
             </button>
           </div>
