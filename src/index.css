@@ -1,0 +1,65 @@
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+html,
+body {
+  font-family: Inter-Variable, sans-serif;
+  /* line-height: 1.5; */
+  font-weight: 400;
+  font-size: 16px;
+  background-color: #ececec;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+}
+button:hover {
+  color: gainsboro;
+}
+a {
+  text-decoration: none;
+  color: unset;
+  cursor: pointer;
+}
+
+ul {
+  all: unset;
+  list-style: none;
+}
+form {
+  /* all: unset; */
+  font-size: inherit;
+}
+form button {
+  padding: 4px 6px 4px 6px;
+  border: 1px solid rgb(194, 194, 194);
+  border-radius: 9999px;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'] {
+  all: unset;
+  padding: 4px 12px 4px 12px;
+  border: 1px solid rgb(194, 194, 194);
+  border-radius: 8px;
+}
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#root {
+  display: flex;
+}
