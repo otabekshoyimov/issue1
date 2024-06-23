@@ -1,15 +1,35 @@
-import {
-  MagnifyingGlass,
-  Tray,
-  TreeView,
-  UserSquare,
-  Plus,
-} from '@phosphor-icons/react';
+import { MagnifyingGlass, Plus } from '@phosphor-icons/react';
 import { Outlet } from 'react-router-dom';
 import { UserSVG } from './components/user-svg';
 import { InboxSVG } from './components/inbox-svg';
+import { useRef } from 'react';
 
 export const Root = () => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const dialogInnerRef = useRef<HTMLDivElement>(null);
+
+  const toggleDialog = () => {
+    if (!dialogRef.current) {
+      return;
+    }
+    dialogRef.current.hasAttribute('open')
+      ? dialogRef.current.close()
+      : dialogRef.current.showModal();
+  };
+
+  const handleDialogClick = (
+    e: React.MouseEvent<HTMLDialogElement, MouseEvent>
+  ) => {
+    if (dialogRef.current && e.target === dialogRef.current) {
+      dialogRef.current.close();
+    }
+  };
+
+  const dialogInnerStopPropagation = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+  };
   return (
     <>
       <nav className="w-[220px] h-dvh border-0 border-r border-solid border-gray-300 text-sm px-3 pt-3">
@@ -28,9 +48,19 @@ export const Root = () => {
             <button className="h-7 min-w-7 flex items-center justify-center hover:bg-[#e1e1e1] hover:rounded-md">
               <MagnifyingGlass size={16} color="#575859" />
             </button>
-            <button className="h-7 min-w-7 flex items-center justify-center hover:bg-[#e1e1e1] hover:rounded-md">
+            <button
+              onClick={toggleDialog}
+              className="h-7 min-w-7 flex items-center justify-center hover:bg-[#e1e1e1] hover:rounded-md"
+            >
               <Plus size={16} color="#575859" />
             </button>
+
+            {/* <Dialog
+              handleDialogClick={handleDialogClick}
+              dialogInnerStopPropagation={dialogInnerStopPropagation}
+              dialogRef={dialogRef}
+              dialogInnerRef={dialogInnerRef}
+            /> */}
           </div>
         </div>
         <div className="pt-2">
@@ -62,7 +92,14 @@ export const Root = () => {
         </div>
       </nav>
       <section className="root-outlet w-full ">
-        <Outlet />
+        <Outlet
+          context={{
+            handleDialogClick,
+            dialogInnerStopPropagation,
+            dialogInnerRef,
+            dialogRef,
+          }}
+        />
       </section>
     </>
   );

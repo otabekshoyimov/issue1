@@ -3,8 +3,12 @@
 export type IconName =
   | "User"
   | "Inbox"
+  | "CloseButton"
+  | "CircleDashed"
 
 export const iconNames = [
   "User",
   "Inbox",
+  "CloseButton",
+  "CircleDashed",
 ] as const
