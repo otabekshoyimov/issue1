@@ -34,9 +34,11 @@ export const Root = () => {
     <>
       <nav className="w-[283px] h-dvh border-0 border-r border-solid border-gray-300 text-sm px-3 pt-3">
         <header className="flex gap-1 justify-between items-center">
-          <button className="flex items-center gap-2 w-5 h-5  justify-center">
-            <div className="bg-green-600 text-white rounded-md">
-              <span className="px-1 ">O</span>
+          <button className="hover:bg-[#e1e1e1]">
+            <div className="p-1">
+              <div className="bg-green-600 text-white rounded-md ">
+                <span className="px-1 ">O</span>
+              </div>
             </div>
           </button>
 
