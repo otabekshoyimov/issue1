@@ -2,30 +2,30 @@ import { RefObject } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { CloseSVG } from './components/close-button';
 import { UserSVG } from './components/user-svg';
-import { FilterSVG } from './components/filter';
 
 export const Index = () => {
   return (
     <>
-      <main className="bg-[#fbfbfb] my-2 rounded-md">
-        <div className="px-8 pt-2 pb-2 flex gap-2 flex-col">
-          <header className="border-0 border-b border-solid border-gray-300 h-7 text-sm">
-            All issues
-          </header>
-          <footer className="">
-            <button className="flex gap-1 hover:rounded-md group hover:bg-[#e1e1e1]">
-              <span className="px-1 flex items-center gap-1 text-sm">
-                <FilterSVG
-                  name="Filter"
-                  width={16}
-                  height={16}
-                  className="group-hover:text-black text-[#5c5c5e]  "
-                />
-                Filter
-              </span>
+      <main className="bg-[#fbfbfb] mb-2 rounded-md">
+        <header className="  text-sm border-0 border-b border-solid border-gray-300 ">
+          <div className="flex items-center h-9 gap-10 pl-8">
+            <span>All issues</span>
+            <button className="outline-1 outline-dashed outline-gray-300 rounded-sm text-gray-500 px-1">
+              + Filter
             </button>
-          </footer>
-        </div>
+          </div>
+        </header>
+
+        <section className="text-sm">
+          <header className="px-8 py-2 bg-gray-100 border-0 border-b border-solid border-gray-300">
+            Backlog
+          </header>
+          <main>
+            <div className="border-0 border-b border-solid border-gray-300 px-8 py-2">
+              Issue 1
+            </div>
+          </main>
+        </section>
       </main>
       <Dialog />
     </>
