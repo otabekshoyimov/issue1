@@ -20,8 +20,14 @@ body {
 }
 
 button {
-  all: unset;
-  cursor: pointer;
+  /* all: unset; */
+  /* cursor: pointer; */
+  background: transparent;
+  -webkit-appearance: none;
+  box-shadow: none;
+  border: none;
+  color: inherit;
+  font: inherit;
 }
 
 a {

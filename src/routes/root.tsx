@@ -48,7 +48,10 @@ export const Root = () => {
         </header>
         <main className="pt-2">
           <div className="px-4">
-            <div className="hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 mb-6 w-full outline outline-1 outline-gray-300 rounded-md shadow-sm p-1 pl-2 ">
+            <button
+              onClick={toggleDialog}
+              className="hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 mb-6 w-full outline outline-1 outline-gray-300 rounded-md shadow-sm p-1 pl-2 "
+            >
               <NewIssueSVG
                 name="NewIssue"
                 width={16}
@@ -56,7 +59,7 @@ export const Root = () => {
                 className="group-hover:text-black text-[#575859]"
               />
               New issue
-            </div>
+            </button>
           </div>
           <ul className="flex flex-col gap-1 px-4">
             <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 outline outline-1 outline-gray-300 rounded-md group ">

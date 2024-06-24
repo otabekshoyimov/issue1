@@ -53,12 +53,12 @@ const Dialog = () => {
           onClick={dialogInnerStopPropagation}
         >
           <header className="flex justify-between items-center ">
-            <button className="flex items-center justify-center gap-1 text-sm text-gray-500">
+            <div className="flex items-center justify-center gap-1 text-sm text-gray-500">
               <span className="flex items-center border border-solid border-gray-300 rounded-sm">
                 <UserSVG name="User" color="#00ae28" width={12} height={12} />
               </span>
               New Issue
-            </button>
+            </div>
 
             <button className="flex justify-end hover:bg-gray-200 hover:rounded-md">
               <span className=" rounded-md px-1  text-sm leading-none py-1">
