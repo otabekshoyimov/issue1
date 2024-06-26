@@ -1,5 +1,6 @@
 import { RefObject, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+
 import { CloseSVG } from './components/close-button';
 import { UserSVG } from './components/user-svg';
 import { BacklogSVG } from './components/backlog-svg';
@@ -9,18 +10,25 @@ export const Index = () => {
   const [issues, setIssues] = useState<any>([]);
   const [newIssueTitle, setNewIssueTitle] = useState('');
   const [newIssueDescription, setNewIssueDescription] = useState('');
+  const [error, setError] = useState('');
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!newIssueTitle) {
+      setError('Input cannot be empty. Please try again!');
+      return;
+    }
     const newIssue = {
       id: crypto.randomUUID(),
       title: newIssueTitle,
       description: newIssueDescription,
       checked: false,
     };
+
     setIssues([...issues, newIssue]);
     setNewIssueTitle('');
     setNewIssueDescription('');
+    setError('');
     if (dialogRef.current) {
       dialogRef.current.close();
     }
@@ -28,6 +36,12 @@ export const Index = () => {
 
   return (
     <>
+      <Dialog
+        handleFormSubmit={handleFormSubmit}
+        setNewIssueTitle={setNewIssueTitle}
+        setNewIssueDescription={setNewIssueDescription}
+        error={error}
+      />
       <main className="bg-[#fbfbfb] mb-2 rounded-md">
         <header className="  text-sm border-0 border-b border-solid border-gray-300 ">
           <div className="flex items-center h-9 gap-10 pl-8">
@@ -57,11 +71,6 @@ export const Index = () => {
           </main>
         </section>
       </main>
-      <Dialog
-        handleFormSubmit={handleFormSubmit}
-        setNewIssueTitle={setNewIssueTitle}
-        setNewIssueDescription={setNewIssueDescription}
-      />
     </>
   );
 };
@@ -70,6 +79,7 @@ const Dialog = ({
   handleFormSubmit,
   setNewIssueTitle,
   setNewIssueDescription,
+  error,
 }) => {
   const {
     dialogInnerRef,
@@ -103,6 +113,7 @@ const Dialog = ({
                 <UserSVG name="User" color="#00ae28" width={12} height={12} />
               </span>
               New Issue
+              {error && <div className="text-red-500 text-sm">{error}</div>}
             </div>
 
             <button
