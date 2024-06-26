@@ -10,6 +10,7 @@ export type IconName =
   | "Filter"
   | "CloseButton"
   | "CircleDashed"
+  | "Backlog"
 
 export const iconNames = [
   "Views",
@@ -21,4 +22,5 @@ export const iconNames = [
   "Filter",
   "CloseButton",
   "CircleDashed",
+  "Backlog",
 ] as const
