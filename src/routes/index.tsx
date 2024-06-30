@@ -1,4 +1,4 @@
-import { RefObject, useState } from 'react';
+import { RefObject, useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import {
   Button,
@@ -21,10 +21,17 @@ import { CancelledSVG } from './components/cancelled';
 
 export const Index = () => {
   const { dialogRef } = useOutletContext<DialogProps>();
-  const [issues, setIssues] = useState<any>([]);
+  const [issues, setIssues] = useState<any>(() => {
+    const savedIssues = window.localStorage.getItem('issues');
+    return savedIssues ? JSON.parse(savedIssues) : [];
+  });
   const [newIssueTitle, setNewIssueTitle] = useState('');
   const [newIssueDescription, setNewIssueDescription] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    window.localStorage.setItem('issues', JSON.stringify(issues));
+  }, [issues]);
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -111,29 +118,7 @@ export const Index = () => {
                 {issues.map((issue) => (
                   <li className="flex gap-4 items-center" key={issue.id}>
                     <input type="checkbox" value={issue.checked} />
-                    <Select>
-                      <Label>
-                        {/* <CircleDashedSVG
-                          name="CircleDashed"
-                          width={14}
-                          height={14}
-                        /> */}
-                        Favorite Animal
-                      </Label>
-                      <Button>
-                        <SelectValue />
-                        <span aria-hidden="true">▼</span>
-                      </Button>
-                      <Popover>
-                        <ListBox>
-                          <ListBoxItem>Backlog</ListBoxItem>
-                          <ListBoxItem>Todo</ListBoxItem>
-                          <ListBoxItem>In Progress</ListBoxItem>
-                          <ListBoxItem>Done</ListBoxItem>
-                          <ListBoxItem>Cancelled</ListBoxItem>
-                        </ListBox>
-                      </Popover>
-                    </Select>
+
                     <header>{issue.title}</header>
                     <p>{issue.description}</p>
                   </li>
