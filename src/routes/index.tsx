@@ -1,9 +1,23 @@
 import { RefObject, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import {
+  Button,
+  Label,
+  ListBox,
+  ListBoxItem,
+  Popover,
+  Select,
+  SelectValue,
+} from 'react-aria-components';
 
 import { CloseSVG } from './components/close-button';
 import { UserSVG } from './components/user-svg';
 import { BacklogSVG } from './components/backlog-svg';
+import { CircleDashedSVG } from './components/circle-dashed';
+import { TodoSVG } from './components/todo-svg';
+import { InProgressSVG } from './components/in-progess';
+import { DoneSVG } from './components/done';
+import { CancelledSVG } from './components/cancelled';
 
 export const Index = () => {
   const { dialogRef } = useOutletContext<DialogProps>();
@@ -46,9 +60,44 @@ export const Index = () => {
         <header className="  text-sm border-0 border-b border-solid border-gray-300 ">
           <div className="flex items-center h-9 gap-10 pl-8">
             <span>All issues</span>
+
             <button className="outline-1 outline-dashed outline-gray-300 rounded-sm text-gray-500 px-1">
               + Filter
             </button>
+            <Select className="flex flex-col gap-1 w-[160px]">
+              {/* <Label>Favorite Animal</Label> */}
+              <Button>
+                <SelectValue />
+                {/* <span aria-hidden="true">▼</span> */}
+              </Button>
+              <Popover
+                placement="right"
+                className="overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5 data-[entering]:animate-in entering:fade-in exiting:animate-out exiting:fade-out"
+              >
+                <ListBox className="flex flex-col gap-2">
+                  <ListBoxItem className="px-2 data-[selected]:bg-blue-400 data-[disabled]:bg-gray-100 data-[focused]:bg-gray-200 flex gap-2 items-center">
+                    <BacklogSVG name="Backlog" width={14} height={14} />
+                    Backlog
+                  </ListBoxItem>
+                  <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
+                    <TodoSVG name="Todo" width={14} height={14} />
+                    Todo
+                  </ListBoxItem>
+                  <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
+                    <InProgressSVG name="InProgress" width={14} height={14} />
+                    In Progress
+                  </ListBoxItem>
+                  <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
+                    <DoneSVG name="Done" width={14} height={14} />
+                    Done
+                  </ListBoxItem>
+                  <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
+                    <CancelledSVG name="Cancelled" width={14} height={14} />
+                    Cancelled
+                  </ListBoxItem>
+                </ListBox>
+              </Popover>
+            </Select>
           </div>
         </header>
 
@@ -62,6 +111,29 @@ export const Index = () => {
                 {issues.map((issue) => (
                   <li className="flex gap-4 items-center" key={issue.id}>
                     <input type="checkbox" value={issue.checked} />
+                    <Select>
+                      <Label>
+                        {/* <CircleDashedSVG
+                          name="CircleDashed"
+                          width={14}
+                          height={14}
+                        /> */}
+                        Favorite Animal
+                      </Label>
+                      <Button>
+                        <SelectValue />
+                        <span aria-hidden="true">▼</span>
+                      </Button>
+                      <Popover>
+                        <ListBox>
+                          <ListBoxItem>Backlog</ListBoxItem>
+                          <ListBoxItem>Todo</ListBoxItem>
+                          <ListBoxItem>In Progress</ListBoxItem>
+                          <ListBoxItem>Done</ListBoxItem>
+                          <ListBoxItem>Cancelled</ListBoxItem>
+                        </ListBox>
+                      </Popover>
+                    </Select>
                     <header>{issue.title}</header>
                     <p>{issue.description}</p>
                   </li>
@@ -112,6 +184,7 @@ const Dialog = ({
               <span className="flex items-center border border-solid border-gray-300 rounded-sm">
                 <UserSVG name="User" color="#00ae28" width={12} height={12} />
               </span>
+              {/* <CustomSelect /> */}
               New Issue
               {error && <div className="text-red-500 text-sm">{error}</div>}
             </div>
@@ -144,7 +217,6 @@ const Dialog = ({
                 </label>
                 <footer>
                   <div className="flex gap-4 text-sm text-gray-500">
-                    <button className="">Backlog</button>
                     <button className="">Priority</button>
                     <button className="">Add labels</button>
                   </div>
