@@ -10,13 +10,14 @@ export const Root = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const dialogInnerRef = useRef<HTMLDivElement>(null);
 
-  const toggleDialog = () => {
+  const openDialog = () => {
     if (!dialogRef.current) {
       return;
     }
-    dialogRef.current.hasAttribute('open')
-      ? dialogRef.current.close()
-      : dialogRef.current.showModal();
+
+    if (dialogRef.current) {
+      dialogRef.current.showModal();
+    }
   };
 
   const handleDialogClick = (
@@ -49,7 +50,7 @@ export const Root = () => {
         <main className="pt-2">
           <div className="px-4">
             <button
-              onClick={toggleDialog}
+              onClick={openDialog}
               className="hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 mb-6 w-full outline outline-1 outline-gray-300 rounded-md shadow-sm p-1 pl-2 "
             >
               <NewIssueSVG

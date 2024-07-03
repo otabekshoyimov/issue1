@@ -24,6 +24,7 @@ button {
   /* cursor: pointer; */
   background: transparent;
   -webkit-appearance: none;
+  appearance: none;
   box-shadow: none;
   border: none;
   color: inherit;
