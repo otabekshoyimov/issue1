@@ -23,6 +23,7 @@ type TIssue = {
   title: string;
   description: string;
   checked: boolean;
+  date: string;
 };
 export const Index = () => {
   const { newIssueTitle, newIssueDescription, setError } = useIssueContext();
@@ -51,6 +52,7 @@ export const Index = () => {
       title: newIssueTitle,
       description: newIssueDescription,
       checked: false,
+      date: new Date().toISOString(),
     };
 
     setIssues([...issues, newIssue]);
@@ -75,12 +77,17 @@ export const Index = () => {
     setSelectedIssues([]);
   };
 
+  const dateFormatter = new Intl.DateTimeFormat('en-US', {
+    day: '2-digit',
+    month: 'short',
+  });
+
   return (
     <>
       <Dialog handleFormSubmit={handleFormSubmit} />
       <main className="bg-[#fbfbfb] mb-2 rounded-md">
         <header className="  text-sm border-0 border-b border-solid border-gray-300 ">
-          <div className="flex  h-9 gap-10 pl-8">
+          <div className="flex px-8 h-9 gap-10 ">
             <div className="flex items-center justify-center gap-10">
               <span>All issues</span>
 
@@ -122,7 +129,7 @@ export const Index = () => {
                 </Popover>
               </Select>
             </div>
-            <div className="flex-grow justify-end flex pr-6">
+            <div className="flex-grow justify-end flex">
               <button
                 onClick={handleSelecetedIssue}
                 disabled={selectedIssues.length === 0}
@@ -138,10 +145,13 @@ export const Index = () => {
             <BacklogSVG name="Backlog" width={14} height={14} /> Backlog
           </header>
           <main>
-            <div className="border-0 border-b border-solid border-gray-300 px-8 py-2">
+            <div className="border-0 border-b border-solid border-gray-300 ">
               <ul>
                 {issues.map((issue: TIssue) => (
-                  <li className="flex gap-4 items-center" key={issue.id}>
+                  <li
+                    className="flex gap-4 px-8 border-0 border-solid border-b border-gray-300  leading-8 items-center"
+                    key={issue.id}
+                  >
                     <input
                       type="checkbox"
                       value={Number(issue.checked)}
@@ -151,7 +161,9 @@ export const Index = () => {
 
                     <header>{issue.title}</header>
                     <p>{issue.description}</p>
-                    <footer>{}</footer>
+                    <footer className="flex flex-grow justify-end">
+                      <span>{dateFormatter.format(new Date(issue.date))}</span>
+                    </footer>
                   </li>
                 ))}
               </ul>
