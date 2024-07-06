@@ -127,8 +127,9 @@ export const Index = () => {
                 </Popover>
               </Select>
             </div>
-            <div className="flex-grow justify-end flex">
+            <div className="flex-grow justify-end flex items-center">
               <button
+                className="hover:outline-black hover:text-black shadow-sm px-1 outline outline-1 py-1 text-gray-6  00 outline-gray-400 rounded-md  leading-3"
                 onClick={handleSelecetedIssue}
                 disabled={selectedIssues.length === 0}
               >
