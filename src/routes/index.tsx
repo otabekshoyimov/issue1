@@ -1,5 +1,5 @@
-import React, { RefObject, useEffect, useRef, useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import React, { RefObject, useRef, useState } from 'react';
+import { Link, Outlet, useOutletContext, useParams } from 'react-router-dom';
 import {
   Button,
   ListBox,
@@ -17,8 +17,9 @@ import { InProgressSVG } from './components/in-progess';
 import { DoneSVG } from './components/done';
 import { CancelledSVG } from './components/cancelled';
 import { useIssueContext } from './issueContext';
+import { useAddIssue, useDeleteIssues, useIssue, useIssues } from '../api/api';
 
-type TIssue = {
+export type TIssue = {
   id: string;
   title: string;
   description: string;
@@ -28,18 +29,11 @@ type TIssue = {
 export const Index = () => {
   const { newIssueTitle, newIssueDescription, setError } = useIssueContext();
   const { dialogRef } = useOutletContext<TOutletContext>();
-
-  const [issues, setIssues] = useState<any>(() => {
-    const savedIssues = window.localStorage.getItem('issues');
-    return savedIssues ? JSON.parse(savedIssues) : [];
-  });
-
+  const { data: issues, isLoading, error, refetch } = useIssues();
   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
 
-  useEffect(() => {
-    window.localStorage.setItem('issues', JSON.stringify(issues));
-  }, [issues]);
-
+  const addIssueMn = useAddIssue();
+  const deleteIssueMutation = useDeleteIssues();
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -55,11 +49,15 @@ export const Index = () => {
       date: new Date().toISOString(),
     };
 
-    setIssues([...issues, newIssue]);
-    form.reset();
-    if (dialogRef.current) {
-      dialogRef.current.close();
-    }
+    addIssueMn.mutate(newIssue, {
+      onSuccess: () => {
+        form.reset();
+        if (dialogRef.current) {
+          dialogRef.current.close();
+        }
+        refetch();
+      },
+    });
   };
 
   const handleIssueSelection = (issueId: string) => {
@@ -71,16 +69,16 @@ export const Index = () => {
   };
 
   const handleSelecetedIssue = () => {
-    setIssues((prevIssues: TIssue[]) =>
-      prevIssues.filter((issue) => !selectedIssues.includes(issue.id))
-    );
+    deleteIssueMutation.mutate(selectedIssues);
     setSelectedIssues([]);
   };
 
-  const dateFormatter = new Intl.DateTimeFormat('en-US', {
-    day: '2-digit',
-    month: 'short',
-  });
+  if (isLoading) {
+    return <div>loading...</div>;
+  }
+  if (error) {
+    return <div>an error occured {error.message}</div>;
+  }
 
   return (
     <>
@@ -148,29 +146,79 @@ export const Index = () => {
             <div className="border-0 border-b border-solid border-gray-300 ">
               <ul>
                 {issues.map((issue: TIssue) => (
-                  <li
-                    className="flex gap-4 px-8 border-0 border-solid border-b border-gray-300  leading-8 items-center"
+                  <Issue
+                    issue={issue}
                     key={issue.id}
-                  >
-                    <input
-                      type="checkbox"
-                      value={Number(issue.checked)}
-                      checked={selectedIssues.includes(issue.id)}
-                      onChange={() => handleIssueSelection(issue.id)}
-                    />
-
-                    <header>{issue.title}</header>
-                    <p>{issue.description}</p>
-                    <footer className="flex flex-grow justify-end">
-                      <span>{dateFormatter.format(new Date(issue.date))}</span>
-                    </footer>
-                  </li>
+                    selectedIssues={selectedIssues}
+                    handleIssueSelection={handleIssueSelection}
+                  />
                 ))}
               </ul>
+              <Outlet />
             </div>
           </main>
         </section>
       </main>
+    </>
+  );
+};
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  day: '2-digit',
+  month: 'short',
+});
+
+type IssueProps = {
+  issue: TIssue;
+  selectedIssues: string[];
+  handleIssueSelection: (issueId: string) => void;
+};
+export const Issue = ({
+  issue,
+  selectedIssues,
+  handleIssueSelection,
+}: IssueProps) => {
+  return (
+    <>
+      <li className="hover:bg-[#e1e1e1] hover:rounded-md flex gap-4 px-8 border-0 border-solid border-b border-gray-300  leading-8 items-center">
+        <input
+          type="checkbox"
+          value={issue.checked.toString()}
+          checked={selectedIssues.includes(issue.id)}
+          onChange={() => handleIssueSelection(issue.id)}
+        />
+
+        <Link className="flex justify-between flex-grow" to={`${issue.id}`}>
+          <header>{issue.title}</header>
+          <p>{issue.description}</p>
+
+          <span className="">{dateFormatter.format(new Date(issue.date))}</span>
+        </Link>
+      </li>
+    </>
+  );
+};
+
+export const IssueDetail = () => {
+  const { issueId } = useParams<{ issueId: string }>();
+  if (!issueId) {
+    return <div>Issue ID is missing.</div>;
+  }
+  const { data: issue, isLoading, error } = useIssue(issueId);
+
+  if (isLoading) {
+    return <div>loading...</div>;
+  }
+  if (error) {
+    return <div>{error.message}</div>;
+  }
+
+  return (
+    <>
+      <div>
+        <header>{issue.title}</header>
+        <span>{dateFormatter.format(new Date(issue.date))}</span>
+      </div>
     </>
   );
 };

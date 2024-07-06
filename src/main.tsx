@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom/client';
 import { Root } from './routes/root';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Index } from './routes';
+import { Index, Issue, IssueDetail } from './routes';
 import { IssueProvider } from './routes/issueContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
     path: `/`,
@@ -15,11 +17,17 @@ const router = createBrowserRouter([
         index: true,
         element: <Index />,
       },
+      {
+        path: '/:issueId',
+        element: <IssueDetail />,
+      },
     ],
   },
 ]);
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <IssueProvider>
-    <RouterProvider router={router}></RouterProvider>
-  </IssueProvider>
+  <QueryClientProvider client={queryClient}>
+    <IssueProvider>
+      <RouterProvider router={router}></RouterProvider>
+    </IssueProvider>
+  </QueryClientProvider>
 );
