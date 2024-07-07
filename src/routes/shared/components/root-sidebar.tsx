@@ -43,13 +43,15 @@ export const RootSidebar = ({ openDialog }: RootSidebarProps) => {
         </div>
         <ul className="flex flex-col gap-1 px-4">
           <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 outline outline-1 outline-gray-300 rounded-md group ">
-            <SearchSVG
-              name="Search"
-              width={16}
-              height={16}
-              className="group-hover:text-black text-[#575859]"
-            />
-            Search
+            <button className="w-full flex gap-2">
+              <SearchSVG
+                name="Search"
+                width={16}
+                height={16}
+                className="group-hover:text-black text-[#575859]"
+              />
+              Search
+            </button>
           </li>
           <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md items-center  group ">
             <a href="" className="w-full flex gap-2">

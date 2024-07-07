@@ -14,6 +14,8 @@ import {
   Select,
   SelectValue,
 } from 'react-aria-components';
+import type { Key } from 'react-aria-components';
+import { useAddIssue } from '../../../api/api';
 
 type IssueProps = {
   issue: NewIssue;
@@ -59,7 +61,8 @@ export const Issue = ({
       icon: <CancelledSVG name="Cancelled" width={14} height={14} />,
     },
   ];
-  const [selected, setSelected] = useState('Backlog');
+  const [selectedKey, setSelectedKey] = useState<Key>('Backlog');
+  const selectedItem = items.find((item) => item.key === selectedKey);
 
   return (
     <>
@@ -72,35 +75,38 @@ export const Issue = ({
         />
 
         <Link className="flex justify-between flex-grow" to={`${issue.id}`}>
-          <Select className="flex flex-col gap-1 w-fit">
+          <Select
+            defaultSelectedKey={selectedKey}
+            onSelectionChange={(selected) => setSelectedKey(selected)}
+            className="flex flex-col gap-1 w-fit"
+          >
             <Button>
-              <SelectValue></SelectValue>
+              <SelectValue>
+                {selectedItem && (
+                  <>
+                    {selectedItem.icon}
+                    {selectedItem.text}
+                  </>
+                )}
+              </SelectValue>
             </Button>
             <Popover
               placement="right top"
               className="overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5 data-[entering]:animate-in entering:fade-in exiting:animate-out exiting:fade-out"
             >
-              <ListBox className="flex flex-col gap-2 items-center">
-                <ListBoxItem className="px-2 data-[selected]:bg-blue-400 data-[disabled]:bg-gray-100 data-[focused]:bg-gray-200 flex gap-2 items-center">
-                  <BacklogSVG name="Backlog" width={14} height={14} />
-                  Backlog
-                </ListBoxItem>
-                <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
-                  <TodoSVG name="Todo" width={14} height={14} />
-                  Todo
-                </ListBoxItem>
-                <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
-                  <InProgressSVG name="InProgress" width={14} height={14} />
-                  In Progress
-                </ListBoxItem>
-                <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
-                  <DoneSVG name="Done" width={14} height={14} />
-                  Done
-                </ListBoxItem>
-                <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
-                  <CancelledSVG name="Cancelled" width={14} height={14} />
-                  Cancelled
-                </ListBoxItem>
+              <ListBox
+                className="flex flex-col gap-2 items-center"
+                items={items}
+              >
+                {items.map((item) => (
+                  <ListBoxItem
+                    key={item.key}
+                    className="px-2 data-[selected]:bg-blue-400 data-[disabled]:bg-gray-100 data-[focused]:bg-gray-200 flex gap-2 items-center"
+                  >
+                    {item.icon}
+                    {item.text}
+                  </ListBoxItem>
+                ))}
               </ListBox>
             </Popover>
           </Select>

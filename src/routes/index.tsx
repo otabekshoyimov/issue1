@@ -63,6 +63,7 @@ export const Index = () => {
     deleteIssueMutation.mutate(selectedIssues);
     setSelectedIssues([]);
   };
+  if (!issues) return null;
 
   if (isLoading) {
     return <div>loading...</div>;

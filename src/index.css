@@ -21,7 +21,7 @@ body {
 
 button {
   /* all: unset; */
-  /* cursor: pointer; */
+  cursor: pointer;
   background: transparent;
   -webkit-appearance: none;
   appearance: none;
@@ -69,7 +69,9 @@ img {
 #root {
   display: flex;
 }
-
+/* 
+* MARK: Dialog
+*/
 #dialog {
   max-width: 700px;
   max-height: 160px;
