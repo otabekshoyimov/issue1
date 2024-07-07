@@ -105,7 +105,6 @@ export const Issue = ({
             </Popover>
           </Select>
           <header>{issue.title}</header>
-          <p>{issue.description}</p>
 
           <span className="">{dateFormatter.format(new Date(issue.date))}</span>
         </Link>

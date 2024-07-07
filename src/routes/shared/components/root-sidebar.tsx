@@ -51,32 +51,38 @@ export const RootSidebar = ({ openDialog }: RootSidebarProps) => {
             />
             Search
           </li>
-          <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 group ">
-            <InboxSVG
-              name="Inbox"
-              width={16}
-              height={16}
-              className="group-hover:text-black text-[#575859]"
-            />
-            Inbox
+          <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md items-center  group ">
+            <a href="" className="w-full flex gap-2">
+              <InboxSVG
+                name="Inbox"
+                width={16}
+                height={16}
+                className="group-hover:text-black text-[#575859]"
+              />
+              Inbox
+            </a>
           </li>
           <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 group ">
-            <IssuesSVG
-              name="Issues"
-              width={16}
-              height={16}
-              className="group-hover:text-black text-[#575859]"
-            />
-            Issues
+            <a href="" className="flex gap-2 w-full">
+              <IssuesSVG
+                name="Issues"
+                width={16}
+                height={16}
+                className="group-hover:text-black text-[#575859]"
+              />
+              Issues
+            </a>
           </li>
           <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2  group">
-            <ViewsSVG
-              name="Views"
-              width={16}
-              height={16}
-              className="group-hover:text-black text-[#575859]"
-            />
-            Views
+            <a href="" className="flex gap-2 w-full">
+              <ViewsSVG
+                name="Views"
+                width={16}
+                height={16}
+                className="group-hover:text-black text-[#575859]"
+              />
+              Views
+            </a>
           </li>
           <ul className="mt-4">
             <li className="hover:bg-[#e1e1e1] hover:rounded-md group ">
