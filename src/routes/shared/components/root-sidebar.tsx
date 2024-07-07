@@ -19,7 +19,12 @@ export const RootSidebar = ({ openDialog }: RootSidebarProps) => {
           </div>
         </button>
 
-        <button>github</button>
+        <a
+          className="hover:bg-[#e1e1e1] rounded-md leading-6 px-2"
+          href="https://github.com/otabekshoyimov/not-linear"
+        >
+          github
+        </a>
       </header>
       <main className="pt-2">
         <div className="px-4">

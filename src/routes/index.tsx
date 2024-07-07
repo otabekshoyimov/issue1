@@ -1,25 +1,16 @@
-import React, { RefObject, useRef, useState } from 'react';
-import { Link, Outlet, useOutletContext, useParams } from 'react-router-dom';
-import {
-  Button,
-  ListBox,
-  ListBoxItem,
-  Popover,
-  Select,
-  SelectValue,
-} from 'react-aria-components';
-
-import { CloseSVG } from './components/close-button';
-import { UserSVG } from './components/user-svg';
-import { BacklogSVG } from './components/backlog-svg';
-import { TodoSVG } from './components/todo-svg';
-import { InProgressSVG } from './components/in-progess';
-import { DoneSVG } from './components/done';
-import { CancelledSVG } from './components/cancelled';
+import React, { useState } from 'react';
+import { Outlet, useOutletContext } from 'react-router-dom';
 import { useIssueContext } from './issueContext';
-import { useAddIssue, useDeleteIssues, useIssue, useIssues } from '../api/api';
+import { useAddIssue, useDeleteIssues, useIssues } from '../api/api';
+import { OutletContext } from './root';
+import { Dialog } from './shared/components/dialog';
+import { Issue } from './shared/components/issue';
+import { IssuesList } from './shared/components/issues-list';
+import { IssuesHeader } from './shared/components/issues-header';
+import { IssuesListHeader } from './shared/components/issues-list-header';
+import { IssuesContainer } from './shared/components/issues-container';
 
-export type TIssue = {
+export type NewIssue = {
   id: string;
   title: string;
   description: string;
@@ -28,7 +19,7 @@ export type TIssue = {
 };
 export const Index = () => {
   const { newIssueTitle, newIssueDescription, setError } = useIssueContext();
-  const { dialogRef } = useOutletContext<TOutletContext>();
+  const { dialogRef } = useOutletContext<OutletContext>();
   const { data: issues, isLoading, error, refetch } = useIssues();
   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
 
@@ -41,7 +32,7 @@ export const Index = () => {
       setError('Input cannot be empty. Please try again!');
       return;
     }
-    const newIssue: TIssue = {
+    const newIssue: NewIssue = {
       id: crypto.randomUUID(),
       title: newIssueTitle,
       description: newIssueDescription,
@@ -83,254 +74,31 @@ export const Index = () => {
   return (
     <>
       <Dialog handleFormSubmit={handleFormSubmit} />
-      <main className="bg-[#fbfbfb] mb-2 rounded-md">
-        <header className="  text-sm border-0 border-b border-solid border-gray-300 ">
-          <div className="flex px-8 h-9 gap-10 ">
-            <div className="flex items-center justify-center gap-10">
-              <span>All issues</span>
-
-              <button className="outline-1 outline-dashed outline-gray-300 rounded-sm text-gray-500 px-1">
-                + Filter
-              </button>
-              <Select className="flex flex-col gap-1 w-[160px]">
-                {/* <Label>Favorite Animal</Label> */}
-                <Button>
-                  <SelectValue />
-                  {/* <span aria-hidden="true">▼</span> */}
-                </Button>
-                <Popover
-                  placement="right"
-                  className="overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5 data-[entering]:animate-in entering:fade-in exiting:animate-out exiting:fade-out"
-                >
-                  <ListBox className="flex flex-col gap-2">
-                    <ListBoxItem className="px-2 data-[selected]:bg-blue-400 data-[disabled]:bg-gray-100 data-[focused]:bg-gray-200 flex gap-2 items-center">
-                      <BacklogSVG name="Backlog" width={14} height={14} />
-                      Backlog
-                    </ListBoxItem>
-                    <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
-                      <TodoSVG name="Todo" width={14} height={14} />
-                      Todo
-                    </ListBoxItem>
-                    <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
-                      <InProgressSVG name="InProgress" width={14} height={14} />
-                      In Progress
-                    </ListBoxItem>
-                    <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
-                      <DoneSVG name="Done" width={14} height={14} />
-                      Done
-                    </ListBoxItem>
-                    <ListBoxItem className="px-2 data-[focused]:bg-gray-200 flex gap-2 items-center">
-                      <CancelledSVG name="Cancelled" width={14} height={14} />
-                      Cancelled
-                    </ListBoxItem>
-                  </ListBox>
-                </Popover>
-              </Select>
-            </div>
-            <div className="flex-grow justify-end flex items-center">
-              <button
-                className="hover:outline-black hover:text-black shadow-sm px-1 outline outline-1 py-1 text-gray-6  00 outline-gray-400 rounded-md  leading-3"
-                onClick={handleSelecetedIssue}
-                disabled={selectedIssues.length === 0}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </header>
-
-        <section className="text-sm">
-          <header className="px-8 py-2 bg-gray-100 border-0 border-b border-solid border-gray-300 flex items-center gap-2">
-            <BacklogSVG name="Backlog" width={14} height={14} /> Backlog
-          </header>
-          <main>
-            <div className="border-0 border-b border-solid border-gray-300 ">
-              <ul>
-                {issues.map((issue: TIssue) => (
-                  <Issue
-                    issue={issue}
-                    key={issue.id}
-                    selectedIssues={selectedIssues}
-                    handleIssueSelection={handleIssueSelection}
-                  />
-                ))}
-              </ul>
-              <Outlet />
-            </div>
-          </main>
-        </section>
-      </main>
+      <IssuesContainer>
+        <IssuesHeader
+          handleSelecetedIssue={handleSelecetedIssue}
+          selectedIssues={selectedIssues}
+        />
+        <IssuesListHeader />
+        <IssuesList>
+          <ul>
+            {issues.map((issue: NewIssue) => (
+              <Issue
+                issue={issue}
+                key={issue.id}
+                selectedIssues={selectedIssues}
+                handleIssueSelection={handleIssueSelection}
+              />
+            ))}
+          </ul>
+          <Outlet />
+        </IssuesList>
+      </IssuesContainer>
     </>
   );
 };
 
-const dateFormatter = new Intl.DateTimeFormat('en-US', {
+export const dateFormatter = new Intl.DateTimeFormat('en-US', {
   day: '2-digit',
   month: 'short',
 });
-
-type IssueProps = {
-  issue: TIssue;
-  selectedIssues: string[];
-  handleIssueSelection: (issueId: string) => void;
-};
-export const Issue = ({
-  issue,
-  selectedIssues,
-  handleIssueSelection,
-}: IssueProps) => {
-  return (
-    <>
-      <li className="hover:bg-[#e1e1e1] hover:rounded-md flex gap-4 px-8 border-0 border-solid border-b border-gray-300  leading-8 items-center">
-        <input
-          type="checkbox"
-          value={issue.checked.toString()}
-          checked={selectedIssues.includes(issue.id)}
-          onChange={() => handleIssueSelection(issue.id)}
-        />
-
-        <Link className="flex justify-between flex-grow" to={`${issue.id}`}>
-          <header>{issue.title}</header>
-          <p>{issue.description}</p>
-
-          <span className="">{dateFormatter.format(new Date(issue.date))}</span>
-        </Link>
-      </li>
-    </>
-  );
-};
-
-export const IssueDetail = () => {
-  const { issueId } = useParams<{ issueId: string }>();
-  if (!issueId) {
-    return <div>Issue ID is missing.</div>;
-  }
-  const { data: issue, isLoading, error } = useIssue(issueId);
-
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
-  if (error) {
-    return <div>{error.message}</div>;
-  }
-
-  return (
-    <>
-      <div>
-        <header>{issue.title}</header>
-        <span>{dateFormatter.format(new Date(issue.date))}</span>
-      </div>
-    </>
-  );
-};
-
-type DialogProps = {
-  handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-};
-
-type TOutletContext = {
-  handleDialogClick: (
-    e: React.MouseEvent<HTMLDialogElement, MouseEvent>
-  ) => void;
-
-  dialogInnerStopPropagation: (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => void;
-  dialogRef: RefObject<HTMLDialogElement>;
-  dialogInnerRef: RefObject<HTMLDivElement>;
-};
-const Dialog = ({ handleFormSubmit }: DialogProps) => {
-  const { setNewIssueTitle, setNewIssueDescription, error } = useIssueContext();
-  const {
-    dialogInnerRef,
-    dialogInnerStopPropagation,
-    handleDialogClick,
-    dialogRef,
-  } = useOutletContext<TOutletContext>();
-
-  const formRef = useRef<HTMLFormElement>(null);
-
-  const handleCloseButtonClick = () => {
-    if (dialogRef.current) {
-      dialogRef.current.close();
-    }
-  };
-
-  return (
-    <>
-      <dialog
-        id="dialog"
-        ref={dialogRef}
-        onClick={handleDialogClick}
-        className="shadow-lg"
-      >
-        <div
-          id="dialog-inner"
-          ref={dialogInnerRef}
-          onClick={dialogInnerStopPropagation}
-        >
-          <header className="flex justify-between items-center ">
-            <div className="flex items-center justify-center gap-1 text-sm text-gray-500">
-              <span className="flex items-center border border-solid border-gray-300 rounded-sm">
-                <UserSVG name="User" color="#00ae28" width={12} height={12} />
-              </span>
-              {/* <CustomSelect /> */}
-              New Issue
-              {error && <div className="text-red-500 text-sm">{error}</div>}
-            </div>
-
-            <button
-              onClick={handleCloseButtonClick}
-              className="flex justify-end hover:bg-gray-200 hover:rounded-md"
-            >
-              <span className=" rounded-md px-1  text-sm leading-none py-1">
-                <CloseSVG name="CloseButton" width={16} height={16} />
-              </span>
-            </button>
-          </header>
-          <main>
-            <div className="pb-2 pt-2">
-              <form
-                className="flex flex-col gap-2"
-                onSubmit={handleFormSubmit}
-                ref={formRef}
-              >
-                <label htmlFor="" className="font-semibold">
-                  <input
-                    type="text"
-                    placeholder="Issue title"
-                    onChange={(e) => setNewIssueTitle(e.target.value)}
-                  />
-                </label>
-                <label htmlFor="">
-                  <input
-                    type="text"
-                    placeholder="Add description"
-                    onChange={(e) => setNewIssueDescription(e.target.value)}
-                  />
-                </label>
-                <footer>
-                  <div className="flex gap-4 text-sm text-gray-500">
-                    <button className="">Priority</button>
-                    <button className="">Add labels</button>
-                  </div>
-                  <span className="flex justify-end ">
-                    <button
-                      type="submit"
-                      className="bg-purple-400 rounded-md px-2 text-white text-sm py-1"
-                    >
-                      Create Issue
-                    </button>
-                  </span>
-                  {/* <div>{JSON.stringify(newIssueTitle)}</div> */}
-                  {/* <div>{JSON.stringify(newIssueDescription)}</div> */}
-                  {/* <div>{JSON.stringify(issues)}</div> */}
-                </footer>
-              </form>
-            </div>
-          </main>
-        </div>
-      </dialog>
-    </>
-  );
-};

@@ -46,7 +46,7 @@ export const Root = () => {
   );
 };
 
-export type TOutletContext = {
+export type OutletContext = {
   handleDialogClick: (
     e: React.MouseEvent<HTMLDialogElement, MouseEvent>
   ) => void;

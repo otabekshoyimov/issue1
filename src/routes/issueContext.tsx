@@ -1,11 +1,11 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
 
-const IssueContext = createContext<TIssueContext>(null!);
+const IssueContext = createContext<IssueContext>(null!);
 
-type TIssueProviderProps = {
+type IssueProviderProps = {
   children: ReactNode;
 };
-export const IssueProvider = ({ children }: TIssueProviderProps) => {
+export const IssueProvider = ({ children }: IssueProviderProps) => {
   const [newIssueTitle, setNewIssueTitle] = useState('');
   const [newIssueDescription, setNewIssueDescription] = useState('');
   const [error, setError] = useState('');
@@ -33,7 +33,7 @@ export const useIssueContext = () => {
   return context;
 };
 
-type TIssueContext = {
+type IssueContext = {
   newIssueTitle: string;
   setNewIssueTitle: (title: string) => void;
   newIssueDescription: string;

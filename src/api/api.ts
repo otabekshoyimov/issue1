@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TIssue } from '../routes';
+import { NewIssue } from '../routes';
 
 const getIssues = () => {
   const issues = JSON.parse(window.localStorage.getItem('issues') || '[]');
@@ -15,7 +15,7 @@ export const useIssues = () => {
 
 const getIssueById = (id: string) => {
   const issues = JSON.parse(window.localStorage.getItem('issues') || '[]');
-  const issue = issues.find((i: TIssue) => i.id.toString() === id);
+  const issue = issues.find((i: NewIssue) => i.id.toString() === id);
   return Promise.resolve(issue);
 };
 
@@ -26,15 +26,15 @@ export const useIssue = (id: string) => {
   });
 };
 
-const updateLocalStorage = (issues: TIssue[]) => {
+const updateLocalStorage = (issues: NewIssue[]) => {
   window.localStorage.setItem('issues', JSON.stringify(issues));
 };
 
 export const useAddIssue = () => {
   const querClient = useQueryClient();
   return useMutation({
-    mutationFn: (newIssue: TIssue) => {
-      const issues = querClient.getQueryData<TIssue[]>(['issues']) || [];
+    mutationFn: (newIssue: NewIssue) => {
+      const issues = querClient.getQueryData<NewIssue[]>(['issues']) || [];
       const updatedIssues = [...issues, newIssue];
       updateLocalStorage(updatedIssues);
       return Promise.resolve(updatedIssues);
@@ -50,7 +50,7 @@ export const useDeleteIssues = () => {
 
   return useMutation({
     mutationFn: (issueIdsToDelete: string[]) => {
-      const issues = querClient.getQueryData<TIssue[]>(['issues']) || [];
+      const issues = querClient.getQueryData<NewIssue[]>(['issues']) || [];
       const updatedIssues = issues.filter(
         (issue) => !issueIdsToDelete.includes(issue.id)
       );
