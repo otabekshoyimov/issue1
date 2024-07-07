@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from 'react-aria-components';
 import type { Key } from 'react-aria-components';
-import { useAddIssue } from '../../../api/api';
 
 type IssueProps = {
   issue: NewIssue;
@@ -83,10 +82,10 @@ export const Issue = ({
             <Button>
               <SelectValue>
                 {selectedItem && (
-                  <>
+                  <span className="flex gap-2 items-center">
                     {selectedItem.icon}
                     {selectedItem.text}
-                  </>
+                  </span>
                 )}
               </SelectValue>
             </Button>

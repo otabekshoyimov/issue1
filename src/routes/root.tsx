@@ -29,6 +29,7 @@ export const Root = () => {
   ) => {
     e.stopPropagation();
   };
+
   return (
     <>
       <RootSidebar openDialog={openDialog} />
