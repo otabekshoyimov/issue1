@@ -1,7 +1,7 @@
-import type { IconName } from '../../assets/types';
+import type { IconName } from '../../../assets/types';
 import type { SVGProps } from 'react';
-import spriteHref from '../../assets/sprite.svg';
-export const InboxSVG = ({
+import spriteHref from '../../../assets/sprite.svg';
+export const SearchSVG = ({
   name,
   ...props
 }: SVGProps<SVGSVGElement> & {

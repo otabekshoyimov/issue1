@@ -1,7 +1,7 @@
-import type { IconName } from '../../assets/types';
+import type { IconName } from '../../../assets/types';
 import type { SVGProps } from 'react';
-import spriteHref from '../../assets/sprite.svg';
-export const DoneSVG = ({
+import spriteHref from '../../../assets/sprite.svg';
+export const BacklogSVG = ({
   name,
   ...props
 }: SVGProps<SVGSVGElement> & {

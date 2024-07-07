@@ -1,7 +1,7 @@
-import type { IconName } from '../../assets/types';
+import type { IconName } from '../../../assets/types';
 import type { SVGProps } from 'react';
-import spriteHref from '../../assets/sprite.svg';
-export const IssuesSVG = ({
+import spriteHref from '../../../assets/sprite.svg';
+export const ViewsSVG = ({
   name,
   ...props
 }: SVGProps<SVGSVGElement> & {
