@@ -65,7 +65,7 @@ export const Issue = ({
 
   return (
     <>
-      <li className="hover:bg-[#e1e1e1] hover:rounded-md flex gap-4 px-8 border-0 border-solid border-b border-gray-300  leading-8 items-center">
+      <li className="hover:bg-[#e1e1e1] hover:rounded-md flex gap-4 px-5 border-0 border-solid border-b border-gray-300  leading-8 items-center">
         <input
           type="checkbox"
           value={issue.checked.toString()}
@@ -77,15 +77,17 @@ export const Issue = ({
           <Select
             defaultSelectedKey={selectedKey}
             onSelectionChange={(selected) => setSelectedKey(selected)}
-            className="flex flex-col gap-1 w-fit"
+            className="flex  gap-1 w-fit pr-3"
           >
             <Button>
-              <SelectValue>
+              <SelectValue className="flex items-center gap-2">
                 {selectedItem && (
-                  <span className="flex gap-2 items-center">
-                    {selectedItem.icon}
-                    {selectedItem.text}
-                  </span>
+                  <>
+                    <span className="flex gap-2 items-center">
+                      {selectedItem.icon}
+                    </span>
+                    <span className="text-sm">{selectedItem.text}</span>
+                  </>
                 )}
               </SelectValue>
             </Button>
@@ -109,9 +111,12 @@ export const Issue = ({
               </ListBox>
             </Popover>
           </Select>
-          <header>{issue.title}</header>
-
-          <span className="">{dateFormatter.format(new Date(issue.date))}</span>
+          <div className="flex-grow justify-between flex items-center">
+            <header>{issue.title}</header>
+            <span className="text-gray-500 text-sm">
+              {dateFormatter.format(new Date(issue.date))}
+            </span>
+          </div>
         </Link>
       </li>
     </>

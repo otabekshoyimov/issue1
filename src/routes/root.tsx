@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { RefObject, useRef } from 'react';
+import { RefObject, useRef, useState } from 'react';
 import { RootSidebar } from './shared/components/root-sidebar';
 
 export const Root = () => {
@@ -30,18 +30,29 @@ export const Root = () => {
     e.stopPropagation();
   };
 
+  const [isNavVisible, setIsNavVisible] = useState(false);
+  const handleIsNavVisibleClick = () => {
+    setIsNavVisible((prevState) => !prevState);
+    console.log('Nav visibility toggled:', !isNavVisible);
+  };
+
   return (
     <>
-      <RootSidebar openDialog={openDialog} />
-      <div className="root-outlet w-full ">
-        <Outlet
-          context={{
-            handleDialogClick,
-            dialogInnerStopPropagation,
-            dialogInnerRef,
-            dialogRef,
-          }}
-        />
+      <div className="flex flex-row w-full h-full min-h-full">
+        <div>
+          <RootSidebar openDialog={openDialog} isNavVisible={isNavVisible} />
+        </div>
+        <div className="root-outlet flex-col flex-shrink-0 basis-0 min-w-0 ">
+          <Outlet
+            context={{
+              handleDialogClick,
+              dialogInnerStopPropagation,
+              dialogInnerRef,
+              dialogRef,
+              handleIsNavVisibleClick,
+            }}
+          />
+        </div>
       </div>
     </>
   );
@@ -57,4 +68,5 @@ export type OutletContext = {
   ) => void;
   dialogRef: RefObject<HTMLDialogElement>;
   dialogInnerRef: RefObject<HTMLDivElement>;
+  handleIsNavVisibleClick: () => void;
 };

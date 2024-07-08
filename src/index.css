@@ -17,6 +17,9 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 
 button {
@@ -66,9 +69,9 @@ img {
   height: 100%;
 }
 
-#root {
+/* #root {
   display: flex;
-}
+} */
 /* 
 * MARK: Dialog
 */
@@ -98,4 +101,39 @@ dialog {
   margin: auto;
   z-index: 9999;
   isolation: isolate;
+}
+
+.nav-wrapper {
+  width: auto;
+  left: -330px;
+  top: 0px;
+  bottom: 0px;
+  position: fixed;
+}
+.nav-wrapper.nav-visible {
+  left: 0;
+}
+
+@media (min-width: 1024px) {
+  .nav-wrapper {
+    width: 250px;
+    left: 0px;
+  }
+}
+
+/* @media (min-width: 1024px) {
+  .nav-btn {
+    display: none;
+  }
+  .nav-global {
+    display: block !important; 
+  }
+}
+
+.hiddenN {
+  display: none !important;
+} */
+
+.root-outlet {
+  flex-grow: 1;
 }
