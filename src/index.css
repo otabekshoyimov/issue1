@@ -121,19 +121,6 @@ dialog {
   }
 }
 
-/* @media (min-width: 1024px) {
-  .nav-btn {
-    display: none;
-  }
-  .nav-global {
-    display: block !important; 
-  }
-}
-
-.hiddenN {
-  display: none !important;
-} */
-
 .root-outlet {
   flex-grow: 1;
 }
