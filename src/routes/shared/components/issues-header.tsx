@@ -7,11 +7,8 @@ type IssuesHeaderProps = {
   handleSelecetedIssue: () => void;
   selectedIssues: string[];
 };
-export const IssuesHeader = ({
-  handleSelecetedIssue,
-  selectedIssues,
-}: IssuesHeaderProps) => {
-  const { handleIsNavVisibleClick } = useOutletContext<OutletContext>();
+export const IssuesHeader = (props: IssuesHeaderProps) => {
+  const outletContext = useOutletContext<OutletContext>();
   return (
     <>
       <header className="  text-sm border-0 border-b border-solid border-gray-300 ">
@@ -19,8 +16,7 @@ export const IssuesHeader = ({
           <div className="flex items-center justify-center gap-10">
             <button
               onClick={() => {
-                console.log('button clicked');
-                handleIsNavVisibleClick();
+                outletContext.handleIsNavVisibleClick();
               }}
               className="flex items-center hover:bg-gray-300 p-1 rounded-md nav-btn z-[97] relative lg:hidden"
             >
@@ -31,8 +27,8 @@ export const IssuesHeader = ({
           <div className="flex-grow justify-end flex items-center">
             <Button
               text="Delete"
-              onClick={handleSelecetedIssue}
-              disabled={selectedIssues.length === 0}
+              onClick={props.handleSelecetedIssue}
+              disabled={props.selectedIssues.length === 0}
             />
           </div>
         </div>

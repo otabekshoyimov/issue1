@@ -21,11 +21,7 @@ type IssueProps = {
   selectedIssues: string[];
   handleIssueSelection: (issueId: string) => void;
 };
-export const Issue = ({
-  issue,
-  selectedIssues,
-  handleIssueSelection,
-}: IssueProps) => {
+export const Issue = (props: IssueProps) => {
   // Define a type for your items
   type ItemType = {
     key: string;
@@ -68,12 +64,15 @@ export const Issue = ({
       <li className="hover:bg-[#e1e1e1] hover:rounded-md flex gap-4 px-5 border-0 border-solid border-b border-gray-300  leading-8 items-center">
         <input
           type="checkbox"
-          value={issue.checked.toString()}
-          checked={selectedIssues.includes(issue.id)}
-          onChange={() => handleIssueSelection(issue.id)}
+          value={props.issue.checked.toString()}
+          checked={props.selectedIssues.includes(props.issue.id)}
+          onChange={() => props.handleIssueSelection(props.issue.id)}
         />
 
-        <Link className="flex justify-between flex-grow" to={`${issue.id}`}>
+        <Link
+          className="flex justify-between flex-grow"
+          to={`${props.issue.id}`}
+        >
           <Select
             defaultSelectedKey={selectedKey}
             onSelectionChange={(selected) => setSelectedKey(selected)}
@@ -112,9 +111,9 @@ export const Issue = ({
             </Popover>
           </Select>
           <div className="flex-grow justify-between flex items-center">
-            <header>{issue.title}</header>
+            <header>{props.issue.title}</header>
             <span className="text-gray-500 text-sm">
-              {dateFormatter.format(new Date(issue.date))}
+              {dateFormatter.format(new Date(props.issue.date))}
             </span>
           </div>
         </Link>

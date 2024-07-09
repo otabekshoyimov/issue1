@@ -4,10 +4,10 @@ type IssuesContainerProps = {
   children: ReactNode;
 };
 
-export const IssuesContainer = ({ children }: IssuesContainerProps) => {
+export const IssuesContainer = (props: IssuesContainerProps) => {
   return (
     <>
-      <main className="bg-[#fbfbfb] mb-2 rounded-md">{children}</main>
+      <main className="bg-[#fbfbfb] mb-2 rounded-md">{props.children}</main>
     </>
   );
 };

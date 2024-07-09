@@ -6,16 +6,15 @@ import { ViewsSVG } from '../../../shared/components/svgs/views';
 
 type RootSidebarProps = {
   openDialog: () => void;
-
   isNavVisible: boolean;
 };
-export const RootSidebar = ({ openDialog, isNavVisible }: RootSidebarProps) => {
+export const RootSidebar = (props: RootSidebarProps) => {
   return (
     <>
       <div className="lg:w-[255px] md:0px"></div>
       <div
         className={`nav-wrapper left-0 top-0 bottom-0 w-[255px] fixed ${
-          isNavVisible ? '' : 'nav-visible'
+          props.isNavVisible ? '' : 'nav-visible'
         }`}
       >
         <nav
@@ -40,7 +39,7 @@ export const RootSidebar = ({ openDialog, isNavVisible }: RootSidebarProps) => {
           <main className="pt-2">
             <div className="px-4">
               <button
-                onClick={openDialog}
+                onClick={props.openDialog}
                 className="hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 mb-6 w-full outline outline-1 outline-gray-300 rounded-md shadow-sm p-1 pl-2 "
               >
                 <NewIssueSVG

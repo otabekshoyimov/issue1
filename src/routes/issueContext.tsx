@@ -5,7 +5,7 @@ const IssueContext = createContext<IssueContext>(null!);
 type IssueProviderProps = {
   children: ReactNode;
 };
-export const IssueProvider = ({ children }: IssueProviderProps) => {
+export const IssueProvider = (props: IssueProviderProps) => {
   const [newIssueTitle, setNewIssueTitle] = useState('');
   const [newIssueDescription, setNewIssueDescription] = useState('');
   const [error, setError] = useState('');
@@ -21,7 +21,7 @@ export const IssueProvider = ({ children }: IssueProviderProps) => {
         setError,
       }}
     >
-      {children}
+      {props.children}
     </IssueContext.Provider>
   );
 };

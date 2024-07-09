@@ -9,20 +9,15 @@ type DialogProps = {
   handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 };
 
-export const Dialog = ({ handleFormSubmit }: DialogProps) => {
-  const { setNewIssueTitle, setNewIssueDescription, error } = useIssueContext();
-  const {
-    dialogInnerRef,
-    dialogInnerStopPropagation,
-    handleDialogClick,
-    dialogRef,
-  } = useOutletContext<OutletContext>();
+export const Dialog = (props: DialogProps) => {
+  const issueContext = useIssueContext();
+  const outletContext = useOutletContext<OutletContext>();
 
   const formRef = useRef<HTMLFormElement>(null);
 
   const handleCloseButtonClick = () => {
-    if (dialogRef.current) {
-      dialogRef.current.close();
+    if (outletContext.dialogRef.current) {
+      outletContext.dialogRef.current.close();
     }
   };
 
@@ -30,14 +25,14 @@ export const Dialog = ({ handleFormSubmit }: DialogProps) => {
     <>
       <dialog
         id="dialog"
-        ref={dialogRef}
-        onClick={handleDialogClick}
+        ref={outletContext.dialogRef}
+        onClick={outletContext.handleDialogClick}
         className="shadow-lg"
       >
         <div
           id="dialog-inner"
-          ref={dialogInnerRef}
-          onClick={dialogInnerStopPropagation}
+          ref={outletContext.dialogInnerRef}
+          onClick={outletContext.dialogInnerStopPropagation}
         >
           <header className="flex justify-between items-center ">
             <div className="flex items-center justify-center gap-1 text-sm text-gray-500">
@@ -45,7 +40,9 @@ export const Dialog = ({ handleFormSubmit }: DialogProps) => {
                 <UserSVG name="User" color="#00ae28" width={12} height={12} />
               </span>
               New Issue
-              {error && <div className="text-red-500 text-sm">{error}</div>}
+              {issueContext.error && (
+                <div className="text-red-500 text-sm">{issueContext.error}</div>
+              )}
             </div>
 
             <button
@@ -61,21 +58,25 @@ export const Dialog = ({ handleFormSubmit }: DialogProps) => {
             <div className="pb-2 pt-2">
               <form
                 className="flex flex-col gap-2"
-                onSubmit={handleFormSubmit}
+                onSubmit={props.handleFormSubmit}
                 ref={formRef}
               >
                 <label htmlFor="" className="font-semibold">
                   <input
                     type="text"
                     placeholder="Issue title"
-                    onChange={(e) => setNewIssueTitle(e.target.value)}
+                    onChange={(e) =>
+                      issueContext.setNewIssueTitle(e.target.value)
+                    }
                   />
                 </label>
                 <label htmlFor="">
                   <input
                     type="text"
                     placeholder="Add description"
-                    onChange={(e) => setNewIssueDescription(e.target.value)}
+                    onChange={(e) =>
+                      issueContext.setNewIssueDescription(e.target.value)
+                    }
                   />
                 </label>
                 <footer>

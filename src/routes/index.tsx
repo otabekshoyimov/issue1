@@ -18,9 +18,9 @@ export type NewIssue = {
   date: string;
 };
 export const Index = () => {
-  const { newIssueTitle, newIssueDescription, setError } = useIssueContext();
-  const { dialogRef } = useOutletContext<OutletContext>();
-  const { data: issues, isLoading, error, refetch } = useIssues();
+  const issueContext = useIssueContext();
+  const outletContext = useOutletContext<OutletContext>();
+  const issuesAsync = useIssues();
   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
 
   const addIssueMn = useAddIssue();
@@ -28,14 +28,14 @@ export const Index = () => {
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
-    if (!newIssueTitle) {
-      setError('Input cannot be empty. Please try again!');
+    if (!issueContext.newIssueTitle) {
+      issueContext.setError('Input cannot be empty. Please try again!');
       return;
     }
     const newIssue: NewIssue = {
       id: crypto.randomUUID(),
-      title: newIssueTitle,
-      description: newIssueDescription,
+      title: issueContext.newIssueTitle,
+      description: issueContext.newIssueDescription,
       checked: false,
       date: new Date().toISOString(),
     };
@@ -43,10 +43,10 @@ export const Index = () => {
     addIssueMn.mutate(newIssue, {
       onSuccess: () => {
         form.reset();
-        if (dialogRef.current) {
-          dialogRef.current.close();
+        if (outletContext.dialogRef.current) {
+          outletContext.dialogRef.current.close();
         }
-        refetch();
+        issuesAsync.refetch();
       },
     });
   };
@@ -63,13 +63,13 @@ export const Index = () => {
     deleteIssueMutation.mutate(selectedIssues);
     setSelectedIssues([]);
   };
-  if (!issues) return null;
+  if (!issuesAsync.data) return null;
 
-  if (isLoading) {
+  if (issuesAsync.isLoading) {
     return <div>loading...</div>;
   }
-  if (error) {
-    return <div>an error occured {error.message}</div>;
+  if (issuesAsync.error) {
+    return <div>an error occured {issuesAsync.error.message}</div>;
   }
 
   return (
@@ -83,7 +83,7 @@ export const Index = () => {
         <IssuesListHeader />
         <IssuesList>
           <ul>
-            {issues.map((issue: NewIssue) => (
+            {issuesAsync.data.map((issue: NewIssue) => (
               <Issue
                 issue={issue}
                 key={issue.id}
