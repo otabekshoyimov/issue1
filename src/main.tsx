@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Index } from './routes';
 import { IssueProvider } from './routes/issueContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { IssueDetail } from './routes/shared/components/issue-detail';
+import { IssueDetail } from './routes/issue-detail';
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([

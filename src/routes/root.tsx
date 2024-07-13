@@ -91,7 +91,7 @@ const RootSidebar = (props: RootSidebarProps) => {
         } `}
       >
         <nav
-          className={` min-w-[220px] max-w-[255px] h-dvh border-0 border-r border-solid border-gray-300 text-sm nav-global bg-white flex flex-col relative `}
+          className={` min-w-[220px] max-w-[255px] h-dvh border-0 border-r border-solid border-gray-300 text-sm nav-global bg-[#ececec] flex flex-col relative `}
         >
           <header className="flex gap-1 justify-between items-center px-4 min-[360px]:pt-10 lg:pt-3 pb-3">
             <button className="hover:bg-[#e1e1e1]">
@@ -126,15 +126,16 @@ const RootSidebar = (props: RootSidebarProps) => {
             </div>
             <ul className="flex flex-col gap-1 px-4 mb-5">
               <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 outline outline-1 outline-gray-300 rounded-md group ">
-                <button className="w-full flex gap-2">
-                  <SearchSVG
-                    name="Search"
-                    width={16}
-                    height={16}
-                    className="group-hover:text-black text-[#575859]"
-                  />
-                  Search
-                </button>
+                <SearchSVG
+                  name="Search"
+                  width={16}
+                  height={16}
+                  className="group-hover:text-black text-[#575859]"
+                />
+                <input
+                  className="w-full flex gap-2 bg-[#ececec] leading-4"
+                  placeholder="Search"
+                />
               </li>
               <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md items-center  group ">
                 <a href="" className="w-full flex gap-2">

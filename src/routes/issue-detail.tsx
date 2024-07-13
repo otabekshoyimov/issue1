@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
-import { dateFormatter } from '../..';
-import { useIssue } from '../../../api/api';
+import { dateFormatter } from '.';
+import { useIssue } from '../api/api';
 
 export const IssueDetail = () => {
   const params = useParams<{ issueId: string }>();

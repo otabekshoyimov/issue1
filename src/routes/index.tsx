@@ -3,7 +3,6 @@ import { Link, Outlet, useOutletContext } from 'react-router-dom';
 import { useIssueContext } from './issueContext';
 import { useAddIssue, useDeleteIssues, useIssues } from '../api/api';
 import { OutletContext } from './root';
-import { Dialog } from './shared/components/dialog';
 import { OpenNavSVG } from '../shared/components/svgs/open.nav';
 import { BacklogSVG } from '../shared/components/svgs/backlog-svg';
 import { TodoSVG } from '../shared/components/svgs/todo-svg';
@@ -19,7 +18,8 @@ import {
   Select,
   SelectValue,
 } from 'react-aria-components';
-import { Button } from './shared/components/button';
+import { Button } from '../shared/components/button';
+import { Dialog } from '../shared/components/dialog';
 
 export type NewIssue = {
   id: string;
@@ -232,7 +232,7 @@ const Issue = (props: IssueProps) => {
 
   return (
     <>
-      <li className="hover:bg-[#e1e1e1] hover:rounded-md flex gap-4 px-5 border-0 border-solid border-b border-gray-300  leading-8 items-center">
+      <li className=" animate-fadeInUp hover:bg-[#e1e1e1] hover:rounded-md flex gap-4 px-5 border-0 border-solid border-b border-gray-300  leading-8 items-center">
         <input
           type="checkbox"
           value={props.issue.checked.toString()}
@@ -247,7 +247,7 @@ const Issue = (props: IssueProps) => {
           <Select
             defaultSelectedKey={selectedKey}
             onSelectionChange={(selected) => setSelectedKey(selected)}
-            className="flex  gap-1 w-fit pr-3"
+            className="flex  gap-1 w-fit pr-5"
           >
             <ReactAriaButton>
               <SelectValue className="flex items-center gap-2">
@@ -256,7 +256,7 @@ const Issue = (props: IssueProps) => {
                     <span className="flex gap-2 items-center">
                       {selectedItem.icon}
                     </span>
-                    <span className="text-sm">{selectedItem.text}</span>
+                    <span className="text-sm ">{selectedItem.text}</span>
                   </>
                 )}
               </SelectValue>
@@ -266,16 +266,19 @@ const Issue = (props: IssueProps) => {
               className="overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5 data-[entering]:animate-in entering:fade-in exiting:animate-out exiting:fade-out"
             >
               <ListBox
-                className="flex flex-col gap-2 items-center"
+                className="flex flex-col gap-2 shadow-2xl px-2 py-2 data-[selected]:hidden"
                 items={items}
               >
                 {items.map((item) => (
                   <ListBoxItem
                     key={item.key}
-                    className="px-2 data-[selected]:bg-blue-400 data-[disabled]:bg-gray-100 data-[focused]:bg-gray-200 flex gap-2 items-center"
+                    className="px-2 flex gap-2 items-center"
                   >
-                    {item.icon}
-                    {item.text}
+                    <span>{item.icon}</span>
+
+                    <span className="data-[selected]:hidden data-[pressed]:hidden data-[focused]:hidden [data-focus-visible]:hidden">
+                      {item.text}
+                    </span>
                   </ListBoxItem>
                 ))}
               </ListBox>

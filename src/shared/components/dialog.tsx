@@ -1,9 +1,10 @@
 import { useOutletContext } from 'react-router-dom';
-import { OutletContext } from '../../root';
-import { useIssueContext } from '../../issueContext';
+
 import { useRef } from 'react';
-import { UserSVG } from '../../../shared/components/svgs/user-svg';
-import { CloseSVG } from '../../../shared/components/svgs/close-button';
+import { useIssueContext } from '../../routes/issueContext';
+import { OutletContext } from '../../routes/root';
+import { UserSVG } from './svgs/user-svg';
+import { CloseSVG } from './svgs/close-button';
 
 type DialogProps = {
   handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
