@@ -84,7 +84,7 @@ export const Dialog = (props: DialogProps) => {
                   <span className="flex justify-end ">
                     <button
                       type="submit"
-                      className="bg-purple-400 rounded-md px-2 text-white text-sm py-1"
+                      className="bg-green-600 rounded-md px-2 text-white text-sm py-1"
                     >
                       Create Issue
                     </button>
