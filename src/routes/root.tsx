@@ -86,9 +86,9 @@ const RootSidebar = (props: RootSidebarProps) => {
     <>
       <div className="lg:w-[255px] md:0px"></div>
       <div
-        className={`nav-wrapper left-0 top-0 bottom-0 w-[255px] fixed ${
+        className={` nav-wrapper left-0 top-0 bottom-0 w-[255px] fixed ${
           props.isNavVisible ? 'nav-visible' : ''
-        } `}
+        } ${props.isNavVisible ? 'animate-fadeInLeft' : ''}`}
       >
         <nav
           className={` min-w-[220px] max-w-[255px] h-dvh border-0 border-r border-solid border-gray-300 text-sm nav-global bg-[#ececec] flex flex-col relative `}
@@ -113,7 +113,7 @@ const RootSidebar = (props: RootSidebarProps) => {
             <div className="px-4">
               <button
                 onClick={props.openDialog}
-                className="hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 mb-6 w-full outline outline-1 outline-gray-300 rounded-md shadow-sm p-1 pl-2 "
+                className=" hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 mb-6 w-full outline outline-1 outline-gray-300 rounded-md shadow-sm p-1 pl-2 "
               >
                 <NewIssueSVG
                   name="NewIssue"
@@ -133,7 +133,7 @@ const RootSidebar = (props: RootSidebarProps) => {
                   className="group-hover:text-black text-[#575859]"
                 />
                 <input
-                  className="w-full flex gap-2 bg-[#ececec] leading-4"
+                  className="w-full flex gap-2 bg-[#ececec] leading-4 text-base"
                   placeholder="Search"
                 />
               </li>

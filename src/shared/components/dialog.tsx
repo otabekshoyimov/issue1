@@ -28,7 +28,7 @@ export const Dialog = (props: DialogProps) => {
         id="dialog"
         ref={outletContext.dialogRef}
         onClick={outletContext.handleDialogClick}
-        className="shadow-lg"
+        className="shadow-lg animate-fadeInUp"
       >
         <div
           id="dialog-inner"

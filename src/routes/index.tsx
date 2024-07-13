@@ -132,7 +132,7 @@ type IssuesHeaderProps = {
   handleSelecetedIssue: () => void;
   selectedIssues: string[];
 };
-const IssuesHeader = (props: IssuesHeaderProps) => {
+export const IssuesHeader = (props: IssuesHeaderProps) => {
   const outletContext = useOutletContext<OutletContext>();
   return (
     <>
