@@ -5,7 +5,7 @@ Issue tracking app.
 - UI library: [React](https://react.dev)
 - type hints: [Typescript](https://www.typescriptlang.org)
 - styling: [Tailwind CSS](https://tailwindcss.com)
-- deployment: [Vercel](https://vercel.com)
+- deployment: [Vercel](https://vercel.com), [Cloudflare](https://www.cloudflare.com)
 
 Project goals:
 
