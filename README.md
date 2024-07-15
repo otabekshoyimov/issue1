@@ -15,7 +15,7 @@ Project goals:
 4. learn types (Typescript)
 5. asnyc programming
 
-> **Status of this project:** This is a passion project and thus is not "production grade" stuff.
+> **Note:** This is a passion project.
 
 Work in progress, TODO:
 
