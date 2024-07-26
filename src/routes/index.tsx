@@ -1,7 +1,13 @@
-import React, { ReactNode, useState } from 'react';
-import { Link, Outlet, useOutletContext } from 'react-router-dom';
-import { useIssueContext } from './issueContext';
-import { useAddIssue, useDeleteIssues, useIssues } from '../api/api';
+import React, { ReactNode, useEffect, useState } from 'react';
+import {
+  Link,
+  Outlet,
+  Params,
+  useLoaderData,
+  useNavigation,
+  useOutletContext,
+} from 'react-router-dom';
+import { deleteIssues } from '../api/api';
 import { OutletContext } from './root';
 import { OpenNavSVG } from '../shared/components/svgs/open.nav';
 import { BacklogSVG } from '../shared/components/svgs/backlog-svg';
@@ -11,15 +17,50 @@ import { DoneSVG } from '../shared/components/svgs/done';
 import { CancelledSVG } from '../shared/components/svgs/cancelled';
 import {
   Button as ReactAriaButton,
-  Key,
   ListBox,
   ListBoxItem,
   Popover,
   Select,
   SelectValue,
 } from 'react-aria-components';
-import { Button } from '../shared/components/button';
 import { Dialog } from '../shared/components/dialog';
+import { dateFormatter } from '../utils/utils';
+
+export const loader = async () => {
+  const issues = await JSON.parse(
+    window.localStorage.getItem('issues') || '[]'
+  );
+  return issues;
+};
+
+export async function action({
+  request,
+  params,
+}: {
+  request: Request;
+  params: Params;
+}) {
+  console.log(request, params);
+  console.log(params.issueId);
+
+  const formData = await request.formData();
+  console.log(formData.get('title'));
+  console.log(formData.get('isCheckboxChecked'));
+
+  const newIssue: NewIssue = {
+    id: crypto.randomUUID(),
+    title: formData.get('title') as string,
+    description: formData.get('description') as string,
+    checked: false,
+    date: new Date().toISOString(),
+    status: (formData.get('status') as string) || 'Backlog',
+  };
+  const issues = JSON.parse(window.localStorage.getItem('issues') || '[]');
+  issues.push(newIssue);
+  window.localStorage.setItem('issues', JSON.stringify(issues));
+
+  return { ok: true };
+}
 
 export type NewIssue = {
   id: string;
@@ -27,41 +68,15 @@ export type NewIssue = {
   description: string;
   checked: boolean;
   date: string;
+  status: string;
 };
+
 export const Index = () => {
-  const issueContext = useIssueContext();
-  const outletContext = useOutletContext<OutletContext>();
-  const issuesAsync = useIssues();
+  const issuesAsync = useLoaderData() as any;
+  const navigation = useNavigation();
+  console.log(issuesAsync);
   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
-
-  const addIssueMn = useAddIssue();
-  const deleteIssueMutation = useDeleteIssues();
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    if (!issueContext.newIssueTitle) {
-      issueContext.setError('Input cannot be empty. Please try again!');
-      return;
-    }
-    const newIssue: NewIssue = {
-      id: crypto.randomUUID(),
-      title: issueContext.newIssueTitle,
-      description: issueContext.newIssueDescription,
-      checked: false,
-      date: new Date().toISOString(),
-    };
-
-    addIssueMn.mutate(newIssue, {
-      onSuccess: () => {
-        form.reset();
-        if (outletContext.dialogRef.current) {
-          outletContext.dialogRef.current.close();
-        }
-        outletContext.setIsNavVisible(false);
-        issuesAsync.refetch();
-      },
-    });
-  };
+  console.log(selectedIssues);
 
   const handleIssueSelection = (issueId: string) => {
     setSelectedIssues((prev) =>
@@ -71,36 +86,30 @@ export const Index = () => {
     );
   };
 
-  const handleSelecetedIssue = () => {
-    deleteIssueMutation.mutate(selectedIssues);
+  const handleSelectedIssue = () => {
+    deleteIssues(selectedIssues);
     setSelectedIssues([]);
   };
-  if (!issuesAsync.data) return null;
-
-  if (issuesAsync.isLoading) {
+  if (navigation.state === 'loading') {
     return <div>loading...</div>;
   }
-  if (issuesAsync.error) {
-    return <div>an error occured {issuesAsync.error.message}</div>;
-  }
-
   return (
     <>
-      <Dialog handleFormSubmit={handleFormSubmit} />
+      <Dialog />
       <IssuesContainer>
         <IssuesHeader
-          handleSelecetedIssue={handleSelecetedIssue}
+          onSelecetedIssue={handleSelectedIssue}
           selectedIssues={selectedIssues}
         />
         <IssuesListHeader />
         <IssuesList>
           <ul>
-            {issuesAsync.data.map((issue: NewIssue) => (
+            {issuesAsync.map((issue: NewIssue) => (
               <Issue
-                issue={issue}
+                issueData={issue}
                 key={issue.id}
-                selectedIssues={selectedIssues}
-                handleIssueSelection={handleIssueSelection}
+                selectedIssueIds={selectedIssues}
+                onIssuesSelect={handleIssueSelection}
               />
             ))}
           </ul>
@@ -111,16 +120,7 @@ export const Index = () => {
   );
 };
 
-export const dateFormatter = new Intl.DateTimeFormat('en-US', {
-  day: '2-digit',
-  month: 'short',
-});
-
-type IssuesContainerProps = {
-  children: ReactNode;
-};
-
-const IssuesContainer = (props: IssuesContainerProps) => {
+const IssuesContainer = (props: { children: ReactNode }) => {
   return (
     <>
       <main className="bg-[#fbfbfb] mb-2 rounded-md">{props.children}</main>
@@ -128,11 +128,10 @@ const IssuesContainer = (props: IssuesContainerProps) => {
   );
 };
 
-type IssuesHeaderProps = {
-  handleSelecetedIssue: () => void;
+export const IssuesHeader = (props: {
+  onSelecetedIssue: () => void;
   selectedIssues: string[];
-};
-export const IssuesHeader = (props: IssuesHeaderProps) => {
+}) => {
   const outletContext = useOutletContext<OutletContext>();
   return (
     <>
@@ -141,20 +140,22 @@ export const IssuesHeader = (props: IssuesHeaderProps) => {
           <div className="flex items-center justify-center gap-10">
             <button
               onClick={() => {
-                outletContext.handleIsNavVisibleClick();
+                outletContext.toggleSidebar();
               }}
               className="flex items-center hover:bg-gray-300 p-1 rounded-md nav-btn z-[97] relative lg:hidden"
             >
-              <OpenNavSVG name="OpenNav" width={16} height={16} />
+              <OpenNavSVG name="OpenNav" width={20} height={20} />
             </button>
             <span>All issues</span>
           </div>
           <div className="flex-grow justify-end flex items-center">
-            <Button
-              text="Delete"
-              onClick={props.handleSelecetedIssue}
+            <button
+              onClick={props.onSelecetedIssue}
               disabled={props.selectedIssues.length === 0}
-            />
+              className="disabled:cursor-not-allowed disabled:text-gray-300"
+            >
+              Delete
+            </button>
           </div>
         </div>
       </header>
@@ -166,16 +167,13 @@ const IssuesListHeader = () => {
   return (
     <>
       <div className="px-5 py-2 bg-gray-100 border-0 border-b border-solid border-gray-300 flex items-center gap-2 text-sm">
-        <BacklogSVG name="Backlog" width={14} height={14} /> Backlog
+        <BacklogSVG name="Backlog" width={20} height={20} /> Backlog
       </div>
     </>
   );
 };
 
-type IssuesListProps = {
-  children: ReactNode;
-};
-const IssuesList = (props: IssuesListProps) => {
+const IssuesList = (props: { children: ReactNode }) => {
   return (
     <>
       <main className="border-0 border-b border-solid border-gray-300 ">
@@ -187,82 +185,141 @@ const IssuesList = (props: IssuesListProps) => {
 
 //#region MARK: Issue
 
-type IssueProps = {
-  issue: NewIssue;
-  selectedIssues: string[];
-  handleIssueSelection: (issueId: string) => void;
-};
-const Issue = (props: IssueProps) => {
-  // Define a type for your items
-  type ItemType = {
+const Issue = (props: {
+  issueData: NewIssue;
+  selectedIssueIds: string[];
+  onIssuesSelect: (issueId: string) => void;
+}) => {
+  const items: {
     key: string;
     text: string;
     icon: React.ReactNode;
-  };
-
-  const items: ItemType[] = [
+  }[] = [
     {
       key: 'Backlog',
       text: 'Backlog',
-      icon: <BacklogSVG name="Backlog" width={14} height={14} />,
+      icon: (
+        <BacklogSVG
+          name="Backlog"
+          width={20}
+          height={20}
+          className="flex items-center"
+        />
+      ),
     },
     {
       key: 'Todo',
       text: 'Todo',
-      icon: <TodoSVG name="Todo" width={14} height={14} />,
+      icon: (
+        <TodoSVG
+          name="Todo"
+          width={20}
+          height={20}
+          className="flex items-center"
+        />
+      ),
     },
     {
       key: 'InProgress',
       text: 'In Progress',
-      icon: <InProgressSVG name="InProgress" width={14} height={14} />,
+      icon: (
+        <InProgressSVG
+          name="InProgress"
+          width={20}
+          height={20}
+          className="flex items-center"
+        />
+      ),
     },
     {
       key: 'Done',
       text: 'Done',
-      icon: <DoneSVG name="Done" width={14} height={14} />,
+      icon: (
+        <DoneSVG
+          name="Done"
+          width={20}
+          height={20}
+          className="flex items-center"
+        />
+      ),
     },
     {
       key: 'Cancelled',
       text: 'Cancelled',
-      icon: <CancelledSVG name="Cancelled" width={14} height={14} />,
+      icon: (
+        <CancelledSVG
+          name="Cancelled"
+          width={20}
+          height={20}
+          className="flex items-center"
+        />
+      ),
     },
   ];
-  const [selectedKey, setSelectedKey] = useState<Key>('Backlog');
+
+  const [selectedKey, setSelectedKey] = useState(props.issueData.status);
+  useEffect(() => {
+    const issues = JSON.parse(localStorage.getItem('issues') || '[]');
+    const updatedIssues = issues.map((issue: NewIssue) =>
+      issue.id === props.issueData.id
+        ? { ...issue, status: selectedKey }
+        : issue
+    );
+    localStorage.setItem('issues', JSON.stringify(updatedIssues));
+  }, [selectedKey, props.issueData.id]);
+
   const selectedItem = items.find((item) => item.key === selectedKey);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <li className=" animate-fadeInUp hover:bg-[#e1e1e1] hover:rounded-md flex gap-4 px-5 border-0 border-solid border-b border-gray-300  leading-8 items-center">
         <input
           type="checkbox"
-          value={props.issue.checked.toString()}
-          checked={props.selectedIssues.includes(props.issue.id)}
-          onChange={() => props.handleIssueSelection(props.issue.id)}
+          name="checkbox"
+          value={String(props.issueData.checked)}
+          checked={props.selectedIssueIds.includes(props.issueData.id)}
+          onChange={() => {
+            props.onIssuesSelect(props.issueData.id);
+          }}
+          className="w-4 h-4"
         />
 
         <Link
           className="flex justify-between flex-grow"
-          to={`${props.issue.id}`}
+          to={`${props.issueData.id}`}
         >
           <Select
             defaultSelectedKey={selectedKey}
-            onSelectionChange={(selected) => setSelectedKey(selected)}
-            className="flex  gap-1 w-fit pr-5"
+            onOpenChange={(isOpen) => setIsOpen(isOpen)}
+            onSelectionChange={(selected) => {
+              setSelectedKey(selected as string);
+              setIsOpen(false);
+            }}
+            className={`flex  gap-1 w-fit pr-5 }`}
           >
             <ReactAriaButton>
-              <SelectValue className="flex items-center gap-2">
+              <SelectValue
+                className={`flex items-center gap-2 ${isOpen ? '' : ''}`}
+              >
                 {selectedItem && (
                   <>
                     <span className="flex gap-2 items-center">
                       {selectedItem.icon}
                     </span>
-                    <span className="text-sm ">{selectedItem.text}</span>
+
+                    {isOpen && (
+                      <span className={`text-sm ${isOpen ? 'hidden' : ''}`}>
+                        {selectedItem.text}
+                      </span>
+                    )}
                   </>
                 )}
               </SelectValue>
             </ReactAriaButton>
             <Popover
-              placement="right top"
+              placement="bottom"
               className="overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5 data-[entering]:animate-in entering:fade-in exiting:animate-out exiting:fade-out"
             >
               <ListBox
@@ -272,22 +329,28 @@ const Issue = (props: IssueProps) => {
                 {items.map((item) => (
                   <ListBoxItem
                     key={item.key}
-                    className="px-2 flex gap-2 items-center"
+                    className="px-2 flex gap-2 items-center "
                   >
                     <span>{item.icon}</span>
 
-                    <span className="data-[selected]:hidden data-[pressed]:hidden data-[focused]:hidden [data-focus-visible]:hidden">
-                      {item.text}
-                    </span>
+                    {isOpen && (
+                      <span
+                        className={`data-[selected]:hidden data-[pressed]:hidden data-[focused]:hidden [data-focus-visible]:hidden text-sm ${
+                          isOpen ? '' : ''
+                        }`}
+                      >
+                        {item.text}
+                      </span>
+                    )}
                   </ListBoxItem>
                 ))}
               </ListBox>
             </Popover>
           </Select>
           <div className="flex-grow justify-between flex items-center">
-            <header>{props.issue.title}</header>
+            <header>{props.issueData.title}</header>
             <span className="text-gray-500 text-sm">
-              {dateFormatter.format(new Date(props.issue.date))}
+              {dateFormatter.format(new Date(props.issueData.date))}
             </span>
           </div>
         </Link>

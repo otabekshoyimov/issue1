@@ -2,12 +2,14 @@ import ReactDOM from 'react-dom/client';
 import { Root } from './routes/root';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { Index } from './routes';
-import { IssueProvider } from './routes/issueContext';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { IssueDetail } from './routes/issue-detail';
+import {
+  action as dialogAction,
+  Index,
+  loader as IssuesLoader,
+} from './routes';
 
-const queryClient = new QueryClient();
+import { IssueDetail, loader as IssueLoader } from './routes/issue-detail';
+
 const router = createBrowserRouter([
   {
     path: `/`,
@@ -16,18 +18,17 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Index />,
+        loader: IssuesLoader,
+        action: dialogAction,
       },
       {
         path: '/:issueId',
         element: <IssueDetail />,
+        loader: IssueLoader,
       },
     ],
   },
 ]);
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <QueryClientProvider client={queryClient}>
-    <IssueProvider>
-      <RouterProvider router={router}></RouterProvider>
-    </IssueProvider>
-  </QueryClientProvider>
+  <RouterProvider router={router}></RouterProvider>
 );

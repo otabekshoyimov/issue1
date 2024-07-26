@@ -1,30 +1,32 @@
-import { useParams } from 'react-router-dom';
-import { dateFormatter } from '.';
-import { useIssue } from '../api/api';
+import type { Params } from 'react-router-dom';
+import { useLoaderData, useNavigation } from 'react-router-dom';
+import { dateFormatter } from '../utils/utils';
+import { getIssueById } from '../api/api';
+
+export async function loader({ params }: { params: Params }) {
+  console.log('Params:', params);
+  if (!params.issueId) {
+    throw new Error('issue id is required');
+  }
+  const issue = await getIssueById(params.issueId);
+  console.log('Fetched Issue:', issue);
+  return issue;
+}
 
 export const IssueDetail = () => {
-  const params = useParams<{ issueId: string }>();
-  if (!params.issueId) {
-    return <div>Issue ID is missing.</div>;
-  }
-  const issueAsync = useIssue(params.issueId);
-
-  if (issueAsync.isLoading) {
+  const issue = useLoaderData() as any;
+  console.log(issue);
+  const navigation = useNavigation();
+  if (navigation.state === 'loading') {
     return <div>loading...</div>;
   }
-  if (issueAsync.error) {
-    return <div>{issueAsync.error.message}</div>;
-  }
-
   return (
     <>
       <section className="px-6 pt-4 bg-white leading-8 text-base mt-3">
-        <header className="text-2xl font-medium pb-5">
-          {issueAsync.data.title}
-        </header>
-        <p>{issueAsync.data.description}</p>
+        <header className="text-2xl font-medium pb-5">{issue.title}</header>
+        <p>{issue.description}</p>
         <span className=" block">
-          {dateFormatter.format(new Date(issueAsync.data.date))}
+          {dateFormatter.format(new Date(issue.date))}
         </span>
       </section>
     </>

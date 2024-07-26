@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { RefObject, useRef, useState } from 'react';
 import { NewIssueSVG } from '../shared/components/svgs/new-issue';
 import { SearchSVG } from '../shared/components/svgs/search';
@@ -8,19 +8,12 @@ import { ViewsSVG } from '../shared/components/svgs/views';
 
 export const Root = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const dialogInnerRef = useRef<HTMLDivElement>(null);
-
   const openDialog = () => {
-    if (!dialogRef.current) {
-      return;
-    }
-
     if (dialogRef.current) {
       dialogRef.current.showModal();
     }
   };
-
-  const handleDialogClick = (
+  const closeDialogOnBackdropClick = (
     e: React.MouseEvent<HTMLDialogElement, MouseEvent>
   ) => {
     if (dialogRef.current && e.target === dialogRef.current) {
@@ -28,32 +21,27 @@ export const Root = () => {
     }
   };
 
-  const dialogInnerStopPropagation = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
-  };
-
-  const [isNavVisible, setIsNavVisible] = useState(false);
-  const handleIsNavVisibleClick = () => {
-    setIsNavVisible((prevState) => !prevState);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const toggleSidebar = () => {
+    setIsSidebarVisible((prevState) => !prevState);
   };
 
   return (
     <>
       <div className="flex flex-row w-full h-full min-h-full">
         <div>
-          <RootSidebar openDialog={openDialog} isNavVisible={isNavVisible} />
+          <RootSidebar
+            onDialogClick={openDialog}
+            isNavVisible={isSidebarVisible}
+          />
         </div>
         <div className="root-outlet flex-col flex-shrink-0 basis-0 min-w-0 ">
           <Outlet
             context={{
-              handleDialogClick,
-              dialogInnerStopPropagation,
-              dialogInnerRef,
+              closeDialogOnBackdropClick,
               dialogRef,
-              handleIsNavVisibleClick,
-              setIsNavVisible,
+              toggleSidebar,
+              setIsSidebarVisible,
             }}
           />
         </div>
@@ -63,25 +51,20 @@ export const Root = () => {
 };
 
 export type OutletContext = {
-  handleDialogClick: (
+  closeDialogOnBackdropClick: (
     e: React.MouseEvent<HTMLDialogElement, MouseEvent>
   ) => void;
-
-  dialogInnerStopPropagation: (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => void;
   dialogRef: RefObject<HTMLDialogElement>;
-  dialogInnerRef: RefObject<HTMLDivElement>;
-  handleIsNavVisibleClick: () => void;
-  setIsNavVisible: (value: boolean) => void;
+  toggleSidebar: () => void;
+  setIsSidebarVisible: (value: boolean) => void;
 };
 
 //#region MARK: RootSidebar
-type RootSidebarProps = {
-  openDialog: () => void;
+
+const RootSidebar = (props: {
+  onDialogClick: () => void;
   isNavVisible: boolean;
-};
-const RootSidebar = (props: RootSidebarProps) => {
+}) => {
   return (
     <>
       <div className="lg:w-[255px] md:0px"></div>
@@ -93,12 +76,14 @@ const RootSidebar = (props: RootSidebarProps) => {
         <nav
           className={` min-w-[220px] max-w-[255px] h-dvh border-0 border-r border-solid border-gray-300 text-sm nav-global bg-[#ececec] flex flex-col relative `}
         >
-          <header className="flex gap-1 justify-between items-center px-4 min-[360px]:pt-10 lg:pt-3 pb-3">
+          <header className="max-lg:pt-10 flex gap-1 justify-between items-center px-4 min-[360px]:pt-10 lg:pt-3 pb-3">
             <button className="hover:bg-[#e1e1e1]">
               <div className="p-1">
-                <div className="bg-green-600 text-white rounded-md ">
-                  <span className="px-1 ">O</span>
-                </div>
+                <Link to={'/'}>
+                  <div className="bg-green-600 text-white rounded-md ">
+                    <span className="px-1 ">O</span>
+                  </div>
+                </Link>
               </div>
             </button>
 
@@ -106,13 +91,13 @@ const RootSidebar = (props: RootSidebarProps) => {
               className="hover:bg-[#e1e1e1] rounded-md leading-6 px-2"
               href="https://github.com/otabekshoyimov/not-linear"
             >
-              github
+              Github
             </a>
           </header>
           <main className="pt-2">
             <div className="px-4">
               <button
-                onClick={props.openDialog}
+                onClick={props.onDialogClick}
                 className=" hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 mb-6 w-full outline outline-1 outline-gray-300 rounded-md shadow-sm p-1 pl-2 "
               >
                 <NewIssueSVG
