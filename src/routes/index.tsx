@@ -1,63 +1,82 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, {
+  ButtonHTMLAttributes,
+  ReactNode,
+  useEffect,
+  useState,
+} from 'react';
+import {
+  ListBox,
+  ListBoxItem,
+  Popover,
+  Button as ReactAriaButton,
+  Select,
+  SelectValue,
+} from 'react-aria-components';
 import {
   Link,
   Outlet,
-  Params,
+  useFetcher,
   useLoaderData,
   useNavigation,
   useOutletContext,
 } from 'react-router-dom';
 import { deleteIssues } from '../api/api';
-import { OutletContext } from './root';
-import { OpenNavSVG } from '../shared/components/svgs/open.nav';
 import { BacklogSVG } from '../shared/components/svgs/backlog-svg';
-import { TodoSVG } from '../shared/components/svgs/todo-svg';
-import { InProgressSVG } from '../shared/components/svgs/in-progess';
-import { DoneSVG } from '../shared/components/svgs/done';
 import { CancelledSVG } from '../shared/components/svgs/cancelled';
-import {
-  Button as ReactAriaButton,
-  ListBox,
-  ListBoxItem,
-  Popover,
-  Select,
-  SelectValue,
-} from 'react-aria-components';
-import { Dialog } from '../shared/components/dialog';
+import { DoneSVG } from '../shared/components/svgs/done';
+import { InProgressSVG } from '../shared/components/svgs/in-progess';
+import { OpenNavSVG } from '../shared/components/svgs/open.nav';
+import { TodoSVG } from '../shared/components/svgs/todo-svg';
 import { dateFormatter } from '../utils/utils';
+import { OutletContext } from './root';
+import { UserSVG } from '../shared/components/svgs/user-svg';
+import { CloseSVG } from '../shared/components/svgs/close-button';
 
 export const loader = async () => {
+  console.log('Loader called');
   const issues = await JSON.parse(
     window.localStorage.getItem('issues') || '[]'
   );
+  console.log('Loaded issues:', issues);
   return issues;
 };
 
-export async function action({
-  request,
-  params,
-}: {
-  request: Request;
-  params: Params;
-}) {
-  console.log(request, params);
-  console.log(params.issueId);
+export async function action({ request }: { request: Request }) {
+  console.log('Action called');
 
   const formData = await request.formData();
-  console.log(formData.get('title'));
-  console.log(formData.get('isCheckboxChecked'));
+  // console.log(formData);
+  const intent = formData.get('intent');
+  console.log('Intent:', intent);
+  if (intent === 'create') {
+    const newIssue: NewIssue = {
+      id: crypto.randomUUID(),
+      title: formData.get('title') as string,
+      description: formData.get('description') as string,
+      checked: false,
+      date: new Date().toISOString(),
+      status: (formData.get('status') as string) || 'Backlog',
+    };
+    console.log('New Issue:', newIssue);
+    const issues = JSON.parse(window.localStorage.getItem('issues') || '[]');
+    issues.push(newIssue);
+    window.localStorage.setItem('issues', JSON.stringify(issues));
+    console.log('Updated issues in localStorage');
+  }
 
-  const newIssue: NewIssue = {
-    id: crypto.randomUUID(),
-    title: formData.get('title') as string,
-    description: formData.get('description') as string,
-    checked: false,
-    date: new Date().toISOString(),
-    status: (formData.get('status') as string) || 'Backlog',
-  };
-  const issues = JSON.parse(window.localStorage.getItem('issues') || '[]');
-  issues.push(newIssue);
-  window.localStorage.setItem('issues', JSON.stringify(issues));
+  if (intent === 'delete') {
+    const selectedIssueIds = (formData.get('selectedIssueIds') as string).split(
+      ','
+    );
+    console.log('Selected Issue IDs to delete:', selectedIssueIds);
+
+    let issues = JSON.parse(window.localStorage.getItem('issues') || '[]');
+    issues = issues.filter(
+      (issue: NewIssue) => !selectedIssueIds.includes(issue.id)
+    );
+    window.localStorage.setItem('issues', JSON.stringify(issues));
+    console.log('Updated issues in localStorage after deletion');
+  }
 
   return { ok: true };
 }
@@ -73,6 +92,7 @@ export type NewIssue = {
 
 export const Index = () => {
   const issuesAsync = useLoaderData() as any;
+  console.log('Rendered issues:', issuesAsync);
   const navigation = useNavigation();
   console.log(issuesAsync);
   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
@@ -133,6 +153,16 @@ export const IssuesHeader = (props: {
   selectedIssues: string[];
 }) => {
   const outletContext = useOutletContext<OutletContext>();
+  const fetcher = useFetcher();
+  // const navigation = useNavigation();
+
+  // const text =
+  //   navigation.state === 'submitting'
+  //     ? 'Saving...'
+  //     : navigation.state === 'loading'
+  //     ? 'Saved!'
+  //     : 'Go';
+
   return (
     <>
       <header className="  text-sm border-0 border-b border-solid border-gray-300 ">
@@ -149,13 +179,24 @@ export const IssuesHeader = (props: {
             <span>All issues</span>
           </div>
           <div className="flex-grow justify-end flex items-center">
-            <button
-              onClick={props.onSelecetedIssue}
-              disabled={props.selectedIssues.length === 0}
-              className="disabled:cursor-not-allowed disabled:text-gray-300"
-            >
-              Delete
-            </button>
+            <fetcher.Form method="post">
+              <input
+                type="hidden"
+                name="selectedIssueIds"
+                value={props.selectedIssues.join('.')}
+              />
+              <button
+                // onClick={handleDelete}
+                disabled={props.selectedIssues.length === 0}
+                name="intent"
+                value="delete"
+                type="submit"
+                className="disabled:cursor-not-allowed disabled:text-gray-300"
+              >
+                Delete
+                {/* {text} */}
+              </button>
+            </fetcher.Form>
           </div>
         </div>
       </header>
@@ -360,3 +401,126 @@ const Issue = (props: {
 };
 
 //#endregion
+
+//#region Dialog
+
+const Dialog = () => {
+  const fetcher = useFetcher();
+  const outletContext = useOutletContext<OutletContext>();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    // console.log('fetcher state:', fetcher.state);
+    if (fetcher.state === 'submitting' && outletContext.dialogRef.current) {
+      outletContext.dialogRef.current.close();
+      outletContext.setIsSidebarVisible(false);
+    }
+  }, [fetcher.state, outletContext]);
+
+  return (
+    <>
+      <dialog
+        id="dialog"
+        ref={outletContext.dialogRef}
+        onClick={outletContext.closeDialogOnBackdropClick}
+        className="shadow-lg animate-fadeInUp"
+      >
+        <div id="dialog-inner" onClick={(e) => e.stopPropagation()}>
+          <header className="flex justify-between items-center ">
+            <div className="flex items-center justify-center gap-1 text-sm text-gray-500">
+              <span className="flex items-center border border-solid border-gray-300 rounded-sm">
+                <UserSVG name="User" color="#00ae28" width={12} height={12} />
+              </span>
+              New Issue
+            </div>
+
+            <button
+              onClick={() => {
+                if (outletContext.dialogRef.current) {
+                  outletContext.dialogRef.current.close();
+                }
+              }}
+              className="flex justify-end hover:bg-gray-200 hover:rounded-md"
+            >
+              <span className=" rounded-md px-1  text-sm leading-none py-1">
+                <CloseSVG name="CloseButton" width={16} height={16} />
+              </span>
+            </button>
+          </header>
+          <main>
+            <div className="pb-2 pt-2">
+              <fetcher.Form
+                className="flex flex-col gap-2"
+                role="form"
+                method="post"
+                // onSubmit={(e) => {
+                //   e.preventDefault();
+                //   const formData = new FormData(e.currentTarget);
+                //   console.log('Form data before submission:');
+                //   for (let [key, value] of formData.entries()) {
+                //     console.log(key, value);
+                //   }
+                //   fetcher.submit(e.currentTarget);
+                //   e.currentTarget.reset();
+                // }}
+              >
+                <fieldset>
+                  <input type="text" name="title" placeholder="Issue title" />
+                  <label htmlFor="" className="font-semibold"></label>
+                </fieldset>
+
+                <fieldset>
+                  <input
+                    type="text"
+                    name="description"
+                    placeholder="Add description"
+                  />
+                  <label htmlFor=""></label>
+                </fieldset>
+
+                <fieldset>
+                  <input type="hidden" name="status" value="Backlog" />
+                  <label htmlFor=""></label>
+                </fieldset>
+
+                <footer>
+                  <span className="flex justify-end ">
+                    <button
+                      type="submit"
+                      name="intent"
+                      value="create"
+                      className="bg-green-600 rounded-md px-2 text-white text-sm py-1"
+                    >
+                      {navigation.state === 'submitting' ? (
+                        <span className="">Creating issue...</span>
+                      ) : (
+                        <span className="">Create Issue</span>
+                      )}
+                    </button>
+                  </span>
+                </footer>
+              </fetcher.Form>
+            </div>
+          </main>
+        </div>
+      </dialog>
+    </>
+  );
+};
+//#endregion
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  text: string;
+}
+export const Button = (props: ButtonProps) => {
+  return (
+    <>
+      <button
+        className="disabled:cursor-not-allowed disabled:text-gray-300 disabled:outline-gray-300 enabled:hover:outline-black enabled:hover:text-black shadow-sm px-1 outline outline-1 py-1 text-gray-6  00 outline-gray-400 rounded-md  leading-3"
+        {...props}
+      >
+        {props.text}
+      </button>
+    </>
+  );
+};
