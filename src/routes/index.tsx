@@ -68,6 +68,7 @@ export async function action({ request }: { request: Request }) {
     const selectedIssueIds = (formData.get('selectedIssueIds') as string).split(
       ','
     );
+    console.log('selected issue ids', selectedIssueIds);
     console.log('Selected Issue IDs to delete:', selectedIssueIds);
 
     let issues = JSON.parse(window.localStorage.getItem('issues') || '[]');
@@ -183,7 +184,7 @@ export const IssuesHeader = (props: {
               <input
                 type="hidden"
                 name="selectedIssueIds"
-                value={props.selectedIssues.join('.')}
+                value={props.selectedIssues.join(',')}
               />
               <button
                 // onClick={handleDelete}
