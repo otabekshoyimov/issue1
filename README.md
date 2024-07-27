@@ -1,4 +1,6 @@
 <img src="public/not-linear-md.png">
+<img src="public/not-linear-mobile.png">
+<img src="public/not-linear-mobile2.png">
 
 Issue tracking app.
 
