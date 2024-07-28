@@ -513,11 +513,7 @@ const Dialog = () => {
                       disabled={fetcher.state === 'submitting'}
                       className="bg-green-600 rounded-md px-2 text-white text-sm py-1"
                     >
-                      {fetcher.state === 'submitting' ? (
-                        <span className="">Creating issue...</span>
-                      ) : (
-                        <span className="">Create Issue</span>
-                      )}
+                      Create issue
                     </button>
                   </span>
                 </footer>
