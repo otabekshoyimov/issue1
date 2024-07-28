@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from 'react-aria-components';
 import {
+  json,
   Link,
   Outlet,
   useFetcher,
@@ -20,7 +21,7 @@ import {
   useNavigation,
   useOutletContext,
 } from 'react-router-dom';
-import { deleteIssues } from '../api/api';
+import { createNewIssueAsync, deleteIssuesAsync } from '../api/api';
 import { BacklogSVG } from '../shared/components/svgs/backlog-svg';
 import { CancelledSVG } from '../shared/components/svgs/cancelled';
 import { DoneSVG } from '../shared/components/svgs/done';
@@ -33,21 +34,21 @@ import { UserSVG } from '../shared/components/svgs/user-svg';
 import { CloseSVG } from '../shared/components/svgs/close-button';
 
 export const loader = async () => {
-  console.log('Loader called');
+  // console.log('Loader called');
   const issues = await JSON.parse(
     window.localStorage.getItem('issues') || '[]'
   );
-  console.log('Loaded issues:', issues);
+  // console.log('Loaded issues:', issues);
   return issues;
 };
 
 export async function action({ request }: { request: Request }) {
-  console.log('Action called');
+  // console.log('Action called');
 
   const formData = await request.formData();
   // console.log(formData);
   const intent = formData.get('intent');
-  console.log('Intent:', intent);
+  // console.log('Intent:', intent);
   if (intent === 'create') {
     const newIssue: NewIssue = {
       id: crypto.randomUUID(),
@@ -57,29 +58,27 @@ export async function action({ request }: { request: Request }) {
       date: new Date().toISOString(),
       status: (formData.get('status') as string) || 'Backlog',
     };
-    console.log('New Issue:', newIssue);
-    const issues = JSON.parse(window.localStorage.getItem('issues') || '[]');
-    issues.push(newIssue);
-    window.localStorage.setItem('issues', JSON.stringify(issues));
-    console.log('Updated issues in localStorage');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await createNewIssueAsync(newIssue);
+    console.log('%c NEW created issue', 'color: red', { newIssue });
+    // return json({ newIssue }, { status: 201 });
+    return new Response(JSON.stringify(newIssue), {
+      headers: {
+        'Content-Type': 'application/json; utf-8',
+      },
+    });
   }
 
   if (intent === 'delete') {
     const selectedIssueIds = (formData.get('selectedIssueIds') as string).split(
       ','
     );
-    console.log('selected issue ids', selectedIssueIds);
     console.log('Selected Issue IDs to delete:', selectedIssueIds);
-
-    let issues = JSON.parse(window.localStorage.getItem('issues') || '[]');
-    issues = issues.filter(
-      (issue: NewIssue) => !selectedIssueIds.includes(issue.id)
-    );
-    window.localStorage.setItem('issues', JSON.stringify(issues));
-    console.log('Updated issues in localStorage after deletion');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    const updatedIssues = await deleteIssuesAsync(selectedIssueIds);
+    console.log('%cUpdated Issues', 'color: red', updatedIssues);
+    return json({ updatedIssues }, { status: 200 });
   }
-
-  return { ok: true };
 }
 
 export type NewIssue = {
@@ -93,11 +92,11 @@ export type NewIssue = {
 
 export const Index = () => {
   const issuesAsync = useLoaderData() as any;
-  console.log('Rendered issues:', issuesAsync);
+  // console.log('Rendered issues:', issuesAsync);
   const navigation = useNavigation();
-  console.log(issuesAsync);
+  // console.log(issuesAsync);
   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
-  console.log(selectedIssues);
+  // console.log(selectedIssues);
 
   const handleIssueSelection = (issueId: string) => {
     setSelectedIssues((prev) =>
@@ -108,7 +107,7 @@ export const Index = () => {
   };
 
   const handleSelectedIssue = () => {
-    deleteIssues(selectedIssues);
+    deleteIssuesAsync(selectedIssues);
     setSelectedIssues([]);
   };
   if (navigation.state === 'loading') {
@@ -155,14 +154,6 @@ export const IssuesHeader = (props: {
 }) => {
   const outletContext = useOutletContext<OutletContext>();
   const fetcher = useFetcher();
-  // const navigation = useNavigation();
-
-  // const text =
-  //   navigation.state === 'submitting'
-  //     ? 'Saving...'
-  //     : navigation.state === 'loading'
-  //     ? 'Saved!'
-  //     : 'Go';
 
   return (
     <>
@@ -192,10 +183,13 @@ export const IssuesHeader = (props: {
                 name="intent"
                 value="delete"
                 type="submit"
-                className="disabled:cursor-not-allowed disabled:text-gray-300"
+                className="disabled:cursor-not-allowed disabled:text-gray-300 px-2 max-w-fit"
               >
-                Delete
-                {/* {text} */}
+                {fetcher.state === 'submitting' ? (
+                  <span className="loading-ellipsis">Deleting</span>
+                ) : (
+                  <span>Delete</span>
+                )}
               </button>
             </fetcher.Form>
           </div>
@@ -408,10 +402,7 @@ const Issue = (props: {
 const Dialog = () => {
   const fetcher = useFetcher();
   const outletContext = useOutletContext<OutletContext>();
-  const navigation = useNavigation();
-
   useEffect(() => {
-    // console.log('fetcher state:', fetcher.state);
     if (fetcher.state === 'submitting' && outletContext.dialogRef.current) {
       outletContext.dialogRef.current.close();
       outletContext.setIsSidebarVisible(false);
@@ -454,16 +445,6 @@ const Dialog = () => {
                 className="flex flex-col gap-2"
                 role="form"
                 method="post"
-                // onSubmit={(e) => {
-                //   e.preventDefault();
-                //   const formData = new FormData(e.currentTarget);
-                //   console.log('Form data before submission:');
-                //   for (let [key, value] of formData.entries()) {
-                //     console.log(key, value);
-                //   }
-                //   fetcher.submit(e.currentTarget);
-                //   e.currentTarget.reset();
-                // }}
               >
                 <fieldset>
                   <input type="text" name="title" placeholder="Issue title" />
@@ -490,9 +471,10 @@ const Dialog = () => {
                       type="submit"
                       name="intent"
                       value="create"
+                      disabled={fetcher.state === 'submitting'}
                       className="bg-green-600 rounded-md px-2 text-white text-sm py-1"
                     >
-                      {navigation.state === 'submitting' ? (
+                      {fetcher.state === 'submitting' ? (
                         <span className="">Creating issue...</span>
                       ) : (
                         <span className="">Create Issue</span>

@@ -59,7 +59,7 @@ form fieldset {
   all: unset;
 }
 form button {
-  padding: 4px 6px 4px 6px;
+  padding: 2px 6px 2px 6px;
   border: 1px solid rgb(194, 194, 194);
   border-radius: 9999px;
 }
@@ -137,4 +137,22 @@ dialog {
 
 .root-outlet {
   flex-grow: 1;
+}
+
+@keyframes ellipsis {
+  0% {
+    content: '.';
+  }
+  33% {
+    content: '..';
+  }
+  66% {
+    content: '...';
+  }
+}
+
+.loading-ellipsis::after {
+  content: '.';
+  display: inline-block;
+  animation: ellipsis 1.5s infinite;
 }

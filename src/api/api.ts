@@ -1,6 +1,12 @@
 import { NewIssue } from '../routes';
 
-export const getIssueById = async (id: string) => {
+export const createNewIssueAsync = async (newIssue: NewIssue) => {
+  const issues = JSON.parse(window.localStorage.getItem('issues') || '[]');
+  const newIssues = [...issues, newIssue];
+  window.localStorage.setItem('issues', JSON.stringify(newIssues));
+  return newIssues;
+};
+export const getIssueByIdAsync = async (id: string) => {
   const issues = await JSON.parse(
     window.localStorage.getItem('issues') || '[]'
   );
@@ -8,7 +14,7 @@ export const getIssueById = async (id: string) => {
   return issue;
 };
 
-export const deleteIssues = async (issueIdsToDelete: string[]) => {
+export const deleteIssuesAsync = async (issueIdsToDelete: string[]) => {
   const issues = await JSON.parse(
     window.localStorage.getItem('issues') || '[]'
   );

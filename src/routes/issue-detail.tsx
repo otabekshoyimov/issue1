@@ -1,14 +1,14 @@
 import type { Params } from 'react-router-dom';
 import { useLoaderData, useNavigation } from 'react-router-dom';
 import { dateFormatter } from '../utils/utils';
-import { getIssueById } from '../api/api';
+import { getIssueByIdAsync } from '../api/api';
 
 export async function loader({ params }: { params: Params }) {
   console.log('Params:', params);
   if (!params.issueId) {
     throw new Error('issue id is required');
   }
-  const issue = await getIssueById(params.issueId);
+  const issue = await getIssueByIdAsync(params.issueId);
   console.log('Fetched Issue:', issue);
   return issue;
 }
