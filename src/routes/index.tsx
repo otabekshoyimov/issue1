@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from 'react-aria-components';
 import {
+  ActionFunctionArgs,
   json,
   Link,
   Outlet,
@@ -28,7 +29,7 @@ import { DoneSVG } from '../shared/components/svgs/done';
 import { InProgressSVG } from '../shared/components/svgs/in-progess';
 import { OpenNavSVG } from '../shared/components/svgs/open.nav';
 import { TodoSVG } from '../shared/components/svgs/todo-svg';
-import { dateFormatter } from '../utils/utils';
+import { BAD_REQUEST, dateFormatter, OK, SERVER_ERROR } from '../utils/utils';
 import { OutletContext } from './root';
 import { UserSVG } from '../shared/components/svgs/user-svg';
 import { CloseSVG } from '../shared/components/svgs/close-button';
@@ -42,42 +43,80 @@ export const loader = async () => {
   return issues;
 };
 
-export async function action({ request }: { request: Request }) {
-  // console.log('Action called');
+export async function action({ request }: ActionFunctionArgs) {
+  try {
+    // console.log('Action called');
+    const formData = await request.formData();
+    // console.log(formData);
+    const intent = formData.get('intent');
 
-  const formData = await request.formData();
-  // console.log(formData);
-  const intent = formData.get('intent');
-  // console.log('Intent:', intent);
-  if (intent === 'create') {
-    const newIssue: NewIssue = {
-      id: crypto.randomUUID(),
-      title: formData.get('title') as string,
-      description: formData.get('description') as string,
-      checked: false,
-      date: new Date().toISOString(),
-      status: (formData.get('status') as string) || 'Backlog',
+    const handleCreate = async (formData: FormData) => {
+      try {
+        const newIssue: NewIssue = {
+          id: crypto.randomUUID(),
+          title: formData.get('title') as string,
+          description: formData.get('description') as string,
+          checked: false,
+          date: new Date().toISOString(),
+          status: (formData.get('status') as string) || 'Backlog',
+        };
+        // await new Promise((resolve) => setTimeout(resolve, 3000));
+        await createNewIssueAsync(newIssue);
+        console.log('%c NEW created issue', 'color: red', { newIssue });
+        // return json({ newIssue }, { status: 201 });
+        return new Response(JSON.stringify(newIssue), {
+          status: 201,
+          headers: {
+            'Content-Type': 'application/json; utf-8',
+          },
+        });
+      } catch (error) {
+        console.log('Create error', error);
+        return json(
+          { error: 'Failed to create issue' },
+          { status: BAD_REQUEST }
+        );
+      }
     };
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
-    await createNewIssueAsync(newIssue);
-    console.log('%c NEW created issue', 'color: red', { newIssue });
-    // return json({ newIssue }, { status: 201 });
-    return new Response(JSON.stringify(newIssue), {
-      headers: {
-        'Content-Type': 'application/json; utf-8',
-      },
-    });
-  }
 
-  if (intent === 'delete') {
-    const selectedIssueIds = (formData.get('selectedIssueIds') as string).split(
-      ','
+    const handleDelete = async (formData: FormData) => {
+      try {
+        const selectedIssueIds = (
+          formData.get('selectedIssueIds') as string
+        ).split(',');
+        console.log('Selected Issue IDs to delete:', selectedIssueIds);
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        const updatedIssues = await deleteIssuesAsync(selectedIssueIds);
+        console.log('%cUpdated Issues', 'color: red', updatedIssues);
+        return json({ updatedIssues }, { status: OK });
+      } catch (error) {
+        console.error('Delete error:', error);
+        return json(
+          { error: 'Failed to delete issues' },
+          { status: BAD_REQUEST }
+        );
+      }
+    };
+
+    if (intent === 'create') {
+      return await handleCreate(formData);
+    }
+    if (intent === 'delete') {
+      return await handleDelete(formData);
+    }
+    return new Response(JSON.stringify({ error: 'Unknown intent' }), {
+      status: BAD_REQUEST,
+      headers: { 'Content-Type': 'application/json; utf-8' },
+    });
+  } catch (error) {
+    console.error('Action error:', error);
+    return new Response(
+      JSON.stringify({ error: 'An unexpected error occurred' }),
+      {
+        status: SERVER_ERROR,
+        headers: { 'Content-Type': 'application/json; utf-8' },
+      }
     );
-    console.log('Selected Issue IDs to delete:', selectedIssueIds);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    const updatedIssues = await deleteIssuesAsync(selectedIssueIds);
-    console.log('%cUpdated Issues', 'color: red', updatedIssues);
-    return json({ updatedIssues }, { status: 200 });
   }
 }
 
