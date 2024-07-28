@@ -58,7 +58,7 @@ export async function action({ request }: { request: Request }) {
       date: new Date().toISOString(),
       status: (formData.get('status') as string) || 'Backlog',
     };
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
     await createNewIssueAsync(newIssue);
     console.log('%c NEW created issue', 'color: red', { newIssue });
     // return json({ newIssue }, { status: 201 });
@@ -74,7 +74,7 @@ export async function action({ request }: { request: Request }) {
       ','
     );
     console.log('Selected Issue IDs to delete:', selectedIssueIds);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     const updatedIssues = await deleteIssuesAsync(selectedIssueIds);
     console.log('%cUpdated Issues', 'color: red', updatedIssues);
     return json({ updatedIssues }, { status: 200 });
