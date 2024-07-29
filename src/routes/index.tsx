@@ -444,7 +444,6 @@ const Dialog = () => {
   useEffect(() => {
     if (fetcher.state === 'submitting' && outletContext.dialogRef.current) {
       outletContext.dialogRef.current.close();
-      outletContext.setIsSidebarVisible(false);
     }
   }, [fetcher.state, outletContext]);
 

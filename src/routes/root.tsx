@@ -11,6 +11,7 @@ export const Root = () => {
   const openDialog = () => {
     if (dialogRef.current) {
       dialogRef.current.showModal();
+      setIsSidebarVisible(false);
     }
   };
   const closeDialogOnBackdropClick = (
