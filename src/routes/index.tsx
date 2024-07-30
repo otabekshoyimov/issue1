@@ -145,10 +145,6 @@ export const Index = () => {
     );
   };
 
-  const handleSelectedIssue = () => {
-    deleteIssuesAsync(selectedIssues);
-    setSelectedIssues([]);
-  };
   if (navigation.state === 'loading') {
     return <div>loading...</div>;
   }
@@ -156,19 +152,16 @@ export const Index = () => {
     <>
       <Dialog />
       <IssuesContainer>
-        <IssuesHeader
-          onSelecetedIssue={handleSelectedIssue}
-          selectedIssues={selectedIssues}
-        />
+        <IssuesHeader selectedIssues={selectedIssues} />
         <IssuesListHeader />
         <IssuesList>
           <ul>
             {issuesAsync.map((issue: NewIssue) => (
               <Issue
-                issueData={issue}
+                issue={issue}
                 key={issue.id}
-                selectedIssueIds={selectedIssues}
-                onIssuesSelect={handleIssueSelection}
+                selectedIssue={selectedIssues}
+                onIssueSelect={handleIssueSelection}
               />
             ))}
           </ul>
@@ -187,10 +180,7 @@ const IssuesContainer = (props: { children: ReactNode }) => {
   );
 };
 
-export const IssuesHeader = (props: {
-  onSelecetedIssue: () => void;
-  selectedIssues: string[];
-}) => {
+export const IssuesHeader = (props: { selectedIssues: string[] }) => {
   const outletContext = useOutletContext<OutletContext>();
   const fetcher = useFetcher();
 
@@ -217,7 +207,6 @@ export const IssuesHeader = (props: {
                 value={props.selectedIssues.join(',')}
               />
               <button
-                // onClick={handleDelete}
                 disabled={props.selectedIssues.length === 0}
                 name="intent"
                 value="delete"
@@ -261,9 +250,9 @@ const IssuesList = (props: { children: ReactNode }) => {
 //#region MARK: Issue
 
 const Issue = (props: {
-  issueData: NewIssue;
-  selectedIssueIds: string[];
-  onIssuesSelect: (issueId: string) => void;
+  issue: NewIssue;
+  selectedIssue: string[];
+  onIssueSelect: (issueId: string) => void;
 }) => {
   const items: {
     key: string;
@@ -332,19 +321,15 @@ const Issue = (props: {
     },
   ];
 
-  const [selectedKey, setSelectedKey] = useState(props.issueData.status);
+  const [selectedKey, setSelectedKey] = useState(props.issue.status);
   useEffect(() => {
     const issues = JSON.parse(localStorage.getItem('issues') || '[]');
     const updatedIssues = issues.map((issue: NewIssue) =>
-      issue.id === props.issueData.id
-        ? { ...issue, status: selectedKey }
-        : issue
+      issue.id === props.issue.id ? { ...issue, status: selectedKey } : issue
     );
     localStorage.setItem('issues', JSON.stringify(updatedIssues));
-  }, [selectedKey, props.issueData.id]);
-
+  }, [selectedKey, props.issue.id]);
   const selectedItem = items.find((item) => item.key === selectedKey);
-
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -353,17 +338,17 @@ const Issue = (props: {
         <input
           type="checkbox"
           name="checkbox"
-          value={String(props.issueData.checked)}
-          checked={props.selectedIssueIds.includes(props.issueData.id)}
+          value={String(props.issue.checked)}
+          checked={props.selectedIssue.includes(props.issue.id)}
           onChange={() => {
-            props.onIssuesSelect(props.issueData.id);
+            props.onIssueSelect(props.issue.id);
           }}
           className="w-4 h-4"
         />
 
         <Link
           className="flex justify-between flex-grow"
-          to={`${props.issueData.id}`}
+          to={`${props.issue.id}`}
         >
           <Select
             defaultSelectedKey={selectedKey}
@@ -423,9 +408,9 @@ const Issue = (props: {
             </Popover>
           </Select>
           <div className="flex-grow justify-between flex items-center">
-            <header>{props.issueData.title}</header>
+            <header>{props.issue.title}</header>
             <span className="text-gray-500 text-sm">
-              {dateFormatter.format(new Date(props.issueData.date))}
+              {dateFormatter.format(new Date(props.issue.date))}
             </span>
           </div>
         </Link>
