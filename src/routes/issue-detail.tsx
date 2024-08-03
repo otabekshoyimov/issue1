@@ -1,7 +1,6 @@
 import type { Params } from 'react-router-dom';
 import { useLoaderData, useNavigation } from 'react-router-dom';
 import { pocketbase } from '../pocketbase';
-import { dateFormatter } from '../utils/utils';
 
 export async function loader({ params }: { params: Params }) {
   console.log('Params:', params, typeof params.issueId);
