@@ -22,7 +22,7 @@ import {
   useNavigation,
   useOutletContext,
 } from 'react-router-dom';
-import { createNewIssueAsync, deleteIssuesAsync } from '../api/api';
+// import { createNewIssueAsync, deleteIssuesAsync } from '../api/api';
 import { BacklogSVG } from '../shared/components/svgs/backlog-svg';
 import { CancelledSVG } from '../shared/components/svgs/cancelled';
 import { DoneSVG } from '../shared/components/svgs/done';
@@ -33,14 +33,17 @@ import { BAD_REQUEST, dateFormatter, OK, SERVER_ERROR } from '../utils/utils';
 import { OutletContext } from './root';
 import { UserSVG } from '../shared/components/svgs/user-svg';
 import { CloseSVG } from '../shared/components/svgs/close-button';
+import { pocketbase } from '../pocketbase';
 
 export const loader = async () => {
   // console.log('Loader called');
-  const issues = await JSON.parse(
-    window.localStorage.getItem('issues') || '[]'
-  );
-  // console.log('Loaded issues:', issues);
-  return issues;
+  // const issues = await JSON.parse(
+  //   window.localStorage.getItem('issues') || '[]'
+  // );
+
+  const issues = await pocketbase.collection('posts').getFullList();
+  console.log('Loaded issues:', issues);
+  return { issues };
 };
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -52,8 +55,8 @@ export async function action({ request }: ActionFunctionArgs) {
 
     const handleCreate = async (formData: FormData) => {
       try {
-        const newIssue: NewIssue = {
-          id: crypto.randomUUID(),
+        const newIssue = {
+          // id: crypto.randomUUID(),
           title: formData.get('title') as string,
           description: formData.get('description') as string,
           checked: false,
@@ -61,10 +64,14 @@ export async function action({ request }: ActionFunctionArgs) {
           status: (formData.get('status') as string) || 'Backlog',
         };
         // await new Promise((resolve) => setTimeout(resolve, 3000));
-        await createNewIssueAsync(newIssue);
+        // await createNewIssueAsync(newIssue);
+        const issueRecord = await pocketbase
+          .collection('posts')
+          .create(newIssue);
+
         console.log('%c NEW created issue', 'color: red', { newIssue });
         // return json({ newIssue }, { status: 201 });
-        return new Response(JSON.stringify(newIssue), {
+        return new Response(JSON.stringify(issueRecord), {
           status: 201,
           headers: {
             'Content-Type': 'application/json; utf-8',
@@ -72,6 +79,7 @@ export async function action({ request }: ActionFunctionArgs) {
         });
       } catch (error) {
         console.log('Create error', error);
+
         return json(
           { error: 'Failed to create issue' },
           { status: BAD_REQUEST }
@@ -85,10 +93,14 @@ export async function action({ request }: ActionFunctionArgs) {
           formData.get('selectedIssueIds') as string
         ).split(',');
         console.log('Selected Issue IDs to delete:', selectedIssueIds);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        const updatedIssues = await deleteIssuesAsync(selectedIssueIds);
-        console.log('%cUpdated Issues', 'color: red', updatedIssues);
-        return json({ updatedIssues }, { status: OK });
+        // await new Promise((resolve) => setTimeout(resolve, 2000));
+        // const updatedIssues = await deleteIssuesAsync(selectedIssueIds);
+        const deletePromises = selectedIssueIds.map((id) =>
+          pocketbase.collection('posts').delete(id)
+        );
+        await Promise.all(deletePromises);
+        console.log('%cUpdated Issues', 'color: red', deletePromises);
+        return json({ status: OK });
       } catch (error) {
         console.error('Delete error:', error);
         return json(
@@ -120,8 +132,12 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 }
 
-export type NewIssue = {
+type PocketBaseIssue = {
   id: string;
+  collectionId: string;
+  collectionName: string;
+  created: string;
+  updated: string;
   title: string;
   description: string;
   checked: boolean;
@@ -129,13 +145,18 @@ export type NewIssue = {
   status: string;
 };
 
+type loaderData = {
+  issues: PocketBaseIssue[];
+};
+
 export const Index = () => {
-  const issuesAsync = useLoaderData() as any;
+  const { issues } = useLoaderData() as loaderData;
+
   // console.log('Rendered issues:', issuesAsync);
   const navigation = useNavigation();
   // console.log(issuesAsync);
   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
-  // console.log(selectedIssues);
+  console.log(selectedIssues);
 
   const handleIssueSelection = (issueId: string) => {
     setSelectedIssues((prev) =>
@@ -156,7 +177,7 @@ export const Index = () => {
         <IssuesListHeader />
         <IssuesList>
           <ul>
-            {issuesAsync.map((issue: NewIssue) => (
+            {issues.map((issue: PocketBaseIssue) => (
               <Issue
                 issue={issue}
                 key={issue.id}
@@ -250,7 +271,7 @@ const IssuesList = (props: { children: ReactNode }) => {
 //#region MARK: Issue
 
 const Issue = (props: {
-  issue: NewIssue;
+  issue: PocketBaseIssue;
   selectedIssue: string[];
   onIssueSelect: (issueId: string) => void;
 }) => {
@@ -320,11 +341,12 @@ const Issue = (props: {
       ),
     },
   ];
+  const { issues } = useLoaderData() as loaderData;
 
   const [selectedKey, setSelectedKey] = useState(props.issue.status);
   useEffect(() => {
     const issues = JSON.parse(localStorage.getItem('issues') || '[]');
-    const updatedIssues = issues.map((issue: NewIssue) =>
+    const updatedIssues = issues.map((issue: PocketBaseIssue) =>
       issue.id === props.issue.id ? { ...issue, status: selectedKey } : issue
     );
     localStorage.setItem('issues', JSON.stringify(updatedIssues));
