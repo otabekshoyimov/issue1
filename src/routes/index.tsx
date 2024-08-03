@@ -60,7 +60,7 @@ export async function action({ request }: ActionFunctionArgs) {
           title: formData.get('title') as string,
           description: formData.get('description') as string,
           checked: false,
-          date: new Date().toISOString(),
+          date: new Date(),
           status: (formData.get('status') as string) || 'Backlog',
         };
         // await new Promise((resolve) => setTimeout(resolve, 3000));
