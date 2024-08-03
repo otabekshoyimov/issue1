@@ -137,9 +137,9 @@ dialog {
 
 .root-outlet {
   flex-grow: 1;
-  position: relative;
+  /* position: relative;
   width: 100%;
-  height: 100%;
+  height: 100%; */
 }
 
 @keyframes ellipsis {
@@ -159,7 +159,7 @@ dialog {
   display: inline-block;
   animation: ellipsis 1.5s infinite;
 }
-
+/* 
 .spinner-overlay {
   position: absolute;
   top: 0;
@@ -177,4 +177,4 @@ dialog {
   .spinner-overlay {
     margin-left: -140px;
   }
-}
+} */
