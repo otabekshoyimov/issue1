@@ -28,9 +28,9 @@ export const IssueDetail = () => {
       <section className="px-6 pt-4 bg-white leading-8 text-base mt-3">
         <header className="text-2xl font-medium pb-5">{issue.title}</header>
         <p>{issue.description}</p>
-        <span className=" block">
+        {/* <span className=" block">
           {dateFormatter.format(new Date(issue.date))}
-        </span>
+        </span> */}
       </section>
     </>
   );
