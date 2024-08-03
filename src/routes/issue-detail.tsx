@@ -3,7 +3,7 @@ import { useLoaderData, useNavigation } from 'react-router-dom';
 import { pocketbase } from '../pocketbase';
 import { formatDate } from '../utils/utils';
 
-import { NestedRouteSpinner } from '../shared/components/nested-route-spinner';
+import { Spinner } from '@phosphor-icons/react';
 
 export async function loader({ params }: { params: Params }) {
   console.log('Params:', params, typeof params.issueId);
@@ -21,7 +21,11 @@ export const IssueDetail = () => {
   console.log(issue);
   const navigation = useNavigation();
   if (navigation.state === 'loading') {
-    return <NestedRouteSpinner />;
+    return (
+      <div className="p-3">
+        <Spinner />
+      </div>
+    );
   }
   return (
     <>
