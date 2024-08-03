@@ -29,7 +29,7 @@ import { DoneSVG } from '../shared/components/svgs/done';
 import { InProgressSVG } from '../shared/components/svgs/in-progess';
 import { OpenNavSVG } from '../shared/components/svgs/open.nav';
 import { TodoSVG } from '../shared/components/svgs/todo-svg';
-import { BAD_REQUEST, dateFormatter, OK, SERVER_ERROR } from '../utils/utils';
+import { BAD_REQUEST, OK, SERVER_ERROR } from '../utils/utils';
 import { OutletContext } from './root';
 import { UserSVG } from '../shared/components/svgs/user-svg';
 import { CloseSVG } from '../shared/components/svgs/close-button';
@@ -431,9 +431,9 @@ const Issue = (props: {
           </Select>
           <div className="flex-grow justify-between flex items-center">
             <header>{props.issue.title}</header>
-            <span className="text-gray-500 text-sm">
+            {/* <span className="text-gray-500 text-sm">
               {dateFormatter.format(new Date(props.issue.date))}
-            </span>
+            </span> */}
           </div>
         </Link>
       </li>
