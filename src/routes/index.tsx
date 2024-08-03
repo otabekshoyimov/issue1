@@ -34,6 +34,7 @@ import { OutletContext } from './root';
 import { UserSVG } from '../shared/components/svgs/user-svg';
 import { CloseSVG } from '../shared/components/svgs/close-button';
 import { pocketbase } from '../pocketbase';
+import { Spinner } from '../shared/components/spinner';
 
 export const loader = async () => {
   // console.log('Loader called');
@@ -153,7 +154,7 @@ export const Index = () => {
   const { issues } = useLoaderData() as loaderData;
 
   // console.log('Rendered issues:', issuesAsync);
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   // console.log(issuesAsync);
   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
   console.log(selectedIssues);
@@ -166,15 +167,16 @@ export const Index = () => {
     );
   };
 
-  if (navigation.state === 'loading') {
-    return <div>loading...</div>;
-  }
+  // if (navigation.state === 'loading') {
+  //   return <GlobalSpinner />;
+  // }
   return (
     <>
-      <Dialog />
       <IssuesContainer>
         <IssuesHeader selectedIssues={selectedIssues} />
+        <Dialog />
         <IssuesListHeader />
+
         <IssuesList>
           <ul>
             {issues.map((issue: PocketBaseIssue) => (
@@ -202,13 +204,14 @@ const IssuesContainer = (props: { children: ReactNode }) => {
 };
 
 export const IssuesHeader = (props: { selectedIssues: string[] }) => {
+  const navigation = useNavigation();
   const outletContext = useOutletContext<OutletContext>();
   const fetcher = useFetcher();
 
   return (
     <>
       <header className="  text-sm border-0 border-b border-solid border-gray-300 ">
-        <div className="flex px-4 h-9 gap-10 ">
+        <div className="flex px-4 h-9  ">
           <div className="flex items-center justify-center gap-10">
             <button
               onClick={() => {
@@ -219,6 +222,7 @@ export const IssuesHeader = (props: { selectedIssues: string[] }) => {
               <OpenNavSVG name="OpenNav" width={20} height={20} />
             </button>
             <span>All issues</span>
+            {navigation.state === 'loading' && <Spinner />}
           </div>
           <div className="flex-grow justify-end flex items-center">
             <fetcher.Form method="post">
@@ -448,11 +452,24 @@ const Issue = (props: {
 const Dialog = () => {
   const fetcher = useFetcher();
   const outletContext = useOutletContext<OutletContext>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
-    if (fetcher.state === 'submitting' && outletContext.dialogRef.current) {
-      outletContext.dialogRef.current.close();
+    if (fetcher.state === 'submitting') {
+      setIsSubmitting(true);
+    } else if (fetcher.state === 'idle') {
+      setIsSubmitting(false);
     }
-  }, [fetcher.state, outletContext]);
+  }, [fetcher.state]);
+
+  useEffect(() => {
+    if (fetcher.state === 'idle' && !isSubmitting) {
+      if (outletContext.dialogRef.current) {
+        outletContext.dialogRef.current.close();
+      }
+    }
+  }, [fetcher.state, isSubmitting]);
+  console.log('fethcer state:::', fetcher.state);
 
   return (
     <>
@@ -519,7 +536,11 @@ const Dialog = () => {
                       disabled={fetcher.state === 'submitting'}
                       className="bg-green-600 rounded-md px-2 text-white text-sm py-1"
                     >
-                      Create issue
+                      {fetcher.state === 'submitting' ? (
+                        <span className="loading-ellipsis">Creating</span>
+                      ) : (
+                        <span>Create</span>
+                      )}
                     </button>
                   </span>
                 </footer>
