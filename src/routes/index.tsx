@@ -341,7 +341,7 @@ const Issue = (props: {
       ),
     },
   ];
-  const { issues } = useLoaderData() as loaderData;
+  // const { issues } = useLoaderData() as loaderData;
 
   const [selectedKey, setSelectedKey] = useState(props.issue.status);
   useEffect(() => {
