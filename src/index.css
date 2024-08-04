@@ -31,7 +31,6 @@ body {
 }
 
 button {
-  /* all: unset; */
   cursor: pointer;
   background: transparent;
   -webkit-appearance: none;
