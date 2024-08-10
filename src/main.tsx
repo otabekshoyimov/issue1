@@ -3,8 +3,8 @@ import { Root } from './routes/root';
 import './index.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { action as indexAction, Index, loader as indexLoader } from './routes';
-
 import { IssueDetail, loader as issueLoader } from './routes/issue-detail';
+import { ErrorPage } from './error-page';
 
 const router = createBrowserRouter([
   {
@@ -12,15 +12,20 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        index: true,
-        element: <Index />,
-        loader: indexLoader,
-        action: indexAction,
-      },
-      {
-        path: '/:issueId',
-        element: <IssueDetail />,
-        loader: issueLoader,
+        errorElement: <ErrorPage />,
+        children: [
+          {
+            index: true,
+            element: <Index />,
+            loader: indexLoader,
+            action: indexAction,
+          },
+          {
+            path: '/:issueId',
+            element: <IssueDetail />,
+            loader: issueLoader,
+          },
+        ],
       },
     ],
   },

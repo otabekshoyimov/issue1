@@ -23,18 +23,18 @@ import {
   useOutletContext,
 } from 'react-router-dom';
 // import { createNewIssueAsync, deleteIssuesAsync } from '../api/api';
+import { pocketbase } from '../pocketbase';
+import { Spinner } from '../shared/components/spinner';
 import { BacklogSVG } from '../shared/components/svgs/backlog-svg';
 import { CancelledSVG } from '../shared/components/svgs/cancelled';
+import { CloseSVG } from '../shared/components/svgs/close-button';
 import { DoneSVG } from '../shared/components/svgs/done';
 import { InProgressSVG } from '../shared/components/svgs/in-progess';
 import { OpenNavSVG } from '../shared/components/svgs/open.nav';
 import { TodoSVG } from '../shared/components/svgs/todo-svg';
+import { UserSVG } from '../shared/components/svgs/user-svg';
 import { BAD_REQUEST, formatDate, OK, SERVER_ERROR } from '../utils/utils';
 import { OutletContext } from './root';
-import { UserSVG } from '../shared/components/svgs/user-svg';
-import { CloseSVG } from '../shared/components/svgs/close-button';
-import { pocketbase } from '../pocketbase';
-import { Spinner } from '../shared/components/spinner';
 
 export const loader = async () => {
   // console.log('Loader called');
@@ -64,6 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
           date: new Date().toISOString(),
           status: (formData.get('status') as string) || 'Backlog',
         };
+
         // await new Promise((resolve) => setTimeout(resolve, 3000));
         // await createNewIssueAsync(newIssue);
         const issueRecord = await pocketbase
@@ -72,6 +73,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
         console.log('%c NEW created issue', 'color: red', { newIssue });
         // return json({ newIssue }, { status: 201 });
+
         return new Response(JSON.stringify(issueRecord), {
           status: 201,
           headers: {
