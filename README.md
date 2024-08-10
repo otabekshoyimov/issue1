@@ -2,31 +2,28 @@
 <img src="public/preview-3.png">
 <img src="public/preview-2.png">
 <img src="public/preview-4.gif">
+<img src="public/preview-5.png">
 
 Issue tracking app.
 
-- UI library: [React](https://react.dev)
-- Types: [Typescript](https://www.typescriptlang.org)
-- Styling: [Tailwind CSS](https://tailwindcss.com)
-- Deployment: [Vercel](https://vercel.com), [Cloudflare](https://www.cloudflare.com)
+Deployment: [Cloudflare](https://not-linear.pages.dev)
 
 Project goals:
 
-1. Learn, have fun
-2. Learn html
-3. Learn css, motion
-4. Learn tailwind
-5. Learn javascript
-6. Learn dom api
-7. Learn react
-8. Learn typescript
-9. Learn routing
-10. Learn asnyc programming
-11. Learn error handling
-12. Learn working with formatter(Prettier), linter(Eslint) and bundler(Vite)
-13. Learn git and github
+Learn ... and have fun
 
-> **Note:** This is a passion project.
+1. HTML
+2. CSS
+3. TailwindCSS
+4. JavaScript
+5. DOM api
+6. React
+7. TypeScript
+8. Routing
+9. Asnyc programming
+10. Error handling
+11. Working with formatter(Prettier), linter(Eslint) and bundler(Vite)
+12. Git and Github
 
 ## Building & running locally
 
