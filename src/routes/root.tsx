@@ -5,7 +5,7 @@ import { SearchSVG } from '../shared/components/svgs/search';
 import { InboxSVG } from '../shared/components/svgs/inbox-svg';
 import { IssuesSVG } from '../shared/components/svgs/issues';
 import { ViewsSVG } from '../shared/components/svgs/views';
-
+import { MarkGithubIcon } from '@primer/octicons-react';
 export const Root = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const openDialog = () => {
@@ -87,15 +87,8 @@ const RootSidebar = (props: {
                 </Link>
               </div>
             </button>
-
-            <a
-              className="hover:bg-[#e1e1e1] rounded-md leading-6 px-2"
-              href="https://github.com/otabekshoyimov/not-linear"
-            >
-              Github
-            </a>
           </header>
-          <main className="pt-2">
+          <main className="pt-2 flex-grow">
             <div className="px-4">
               <button
                 onClick={props.onDialogClick}
@@ -157,15 +150,15 @@ const RootSidebar = (props: {
                 </a>
               </li>
             </ul>
-            <details className="px-4">
+            <details className="px-4 pb-5" open>
               <summary className="hover:bg-gray-300 rounded-md px-3 leading-6">
                 Your team
               </summary>
               <ul className="mt-4">
                 <li className="hover:bg-[#e1e1e1] hover:rounded-md group ">
                   <a href="" className="flex items-center gap-3 pl-6 h-7">
-                    <InboxSVG
-                      name="Inbox"
+                    <IssuesSVG
+                      name="Issues"
                       width={16}
                       height={16}
                       className="text-[#575859] group-hover:text-black"
@@ -188,6 +181,15 @@ const RootSidebar = (props: {
               </ul>
             </details>
           </main>
+          <footer className="px-4 pb-5">
+            <a
+              href="https://github.com/otabekshoyimov/not-linear"
+              className="p-1 pl-2 flex gap-2 items-center hover:bg-gray-200 rounded"
+            >
+              <MarkGithubIcon size="small" className="text-[#575859]" />
+              Link to Github
+            </a>
+          </footer>
         </nav>
       </div>
     </>
