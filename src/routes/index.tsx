@@ -36,6 +36,8 @@ import { UserSVG } from '../shared/components/svgs/user-svg';
 import { BAD_REQUEST, formatDate, OK, SERVER_ERROR } from '../utils/utils';
 import { OutletContext } from './root';
 
+import { TrashIcon } from '@primer/octicons-react';
+
 export const loader = async () => {
   // console.log('Loader called');
   // const issues = await JSON.parse(
@@ -175,7 +177,9 @@ export const Index = () => {
   return (
     <>
       <IssuesContainer>
-        <IssuesHeader selectedIssues={selectedIssues} />
+        <IssuesHeader>
+          <DeleteButton selectedIssues={selectedIssues} />
+</IssuesHeader>
         <Dialog />
         <IssuesListHeader />
 
@@ -205,15 +209,13 @@ const IssuesContainer = (props: { children: ReactNode }) => {
   );
 };
 
-export const IssuesHeader = (props: { selectedIssues: string[] }) => {
+export const IssuesHeader = (props: { children?: ReactNode }) => {
   const navigation = useNavigation();
   const outletContext = useOutletContext<OutletContext>();
-  const fetcher = useFetcher();
-
+  
   return (
     <>
-      <header className="  text-sm border-0 border-b border-solid border-gray-300 ">
-        <div className="flex px-4 h-9  ">
+      <section className=" flex px-4 h-9 justify-between items-center text-sm border-0 border-b border-solid border-gray-300 bg-white">
           <div className="flex items-center justify-center gap-10">
             <button
               onClick={() => {
@@ -223,10 +225,19 @@ export const IssuesHeader = (props: { selectedIssues: string[] }) => {
             >
               <OpenNavSVG name="OpenNav" width={20} height={20} />
             </button>
-            <span>All issues</span>
+            <Link to="/" className="hover:bg-gray-200 px-2 p-1 rounded">
+            All issues
+          </Link>
             {navigation.state === 'loading' && <Spinner />}
           </div>
-          <div className="flex-grow justify-end flex items-center">
+          {props.children}
+      </section>
+    </>
+  );
+};
+const DeleteButton = (props: { selectedIssues: string[] }) => {
+  const fetcher = useFetcher();
+  return (
             <fetcher.Form method="post">
               <input
                 type="hidden"
@@ -238,20 +249,22 @@ export const IssuesHeader = (props: { selectedIssues: string[] }) => {
                 name="intent"
                 value="delete"
                 type="submit"
-                className="disabled:cursor-not-allowed disabled:text-gray-300 px-2 max-w-fit"
+                className="flex gap-1 items-center disabled:cursor-not-allowed disabled:text-gray-300 px-2 max-w-fit enabled:text-red-400 outline-1 outline enabled:outline-red-400 text-sm rounded-md "
               >
+<TrashIcon
+          className={`${
+            props.selectedIssues.length === 0 ? 'text-gray-300' : 'text-red-400'
+          }`}
+          size="small"
+        />
                 {fetcher.state === 'submitting' ? (
-                  <span className="loading-ellipsis">Deleting</span>
+                  <p className="loading-ellipsis">Deleting</p>
                 ) : (
-                  <span>Delete</span>
+                  <p>Delete</p>
                 )}
               </button>
             </fetcher.Form>
-          </div>
-        </div>
-      </header>
-    </>
-  );
+            );
 };
 
 const IssuesListHeader = () => {

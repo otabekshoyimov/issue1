@@ -3,6 +3,7 @@ import { useLoaderData, useNavigation } from 'react-router-dom';
 import { pocketbase } from '../pocketbase';
 import { formatDate } from '../utils/utils';
 import { Spinner } from '../shared/components/spinner';
+import { IssuesHeader } from '.';
 
 export async function loader({ params }: { params: Params }) {
   console.log('Params:', params, typeof params.issueId);
@@ -28,6 +29,7 @@ export const IssueDetail = () => {
   }
   return (
     <>
+      <IssuesHeader />
       <section className="px-6 pt-4 bg-white leading-8 text-base mt-3">
         <header className="text-2xl font-medium pb-5">{issue.title}</header>
         <p>{issue.description}</p>
