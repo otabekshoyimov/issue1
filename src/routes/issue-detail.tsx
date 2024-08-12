@@ -11,7 +11,6 @@ export async function loader({ params }: { params: Params }) {
     throw new Error('issue id is required');
   }
   const issue = await pocketbase.collection('posts').getOne(params.issueId);
-  // const issue = await getIssueByIdAsync(params.issueId);
   console.log('Fetched Issue:', issue);
   return issue;
 }

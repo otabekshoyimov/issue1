@@ -62,8 +62,6 @@ export const Root = () => {
     <>
       <div className="flex flex-row w-full h-full min-h-full">
         <div>
-          {navigation.state === 'loading' && <Spinner />}
-
           <RootSidebar
             onDialogClick={openDialog}
             isNavVisible={isSidebarVisible}
@@ -108,7 +106,6 @@ export type OutletContext = {
 };
 
 //#region MARK: RootSidebar
-
 const RootSidebar = (props: {
   onDialogClick: () => void;
   isNavVisible: boolean;

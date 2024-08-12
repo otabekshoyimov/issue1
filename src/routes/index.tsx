@@ -39,11 +39,6 @@ import { OutletContext } from './root';
 import { TrashIcon } from '@primer/octicons-react';
 
 export const loader = async () => {
-  // console.log('Loader called');
-  // const issues = await JSON.parse(
-  //   window.localStorage.getItem('issues') || '[]'
-  // );
-
   const issues = await pocketbase.collection('posts').getFullList();
   console.log('Loaded issues:', issues);
   return { issues };
@@ -51,31 +46,22 @@ export const loader = async () => {
 
 export async function action({ request }: ActionFunctionArgs) {
   try {
-    // console.log('Action called');
     const formData = await request.formData();
-    // console.log(formData);
     const intent = formData.get('intent');
 
     const handleCreate = async (formData: FormData) => {
       try {
         const newIssue = {
-          // id: crypto.randomUUID(),
           title: formData.get('title') as string,
           description: formData.get('description') as string,
           checked: false,
           date: new Date().toISOString(),
           status: (formData.get('status') as string) || 'Backlog',
         };
-
-        // await new Promise((resolve) => setTimeout(resolve, 3000));
-        // await createNewIssueAsync(newIssue);
         const issueRecord = await pocketbase
           .collection('posts')
           .create(newIssue);
-
         console.log('%c NEW created issue', 'color: red', { newIssue });
-        // return json({ newIssue }, { status: 201 });
-
         return new Response(JSON.stringify(issueRecord), {
           status: 201,
           headers: {
@@ -99,7 +85,6 @@ export async function action({ request }: ActionFunctionArgs) {
         ).split(',');
         console.log('Selected Issue IDs to delete:', selectedIssueIds);
         // await new Promise((resolve) => setTimeout(resolve, 2000));
-        // const updatedIssues = await deleteIssuesAsync(selectedIssueIds);
         const deletePromises = selectedIssueIds.map((id) =>
           pocketbase.collection('posts').delete(id)
         );
@@ -157,10 +142,6 @@ type loaderData = {
 export const Index = () => {
   const { issues } = useLoaderData() as loaderData;
   const outletContext = useOutletContext<OutletContext>();
-
-  // console.log('Rendered issues:', issuesAsync);
-  // const navigation = useNavigation();
-  // console.log(issuesAsync);
   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
   console.log(selectedIssues);
 
@@ -171,10 +152,6 @@ export const Index = () => {
         : [...prev, issueId]
     );
   };
-
-  // if (navigation.state === 'loading') {
-  //   return <GlobalSpinner />;
-  // }
   return (
     <>
       <IssuesContainer>
@@ -369,8 +346,6 @@ const Issue = (props: {
       ),
     },
   ];
-  // const { issues } = useLoaderData() as loaderData;
-
   const [selectedKey, setSelectedKey] = useState(props.issue.status);
   useEffect(() => {
     const issues = JSON.parse(localStorage.getItem('issues') || '[]');
@@ -472,7 +447,6 @@ const Issue = (props: {
 //#endregion
 
 //#region Dialog
-
 const Dialog = () => {
   const fetcher = useFetcher();
   const outletContext = useOutletContext<OutletContext>();
@@ -492,9 +466,7 @@ const Dialog = () => {
         outletContext.dialogRef.current.close();
       }
     }
-  }, [fetcher.state, isSubmitting]);
-  console.log('fethcer state:::', fetcher.state);
-
+  }, [fetcher.state, isSubmitting, outletContext.dialogRef]);
   return (
     <>
       <dialog
