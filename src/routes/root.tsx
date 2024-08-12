@@ -1,3 +1,5 @@
+import { MarkGithubIcon } from '@primer/octicons-react';
+import { RefObject, useRef, useState } from 'react';
 import {
   Form,
   Link,
@@ -5,15 +7,12 @@ import {
   useLoaderData,
   useNavigation,
 } from 'react-router-dom';
-import { RefObject, useRef, useState } from 'react';
-import { NewIssueSVG } from '../shared/components/svgs/new-issue';
-import { SearchSVG } from '../shared/components/svgs/search';
+import { pocketbase } from '../pocketbase';
 import { InboxSVG } from '../shared/components/svgs/inbox-svg';
 import { IssuesSVG } from '../shared/components/svgs/issues';
+import { NewIssueSVG } from '../shared/components/svgs/new-issue';
+import { SearchSVG } from '../shared/components/svgs/search';
 import { ViewsSVG } from '../shared/components/svgs/views';
-import { pocketbase } from '../pocketbase';
-import { Spinner } from '../shared/components/spinner';
-import { MarkGithubIcon } from '@primer/octicons-react';
 
 export const rootLoader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
@@ -37,7 +36,7 @@ export const rootLoader = async ({ request }: { request: Request }) => {
 };
 export const Root = () => {
   const filteredResults = useLoaderData();
-  const navigation = useNavigation();
+
   const dialogRef = useRef<HTMLDialogElement>(null);
   const openDialog = () => {
     if (dialogRef.current) {
