@@ -1,22 +1,13 @@
 <img src="public/preview.png">
-<img src="public/preview-3.png">
-<img src="public/preview-2.png">
+<img src="public/preview-select.png">
+<img src="public/preview-dialog.png">
 <img src="public/preview-5.png">
-
-
 
 https://github.com/user-attachments/assets/0aaa9bc1-4efd-4dcb-8513-a253679d7563
 
-
 https://github.com/user-attachments/assets/f4fc7209-64aa-4fbe-8fe9-8072fb244468
 
-
-
 Issue tracking app.
-
-
-
-
 
 Deployment: [Cloudflare](https://not-linear.pages.dev)
 
