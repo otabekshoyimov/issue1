@@ -1,12 +1,6 @@
 import { MarkGithubIcon } from '@primer/octicons-react';
 import { RefObject, useRef, useState } from 'react';
-import {
-  Form,
-  Link,
-  Outlet,
-  useLoaderData,
-  useNavigation,
-} from 'react-router-dom';
+import { Form, Link, Outlet, useLoaderData } from 'react-router-dom';
 import { pocketbase } from '../pocketbase';
 import { InboxSVG } from '../shared/components/svgs/inbox-svg';
 import { IssuesSVG } from '../shared/components/svgs/issues';
