@@ -59,8 +59,6 @@ form fieldset {
 }
 form button {
   padding: 2px 6px 2px 6px;
-  /* border: 1px solid rgb(194, 194, 194);
-  border-radius: 9999px; */
 }
 input {
   border: none;

@@ -156,6 +156,7 @@ type loaderData = {
 
 export const Index = () => {
   const { issues } = useLoaderData() as loaderData;
+  const outletContext = useOutletContext<OutletContext>();
 
   // console.log('Rendered issues:', issuesAsync);
   // const navigation = useNavigation();
@@ -179,21 +180,30 @@ export const Index = () => {
       <IssuesContainer>
         <IssuesHeader>
           <DeleteButton selectedIssues={selectedIssues} />
-</IssuesHeader>
+        </IssuesHeader>
         <Dialog />
         <IssuesListHeader />
 
         <IssuesList>
-          <ul>
-            {issues.map((issue: PocketBaseIssue) => (
-              <Issue
-                issue={issue}
-                key={issue.id}
-                selectedIssue={selectedIssues}
-                onIssueSelect={handleIssueSelection}
-              />
-            ))}
-          </ul>
+          {outletContext.filteredResults ? (
+            <Issue
+              issue={outletContext.filteredResults}
+              key={outletContext.filteredResults.id}
+              selectedIssue={selectedIssues}
+              onIssueSelect={handleIssueSelection}
+            />
+          ) : (
+            <ul>
+              {issues.map((issue: PocketBaseIssue) => (
+                <Issue
+                  issue={issue}
+                  key={issue.id}
+                  selectedIssue={selectedIssues}
+                  onIssueSelect={handleIssueSelection}
+                />
+              ))}
+            </ul>
+          )}
           <Outlet />
         </IssuesList>
       </IssuesContainer>
@@ -212,25 +222,25 @@ const IssuesContainer = (props: { children: ReactNode }) => {
 export const IssuesHeader = (props: { children?: ReactNode }) => {
   const navigation = useNavigation();
   const outletContext = useOutletContext<OutletContext>();
-  
+
   return (
     <>
       <section className=" flex px-4 h-9 justify-between items-center text-sm border-0 border-b border-solid border-gray-300 bg-white">
-          <div className="flex items-center justify-center gap-10">
-            <button
-              onClick={() => {
-                outletContext.toggleSidebar();
-              }}
-              className="flex items-center hover:bg-gray-300 p-1 rounded-md nav-btn z-[97] relative lg:hidden"
-            >
-              <OpenNavSVG name="OpenNav" width={20} height={20} />
-            </button>
-            <Link to="/" className="hover:bg-gray-200 px-2 p-1 rounded">
+        <div className="flex items-center justify-center gap-10">
+          <button
+            onClick={() => {
+              outletContext.toggleSidebar();
+            }}
+            className="flex items-center hover:bg-gray-300 p-1 rounded-md nav-btn z-[97] relative lg:hidden"
+          >
+            <OpenNavSVG name="OpenNav" width={20} height={20} />
+          </button>
+          <Link to="/" className="hover:bg-gray-200 px-2 p-1 rounded">
             All issues
           </Link>
-            {navigation.state === 'loading' && <Spinner />}
-          </div>
-          {props.children}
+          {navigation.state === 'loading' && <Spinner />}
+        </div>
+        {props.children}
       </section>
     </>
   );
@@ -238,35 +248,34 @@ export const IssuesHeader = (props: { children?: ReactNode }) => {
 const DeleteButton = (props: { selectedIssues: string[] }) => {
   const fetcher = useFetcher();
   return (
-            <fetcher.Form method="post">
-              <input
-                type="hidden"
-                name="selectedIssueIds"
-                value={props.selectedIssues.join(',')}
-              />
-              <button
-                disabled={props.selectedIssues.length === 0}
-                name="intent"
-                value="delete"
-                type="submit"
-                className="flex gap-1 items-center disabled:cursor-not-allowed disabled:text-gray-300 px-2 max-w-fit enabled:text-red-400 outline-1 outline enabled:outline-red-400 text-sm rounded-md "
-              >
-<TrashIcon
+    <fetcher.Form method="post">
+      <input
+        type="hidden"
+        name="selectedIssueIds"
+        value={props.selectedIssues.join(',')}
+      />
+      <button
+        disabled={props.selectedIssues.length === 0}
+        name="intent"
+        value="delete"
+        type="submit"
+        className="flex gap-1 items-center disabled:cursor-not-allowed disabled:text-gray-300 px-2 max-w-fit enabled:text-red-400 outline-1 outline enabled:outline-red-400 text-sm rounded-md "
+      >
+        <TrashIcon
           className={`${
             props.selectedIssues.length === 0 ? 'text-gray-300' : 'text-red-400'
           }`}
           size="small"
         />
-                {fetcher.state === 'submitting' ? (
-                  <p className="loading-ellipsis">Deleting</p>
-                ) : (
-                  <p>Delete</p>
-                )}
-              </button>
-            </fetcher.Form>
-            );
+        {fetcher.state === 'submitting' ? (
+          <p className="loading-ellipsis">Deleting</p>
+        ) : (
+          <p>Delete</p>
+        )}
+      </button>
+    </fetcher.Form>
+  );
 };
-
 const IssuesListHeader = () => {
   return (
     <>

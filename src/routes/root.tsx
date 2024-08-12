@@ -1,12 +1,43 @@
-import { Link, Outlet } from 'react-router-dom';
+import {
+  Form,
+  Link,
+  Outlet,
+  useLoaderData,
+  useNavigation,
+} from 'react-router-dom';
 import { RefObject, useRef, useState } from 'react';
 import { NewIssueSVG } from '../shared/components/svgs/new-issue';
 import { SearchSVG } from '../shared/components/svgs/search';
 import { InboxSVG } from '../shared/components/svgs/inbox-svg';
 import { IssuesSVG } from '../shared/components/svgs/issues';
 import { ViewsSVG } from '../shared/components/svgs/views';
+import { pocketbase } from '../pocketbase';
+import { Spinner } from '../shared/components/spinner';
 import { MarkGithubIcon } from '@primer/octicons-react';
+
+export const rootLoader = async ({ request }: { request: Request }) => {
+  const url = new URL(request.url);
+  const searchParams = url.searchParams.get('search');
+
+  if (!searchParams) return null;
+
+  try {
+    const filteredResults = await pocketbase
+      .collection('posts')
+      .getFirstListItem(`title ~ "${searchParams}"`, {
+        $cancelKey: `posts_${searchParams}`, // a unique cancel key
+      });
+
+    console.log(filteredResults);
+    return filteredResults;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return null;
+  }
+};
 export const Root = () => {
+  const filteredResults = useLoaderData();
+  const navigation = useNavigation();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const openDialog = () => {
     if (dialogRef.current) {
@@ -31,6 +62,8 @@ export const Root = () => {
     <>
       <div className="flex flex-row w-full h-full min-h-full">
         <div>
+          {navigation.state === 'loading' && <Spinner />}
+
           <RootSidebar
             onDialogClick={openDialog}
             isNavVisible={isSidebarVisible}
@@ -43,6 +76,7 @@ export const Root = () => {
               dialogRef,
               toggleSidebar,
               setIsSidebarVisible,
+              filteredResults,
             }}
           />
         </div>
@@ -51,6 +85,18 @@ export const Root = () => {
   );
 };
 
+type Post = {
+  id: string;
+  collectionId: string;
+  collectionName: string;
+  created: string;
+  date: string;
+  description: string;
+  status: string;
+  title: string;
+  checked: boolean;
+  updated: string;
+};
 export type OutletContext = {
   closeDialogOnBackdropClick: (
     e: React.MouseEvent<HTMLDialogElement, MouseEvent>
@@ -58,6 +104,7 @@ export type OutletContext = {
   dialogRef: RefObject<HTMLDialogElement>;
   toggleSidebar: () => void;
   setIsSidebarVisible: (value: boolean) => void;
+  filteredResults: Post | null;
 };
 
 //#region MARK: RootSidebar
@@ -105,16 +152,22 @@ const RootSidebar = (props: {
             </div>
             <ul className="flex flex-col gap-1 px-4 mb-5">
               <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 outline outline-1 outline-gray-300 rounded-md group ">
-                <SearchSVG
-                  name="Search"
-                  width={16}
-                  height={16}
-                  className="group-hover:text-black text-[#575859]"
-                />
-                <input
-                  className="w-full flex gap-2 bg-[#ececec] leading-4 text-base"
-                  placeholder="Search"
-                />
+                <Form
+                  role="search"
+                  className="flex items-center gap-2 focus-within:ring-2 focus-within:ring-blue-500 rounded-md"
+                >
+                  <SearchSVG
+                    name="Search"
+                    width={16}
+                    height={16}
+                    className="group-hover:text-black text-[#575859]"
+                  />
+                  <input
+                    name="search"
+                    className="w-full flex gap-2 bg-transparent leading-4  outline-none text-base"
+                    placeholder="Search"
+                  />
+                </Form>
               </li>
               <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md items-center  group ">
                 <a href="" className="w-full flex gap-2">
