@@ -100,11 +100,31 @@ export async function action({ request }: ActionFunctionArgs) {
       }
     };
 
+    const handleUpdateStatus = async (formData: FormData) => {
+      const id = formData.get('id') as string;
+      const status = formData.get('status') as string;
+      try {
+        const updatedIssue = await pocketbase
+          .collection('posts')
+          .update(id, { status });
+        return json(updatedIssue);
+      } catch (error) {
+        console.error('Update status error:', error);
+        return json(
+          { error: 'Failed to update status' },
+          { status: BAD_REQUEST }
+        );
+      }
+    };
+
     if (intent === 'create') {
       return await handleCreate(formData);
     }
     if (intent === 'delete') {
       return await handleDelete(formData);
+    }
+    if (intent === 'updateStatus') {
+      return await handleUpdateStatus(formData);
     }
     return new Response(JSON.stringify({ error: 'Unknown intent' }), {
       status: BAD_REQUEST,
@@ -275,88 +295,81 @@ const IssuesList = (props: { children: ReactNode }) => {
 
 //#region MARK: Issue
 
+const statuses: {
+  key: string;
+  text: string;
+  icon: React.ReactNode;
+}[] = [
+  {
+    key: 'Backlog',
+    text: 'Backlog',
+    icon: (
+      <BacklogSVG
+        name="Backlog"
+        width={20}
+        height={20}
+        className="flex items-center"
+      />
+    ),
+  },
+  {
+    key: 'Todo',
+    text: 'Todo',
+    icon: (
+      <TodoSVG
+        name="Todo"
+        width={20}
+        height={20}
+        className="flex items-center"
+      />
+    ),
+  },
+  {
+    key: 'InProgress',
+    text: 'In Progress',
+    icon: (
+      <InProgressSVG
+        name="InProgress"
+        width={20}
+        height={20}
+        className="flex items-center"
+      />
+    ),
+  },
+  {
+    key: 'Done',
+    text: 'Done',
+    icon: (
+      <DoneSVG
+        name="Done"
+        width={20}
+        height={20}
+        className="flex items-center"
+      />
+    ),
+  },
+  {
+    key: 'Cancelled',
+    text: 'Cancelled',
+    icon: (
+      <CancelledSVG
+        name="Cancelled"
+        width={20}
+        height={20}
+        className="flex items-center"
+      />
+    ),
+  },
+];
 const Issue = (props: {
   issue: PocketBaseIssue;
   selectedIssue: string[];
   onIssueSelect: (issueId: string) => void;
 }) => {
-  const items: {
-    key: string;
-    text: string;
-    icon: React.ReactNode;
-  }[] = [
-    {
-      key: 'Backlog',
-      text: 'Backlog',
-      icon: (
-        <BacklogSVG
-          name="Backlog"
-          width={20}
-          height={20}
-          className="flex items-center"
-        />
-      ),
-    },
-    {
-      key: 'Todo',
-      text: 'Todo',
-      icon: (
-        <TodoSVG
-          name="Todo"
-          width={20}
-          height={20}
-          className="flex items-center"
-        />
-      ),
-    },
-    {
-      key: 'InProgress',
-      text: 'In Progress',
-      icon: (
-        <InProgressSVG
-          name="InProgress"
-          width={20}
-          height={20}
-          className="flex items-center"
-        />
-      ),
-    },
-    {
-      key: 'Done',
-      text: 'Done',
-      icon: (
-        <DoneSVG
-          name="Done"
-          width={20}
-          height={20}
-          className="flex items-center"
-        />
-      ),
-    },
-    {
-      key: 'Cancelled',
-      text: 'Cancelled',
-      icon: (
-        <CancelledSVG
-          name="Cancelled"
-          width={20}
-          height={20}
-          className="flex items-center"
-        />
-      ),
-    },
-  ];
-  const [selectedKey, setSelectedKey] = useState(props.issue.status);
-  useEffect(() => {
-    const issues = JSON.parse(localStorage.getItem('issues') || '[]');
-    const updatedIssues = issues.map((issue: PocketBaseIssue) =>
-      issue.id === props.issue.id ? { ...issue, status: selectedKey } : issue
-    );
-    localStorage.setItem('issues', JSON.stringify(updatedIssues));
-  }, [selectedKey, props.issue.id]);
-  const selectedItem = items.find((item) => item.key === selectedKey);
+  const fetcher = useFetcher();
+  const [selectedKey] = useState(props.issue.status);
+  const selectedStatus = statuses.find((status) => status.key === selectedKey);
   const [isOpen, setIsOpen] = useState(false);
-
   return (
     <>
       <li className=" animate-fadeInUp hover:bg-[#e1e1e1] hover:rounded-md flex gap-4 px-5 border-0 border-solid border-b border-gray-300  leading-8 items-center">
@@ -379,7 +392,14 @@ const Issue = (props: {
             defaultSelectedKey={selectedKey}
             onOpenChange={(isOpen) => setIsOpen(isOpen)}
             onSelectionChange={(selected) => {
-              setSelectedKey(selected as string);
+              fetcher.submit(
+                {
+                  id: props.issue.id,
+                  status: selected,
+                  intent: 'updateStatus',
+                },
+                { method: 'post' }
+              );
               setIsOpen(false);
             }}
             className={`flex  gap-1 w-fit pr-5 }`}
@@ -388,15 +408,15 @@ const Issue = (props: {
               <SelectValue
                 className={`flex items-center gap-2 ${isOpen ? '' : ''}`}
               >
-                {selectedItem && (
+                {selectedStatus && (
                   <>
                     <span className="flex gap-2 items-center">
-                      {selectedItem.icon}
+                      {selectedStatus.icon}
                     </span>
 
                     {isOpen && (
                       <span className={`text-sm ${isOpen ? 'hidden' : ''}`}>
-                        {selectedItem.text}
+                        {selectedStatus.text}
                       </span>
                     )}
                   </>
@@ -409,9 +429,9 @@ const Issue = (props: {
             >
               <ListBox
                 className="flex flex-col gap-2 shadow-2xl px-2 py-2 data-[selected]:hidden"
-                items={items}
+                items={statuses}
               >
-                {items.map((item) => (
+                {statuses.map((item) => (
                   <ListBoxItem
                     key={item.key}
                     className="px-2 flex gap-2 items-center "
