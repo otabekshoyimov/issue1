@@ -29,20 +29,19 @@ import { BAD_REQUEST, formatDate, OK, SERVER_ERROR } from "../shared/utils";
 import { OutletContext } from "./root";
 
 import { TrashIcon } from "@primer/octicons-react";
-import { OpenNavSVG } from "../components/icons/open-nav";
-import { Spinner } from "../components/spinner";
 import { BacklogSVG } from "../components/icons/backlog";
-import { TodoSVG } from "../components/icons/todo";
-import { InProgressSVG } from "../components/icons/in-progess";
-import { DoneSVG } from "../components/icons/done";
 import { CancelledSVG } from "../components/icons/cancelled";
-import { UserSVG } from "../components/icons/user";
 import { CloseSVG } from "../components/icons/close-button";
+import { DoneSVG } from "../components/icons/done";
+import { InProgressSVG } from "../components/icons/in-progess";
+import { OpenNavSVG } from "../components/icons/open-nav";
+import { TodoSVG } from "../components/icons/todo";
+import { UserSVG } from "../components/icons/user";
+import { Spinner } from "../components/spinner";
 
 export const index_loader = async () => {
   const issues = await pocketbase.collection("posts").getFullList();
-  console.log("Loaded issues:", issues);
-  return { issues };
+  return issues;
 };
 
 export async function index_action({ request }: ActionFunctionArgs) {
@@ -143,7 +142,7 @@ export async function index_action({ request }: ActionFunctionArgs) {
   }
 }
 
-type PocketBaseIssue = {
+type Pocketbase_Issue = {
   id: string;
   collectionId: string;
   collectionName: string;
@@ -156,18 +155,13 @@ type PocketBaseIssue = {
   status: string;
 };
 
-type loaderData = {
-  issues: PocketBaseIssue[];
-};
-
 export const IndexPage = () => {
-  const { issues } = useLoaderData() as loaderData;
-  const outletContext = useOutletContext<OutletContext>();
-  const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
-  console.log(selectedIssues);
+  const issues_async = useLoaderData() as Pocketbase_Issue[];
+  const outlet_context = useOutletContext<OutletContext>();
+  const [selected_issues, set_selected_issues] = useState<string[]>([]);
 
-  const handleIssueSelection = (issueId: string) => {
-    setSelectedIssues((prev) =>
+  const handle_issue_selection = (issueId: string) => {
+    set_selected_issues((prev) =>
       prev.includes(issueId)
         ? prev.filter((id) => id !== issueId)
         : [...prev, issueId],
@@ -177,27 +171,27 @@ export const IndexPage = () => {
     <>
       <IssuesContainer>
         <IssuesHeader>
-          <DeleteButton selectedIssues={selectedIssues} />
+          <DeleteButton selectedIssues={selected_issues} />
         </IssuesHeader>
         <Dialog />
         <IssuesListHeader />
 
         <IssuesList>
-          {outletContext.filteredResults ? (
+          {outlet_context.filteredResults ? (
             <Issue
-              issue={outletContext.filteredResults}
-              key={outletContext.filteredResults.id}
-              selectedIssue={selectedIssues}
-              onIssueSelect={handleIssueSelection}
+              issue={outlet_context.filteredResults}
+              key={outlet_context.filteredResults.id}
+              selectedIssue={selected_issues}
+              onIssueSelect={handle_issue_selection}
             />
           ) : (
             <ul>
-              {issues.map((issue: PocketBaseIssue) => (
+              {issues_async.map((issue: Pocketbase_Issue) => (
                 <Issue
                   issue={issue}
                   key={issue.id}
-                  selectedIssue={selectedIssues}
-                  onIssueSelect={handleIssueSelection}
+                  selectedIssue={selected_issues}
+                  onIssueSelect={handle_issue_selection}
                 />
               ))}
             </ul>
@@ -363,7 +357,7 @@ const statuses: {
   },
 ];
 const Issue = (props: {
-  issue: PocketBaseIssue;
+  issue: Pocketbase_Issue;
   selectedIssue: string[];
   onIssueSelect: (issueId: string) => void;
 }) => {
