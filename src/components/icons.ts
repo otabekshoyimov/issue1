@@ -4,6 +4,7 @@ export type IconName =
   | "Views"
   | "User"
   | "Todo"
+  | "Sprite"
   | "Search"
   | "OpenNav"
   | "NewIssue"
@@ -21,6 +22,7 @@ export const iconNames = [
   "Views",
   "User",
   "Todo",
+  "Sprite",
   "Search",
   "OpenNav",
   "NewIssue",

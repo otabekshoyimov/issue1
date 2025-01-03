@@ -3,7 +3,7 @@ import React, {
   ReactNode,
   useEffect,
   useState,
-} from 'react';
+} from "react";
 import {
   ListBox,
   ListBoxItem,
@@ -11,7 +11,7 @@ import {
   Button as ReactAriaButton,
   Select,
   SelectValue,
-} from 'react-aria-components';
+} from "react-aria-components";
 import {
   ActionFunctionArgs,
   json,
@@ -21,59 +21,60 @@ import {
   useLoaderData,
   useNavigation,
   useOutletContext,
-} from 'react-router-dom';
-// import { createNewIssueAsync, deleteIssuesAsync } from '../api/api';
-import { pocketbase } from '../pocketbase';
-import { Spinner } from '../shared/components/spinner';
-import { BacklogSVG } from '../shared/components/svgs/backlog-svg';
-import { CancelledSVG } from '../shared/components/svgs/cancelled';
-import { CloseSVG } from '../shared/components/svgs/close-button';
-import { DoneSVG } from '../shared/components/svgs/done';
-import { InProgressSVG } from '../shared/components/svgs/in-progess';
-import { OpenNavSVG } from '../shared/components/svgs/open.nav';
-import { TodoSVG } from '../shared/components/svgs/todo-svg';
-import { UserSVG } from '../shared/components/svgs/user-svg';
-import { BAD_REQUEST, formatDate, OK, SERVER_ERROR } from '../utils/utils';
-import { OutletContext } from './root';
+} from "react-router-dom";
 
-import { TrashIcon } from '@primer/octicons-react';
+import { pocketbase } from "../shared/pocketbase";
 
-export const loader = async () => {
-  const issues = await pocketbase.collection('posts').getFullList();
-  console.log('Loaded issues:', issues);
+import { BAD_REQUEST, formatDate, OK, SERVER_ERROR } from "../shared/utils";
+import { OutletContext } from "./root";
+
+import { TrashIcon } from "@primer/octicons-react";
+import { OpenNavSVG } from "../components/icons/open-nav";
+import { Spinner } from "../components/spinner";
+import { BacklogSVG } from "../components/icons/backlog";
+import { TodoSVG } from "../components/icons/todo";
+import { InProgressSVG } from "../components/icons/in-progess";
+import { DoneSVG } from "../components/icons/done";
+import { CancelledSVG } from "../components/icons/cancelled";
+import { UserSVG } from "../components/icons/user";
+import { CloseSVG } from "../components/icons/close-button";
+
+export const index_loader = async () => {
+  const issues = await pocketbase.collection("posts").getFullList();
+  console.log("Loaded issues:", issues);
   return { issues };
 };
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function index_action({ request }: ActionFunctionArgs) {
   try {
     const formData = await request.formData();
-    const intent = formData.get('intent');
+    const intent = formData.get("intent");
 
     const handleCreate = async (formData: FormData) => {
       try {
         const newIssue = {
-          title: formData.get('title') as string,
-          description: formData.get('description') as string,
+          title: formData.get("title") as string,
+          description: formData.get("description") as string,
           checked: false,
           date: new Date().toISOString(),
-          status: (formData.get('status') as string) || 'Backlog',
+          status: (formData.get("status") as string) || "Backlog",
         };
         const issueRecord = await pocketbase
-          .collection('posts')
+          .collection("posts")
           .create(newIssue);
-        console.log('%c NEW created issue', 'color: red', { newIssue });
+        console.log("%c NEW created issue", "color: red", { newIssue });
         return new Response(JSON.stringify(issueRecord), {
           status: 201,
           headers: {
-            'Content-Type': 'application/json; utf-8',
+            "Content-Type": "application/json; utf-8",
           },
         });
       } catch (error) {
-        console.log('Create error', error);
+        console.log("Create error", error);
 
         return json(
-          { error: 'Failed to create issue' },
-          { status: BAD_REQUEST }
+          { error: "Failed to create issue" },
+          { status: BAD_REQUEST },
         );
       }
     };
@@ -81,63 +82,63 @@ export async function action({ request }: ActionFunctionArgs) {
     const handleDelete = async (formData: FormData) => {
       try {
         const selectedIssueIds = (
-          formData.get('selectedIssueIds') as string
-        ).split(',');
-        console.log('Selected Issue IDs to delete:', selectedIssueIds);
+          formData.get("selectedIssueIds") as string
+        ).split(",");
+        console.log("Selected Issue IDs to delete:", selectedIssueIds);
         // await new Promise((resolve) => setTimeout(resolve, 2000));
         const deletePromises = selectedIssueIds.map((id) =>
-          pocketbase.collection('posts').delete(id)
+          pocketbase.collection("posts").delete(id),
         );
         await Promise.all(deletePromises);
-        console.log('%cUpdated Issues', 'color: red', deletePromises);
+        console.log("%cUpdated Issues", "color: red", deletePromises);
         return json({ status: OK });
       } catch (error) {
-        console.error('Delete error:', error);
+        console.error("Delete error:", error);
         return json(
-          { error: 'Failed to delete issues' },
-          { status: BAD_REQUEST }
+          { error: "Failed to delete issues" },
+          { status: BAD_REQUEST },
         );
       }
     };
 
     const handleUpdateStatus = async (formData: FormData) => {
-      const id = formData.get('id') as string;
-      const status = formData.get('status') as string;
+      const id = formData.get("id") as string;
+      const status = formData.get("status") as string;
       try {
         const updatedIssue = await pocketbase
-          .collection('posts')
+          .collection("posts")
           .update(id, { status });
         return json(updatedIssue);
       } catch (error) {
-        console.error('Update status error:', error);
+        console.error("Update status error:", error);
         return json(
-          { error: 'Failed to update status' },
-          { status: BAD_REQUEST }
+          { error: "Failed to update status" },
+          { status: BAD_REQUEST },
         );
       }
     };
 
-    if (intent === 'create') {
+    if (intent === "create") {
       return await handleCreate(formData);
     }
-    if (intent === 'delete') {
+    if (intent === "delete") {
       return await handleDelete(formData);
     }
-    if (intent === 'updateStatus') {
+    if (intent === "updateStatus") {
       return await handleUpdateStatus(formData);
     }
-    return new Response(JSON.stringify({ error: 'Unknown intent' }), {
+    return new Response(JSON.stringify({ error: "Unknown intent" }), {
       status: BAD_REQUEST,
-      headers: { 'Content-Type': 'application/json; utf-8' },
+      headers: { "Content-Type": "application/json; utf-8" },
     });
   } catch (error) {
-    console.error('Action error:', error);
+    console.error("Action error:", error);
     return new Response(
-      JSON.stringify({ error: 'An unexpected error occurred' }),
+      JSON.stringify({ error: "An unexpected error occurred" }),
       {
         status: SERVER_ERROR,
-        headers: { 'Content-Type': 'application/json; utf-8' },
-      }
+        headers: { "Content-Type": "application/json; utf-8" },
+      },
     );
   }
 }
@@ -159,7 +160,7 @@ type loaderData = {
   issues: PocketBaseIssue[];
 };
 
-export const Index = () => {
+export const IndexPage = () => {
   const { issues } = useLoaderData() as loaderData;
   const outletContext = useOutletContext<OutletContext>();
   const [selectedIssues, setSelectedIssues] = useState<string[]>([]);
@@ -169,7 +170,7 @@ export const Index = () => {
     setSelectedIssues((prev) =>
       prev.includes(issueId)
         ? prev.filter((id) => id !== issueId)
-        : [...prev, issueId]
+        : [...prev, issueId],
     );
   };
   return (
@@ -235,7 +236,7 @@ export const IssuesHeader = (props: { children?: ReactNode }) => {
           <Link to="/" className="hover:bg-gray-200 px-2 p-1 rounded">
             All issues
           </Link>
-          {navigation.state === 'loading' && <Spinner />}
+          {navigation.state === "loading" && <Spinner />}
         </div>
         {props.children}
       </section>
@@ -249,7 +250,7 @@ const DeleteButton = (props: { selectedIssues: string[] }) => {
       <input
         type="hidden"
         name="selectedIssueIds"
-        value={props.selectedIssues.join(',')}
+        value={props.selectedIssues.join(",")}
       />
       <button
         disabled={props.selectedIssues.length === 0}
@@ -260,11 +261,11 @@ const DeleteButton = (props: { selectedIssues: string[] }) => {
       >
         <TrashIcon
           className={`${
-            props.selectedIssues.length === 0 ? 'text-gray-300' : 'text-red-400'
+            props.selectedIssues.length === 0 ? "text-gray-300" : "text-red-400"
           }`}
           size="small"
         />
-        {fetcher.state === 'submitting' ? (
+        {fetcher.state === "submitting" ? (
           <p className="loading-ellipsis">Deleting</p>
         ) : (
           <p>Delete</p>
@@ -301,8 +302,8 @@ const statuses: {
   icon: React.ReactNode;
 }[] = [
   {
-    key: 'Backlog',
-    text: 'Backlog',
+    key: "Backlog",
+    text: "Backlog",
     icon: (
       <BacklogSVG
         name="Backlog"
@@ -313,8 +314,8 @@ const statuses: {
     ),
   },
   {
-    key: 'Todo',
-    text: 'Todo',
+    key: "Todo",
+    text: "Todo",
     icon: (
       <TodoSVG
         name="Todo"
@@ -325,8 +326,8 @@ const statuses: {
     ),
   },
   {
-    key: 'InProgress',
-    text: 'In Progress',
+    key: "InProgress",
+    text: "In Progress",
     icon: (
       <InProgressSVG
         name="InProgress"
@@ -337,8 +338,8 @@ const statuses: {
     ),
   },
   {
-    key: 'Done',
-    text: 'Done',
+    key: "Done",
+    text: "Done",
     icon: (
       <DoneSVG
         name="Done"
@@ -349,8 +350,8 @@ const statuses: {
     ),
   },
   {
-    key: 'Cancelled',
-    text: 'Cancelled',
+    key: "Cancelled",
+    text: "Cancelled",
     icon: (
       <CancelledSVG
         name="Cancelled"
@@ -396,9 +397,9 @@ const Issue = (props: {
                 {
                   id: props.issue.id,
                   status: selected,
-                  intent: 'updateStatus',
+                  intent: "updateStatus",
                 },
-                { method: 'post' }
+                { method: "post" },
               );
               setIsOpen(false);
             }}
@@ -406,7 +407,7 @@ const Issue = (props: {
           >
             <ReactAriaButton>
               <SelectValue
-                className={`flex items-center gap-2 ${isOpen ? '' : ''}`}
+                className={`flex items-center gap-2 ${isOpen ? "" : ""}`}
               >
                 {selectedStatus && (
                   <>
@@ -415,7 +416,7 @@ const Issue = (props: {
                     </span>
 
                     {isOpen && (
-                      <span className={`text-sm ${isOpen ? 'hidden' : ''}`}>
+                      <span className={`text-sm ${isOpen ? "hidden" : ""}`}>
                         {selectedStatus.text}
                       </span>
                     )}
@@ -441,7 +442,7 @@ const Issue = (props: {
                     {isOpen && (
                       <span
                         className={`data-[selected]:hidden data-[pressed]:hidden data-[focused]:hidden [data-focus-visible]:hidden text-sm ${
-                          isOpen ? '' : ''
+                          isOpen ? "" : ""
                         }`}
                       >
                         {item.text}
@@ -473,15 +474,15 @@ const Dialog = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (fetcher.state === 'submitting') {
+    if (fetcher.state === "submitting") {
       setIsSubmitting(true);
-    } else if (fetcher.state === 'idle') {
+    } else if (fetcher.state === "idle") {
       setIsSubmitting(false);
     }
   }, [fetcher.state]);
 
   useEffect(() => {
-    if (fetcher.state === 'idle' && !isSubmitting) {
+    if (fetcher.state === "idle" && !isSubmitting) {
       if (outletContext.dialogRef.current) {
         outletContext.dialogRef.current.close();
       }
@@ -549,10 +550,10 @@ const Dialog = () => {
                       type="submit"
                       name="intent"
                       value="create"
-                      disabled={fetcher.state === 'submitting'}
+                      disabled={fetcher.state === "submitting"}
                       className="bg-green-600 rounded-md px-2 text-white text-sm py-1"
                     >
-                      {fetcher.state === 'submitting' ? (
+                      {fetcher.state === "submitting" ? (
                         <span className="loading-ellipsis">Creating</span>
                       ) : (
                         <span>Create</span>

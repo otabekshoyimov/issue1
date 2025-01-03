@@ -1,4 +1,4 @@
-<img src="public/preview.png">
+  <img src="public/preview.png">
 <img src="public/preview-select.png">
 <img src="public/preview-dialog.png">
 <img src="public/preview-5.png">

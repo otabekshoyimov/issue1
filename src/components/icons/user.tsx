@@ -1,6 +1,6 @@
-import type { IconName } from '../../../assets/types';
-import type { SVGProps } from 'react';
-import spriteHref from '../../../assets/sprite.svg';
+import type { IconName } from "../icons";
+import type { SVGProps } from "react";
+const spriteHref = "/sprite.svg";
 export const UserSVG = ({
   name,
   ...props

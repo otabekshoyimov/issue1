@@ -1,22 +1,22 @@
-import { MarkGithubIcon } from '@primer/octicons-react';
-import { RefObject, useRef, useState } from 'react';
-import { Form, Link, Outlet, useLoaderData } from 'react-router-dom';
-import { pocketbase } from '../pocketbase';
-import { InboxSVG } from '../shared/components/svgs/inbox-svg';
-import { IssuesSVG } from '../shared/components/svgs/issues';
-import { NewIssueSVG } from '../shared/components/svgs/new-issue';
-import { SearchSVG } from '../shared/components/svgs/search';
-import { ViewsSVG } from '../shared/components/svgs/views';
+import { MarkGithubIcon } from "@primer/octicons-react";
+import { RefObject, useRef, useState } from "react";
+import { Form, Link, Outlet, useLoaderData } from "react-router-dom";
+import { pocketbase } from "../shared/pocketbase";
+import { InboxSVG } from "../components/icons/inbox";
+import { IssuesSVG } from "../components/icons/issues";
+import { NewIssueSVG } from "../components/icons/new-issue";
+import { SearchSVG } from "../components/icons/search";
+import { ViewsSVG } from "../components/icons/views";
 
 export const rootLoader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
-  const searchParams = url.searchParams.get('search');
+  const searchParams = url.searchParams.get("search");
 
   if (!searchParams) return null;
 
   try {
     const filteredResults = await pocketbase
-      .collection('posts')
+      .collection("posts")
       .getFirstListItem(`title ~ "${searchParams}"`, {
         $cancelKey: `posts_${searchParams}`, // a unique cancel key
       });
@@ -24,7 +24,7 @@ export const rootLoader = async ({ request }: { request: Request }) => {
     console.log(filteredResults);
     return filteredResults;
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     return null;
   }
 };
@@ -39,7 +39,7 @@ export const Root = () => {
     }
   };
   const closeDialogOnBackdropClick = (
-    e: React.MouseEvent<HTMLDialogElement, MouseEvent>
+    e: React.MouseEvent<HTMLDialogElement, MouseEvent>,
   ) => {
     if (dialogRef.current && e.target === dialogRef.current) {
       dialogRef.current.close();
@@ -90,7 +90,7 @@ type Post = {
 };
 export type OutletContext = {
   closeDialogOnBackdropClick: (
-    e: React.MouseEvent<HTMLDialogElement, MouseEvent>
+    e: React.MouseEvent<HTMLDialogElement, MouseEvent>,
   ) => void;
   dialogRef: RefObject<HTMLDialogElement>;
   toggleSidebar: () => void;
@@ -108,8 +108,8 @@ const RootSidebar = (props: {
       <div className="lg:w-[255px] md:0px"></div>
       <div
         className={` nav-wrapper left-0 top-0 bottom-0 w-[255px] fixed ${
-          props.isNavVisible ? 'nav-visible' : ''
-        } ${props.isNavVisible ? 'animate-fadeInLeft' : ''}`}
+          props.isNavVisible ? "nav-visible" : ""
+        } ${props.isNavVisible ? "animate-fadeInLeft" : ""}`}
       >
         <nav
           className={` min-w-[220px] max-w-[255px] h-dvh border-0 border-r border-solid border-gray-300 text-sm nav-global bg-[#ececec] flex flex-col relative `}
@@ -117,7 +117,7 @@ const RootSidebar = (props: {
           <header className="max-lg:pt-10 flex gap-1 justify-between items-center px-4 min-[360px]:pt-10 lg:pt-3 pb-3">
             <button className="hover:bg-[#e1e1e1]">
               <div className="p-1">
-                <Link to={'/'}>
+                <Link to={"/"}>
                   <div className="bg-green-600 text-white rounded-md ">
                     <span className="px-1 ">O</span>
                   </div>
