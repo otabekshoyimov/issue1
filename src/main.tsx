@@ -1,10 +1,10 @@
-import ReactDOM from 'react-dom/client';
-import { Root, rootLoader } from './routes/root';
-import './index.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { action as indexAction, Index, loader as indexLoader } from './routes';
-import { IssueDetail, loader as issueLoader } from './routes/issue-detail';
-import { ErrorPage } from './error-page';
+import ReactDOM from "react-dom/client";
+import { Root, rootLoader } from "./routes/root";
+import "./index.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { action as indexAction, Index, loader as indexLoader } from "./routes";
+import { IssueDetail, loader as issueLoader } from "./routes/issue-detail";
+import { ErrorPage } from "./error-page";
 
 const router = createBrowserRouter([
   {
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
             action: indexAction,
           },
           {
-            path: '/:issueId',
+            path: "/:issueId",
             element: <IssueDetail />,
             loader: issueLoader,
           },
@@ -31,6 +31,6 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <RouterProvider router={router}></RouterProvider>
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <RouterProvider router={router}></RouterProvider>,
 );
