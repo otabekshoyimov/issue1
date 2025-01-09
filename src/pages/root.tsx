@@ -9,25 +9,21 @@ import { NewIssueIcon } from "../shared/ui/icons/new-issue-icon";
 import { SearchIcon } from "../shared/ui/icons/search-icon";
 import { ViewsIcon } from "../shared/ui/icons/views-icon";
 
-export const rootLoader = async ({ request }: { request: Request }) => {
+export const root_loader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
   const searchParams = url.searchParams.get("search");
 
   if (!searchParams) return null;
 
-  try {
-    const filteredResults = await pocketbase
+  const filteredResults = await pocketbase
       .collection("posts")
       .getFirstListItem(`title ~ "${searchParams}"`, {
-        $cancelKey: `posts_${searchParams}`, // a unique cancel key
+        $cancelKey: `posts_${searchParams}`
       });
 
-    console.log(filteredResults);
-    return filteredResults;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return null;
-  }
+  console.log(filteredResults);
+  return filteredResults;
+  
 };
 export const Root = () => {
   const filteredResults = useLoaderData();
