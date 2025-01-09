@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Select, SelectValue, Button as ReactAriaButton, Popover, ListBox, ListBoxItem } from "react-aria-components";
 import { Link, useFetcher } from "react-router-dom";
-import { format_date } from "../../../../shared/utils";
+
 import { ISSUE_STATUSES } from "../model/constants";
 import type { Issue_Item } from "../model/types";
+import { format_date } from "../../../../shared/utils/date/format-date";
 
 export const IssueItem = (props: {
   issue: Issue_Item;

@@ -1,9 +1,9 @@
 import type { Params } from "react-router-dom";
 import { useLoaderData, useNavigation } from "react-router-dom";
 import { pocketbase } from "../../shared/pocketbase";
-import { format_date } from "../../shared/utils";
 import { Spinner } from "../../shared/ui/spinner";
 import { IssuesHeader } from "../../features/issue/issues-list/ui/issues-header";
+import { format_date } from "../../shared/utils/date/format-date";
 
 export async function issue_detail_loader({ params }: { params: Params }) {
   console.log("Params:", params, typeof params.issueId);
