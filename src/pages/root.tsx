@@ -1,12 +1,13 @@
 import { MarkGithubIcon } from "@primer/octicons-react";
-import { RefObject, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import type { RefObject } from "react";
 import { Form, Link, Outlet, useLoaderData } from "react-router-dom";
 import { pocketbase } from "../shared/pocketbase";
-import { InboxSVG } from "../components/icons/inbox";
-import { IssuesSVG } from "../components/icons/issues";
-import { NewIssueSVG } from "../components/icons/new-issue";
-import { SearchSVG } from "../components/icons/search";
-import { ViewsSVG } from "../components/icons/views";
+import { InboxIcon } from "../shared/ui/icons/inbox-icon";
+import { IssuesIcon } from "../shared/ui/icons/issues-icon";
+import { NewIssueIcon } from "../shared/ui/icons/new-issue-icon";
+import { SearchIcon } from "../shared/ui/icons/search-icon";
+import { ViewsIcon } from "../shared/ui/icons/views-icon";
 
 export const rootLoader = async ({ request }: { request: Request }) => {
   const url = new URL(request.url);
@@ -131,7 +132,7 @@ const RootSidebar = (props: {
                 onClick={props.onDialogClick}
                 className=" hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 mb-6 w-full outline outline-1 outline-gray-300 rounded-md shadow-sm p-1 pl-2 "
               >
-                <NewIssueSVG
+                <NewIssueIcon
                   name="NewIssue"
                   width={16}
                   height={16}
@@ -146,7 +147,7 @@ const RootSidebar = (props: {
                   role="search"
                   className="flex items-center gap-2 focus-within:ring-2 focus-within:ring-blue-500 rounded-md"
                 >
-                  <SearchSVG
+                  <SearchIcon
                     name="Search"
                     width={16}
                     height={16}
@@ -161,7 +162,7 @@ const RootSidebar = (props: {
               </li>
               <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md items-center  group ">
                 <a href="" className="w-full flex gap-2">
-                  <InboxSVG
+                  <InboxIcon
                     name="Inbox"
                     width={16}
                     height={16}
@@ -172,7 +173,7 @@ const RootSidebar = (props: {
               </li>
               <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 group ">
                 <a href="" className="flex gap-2 w-full">
-                  <IssuesSVG
+                  <IssuesIcon
                     name="Issues"
                     width={16}
                     height={16}
@@ -183,7 +184,7 @@ const RootSidebar = (props: {
               </li>
               <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2  group">
                 <a href="" className="flex gap-2 w-full">
-                  <ViewsSVG
+                  <ViewsIcon
                     name="Views"
                     width={16}
                     height={16}
@@ -200,7 +201,7 @@ const RootSidebar = (props: {
               <ul className="mt-4">
                 <li className="hover:bg-[#e1e1e1] hover:rounded-md group ">
                   <a href="" className="flex items-center gap-3 pl-6 h-7">
-                    <IssuesSVG
+                    <IssuesIcon
                       name="Issues"
                       width={16}
                       height={16}
