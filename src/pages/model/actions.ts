@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "react-router-dom";
-import { pocketbase } from "../../shared/pocketbase";
+import { pocketbase } from "../../shared/api/pocketbase";
 import { HTTP_STATUS } from "../../shared/constants/http-status";
 
 

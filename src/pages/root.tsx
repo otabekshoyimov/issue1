@@ -2,7 +2,7 @@ import { MarkGithubIcon } from "@primer/octicons-react";
 import { useRef, useState } from "react";
 import type { RefObject } from "react";
 import { Form, Link, Outlet, useLoaderData } from "react-router-dom";
-import { pocketbase } from "../shared/pocketbase";
+import { pocketbase } from "../shared/api/pocketbase";
 import { InboxIcon } from "../shared/ui/icons/inbox-icon";
 import { IssuesIcon } from "../shared/ui/icons/issues-icon";
 import { NewIssueIcon } from "../shared/ui/icons/new-issue-icon";

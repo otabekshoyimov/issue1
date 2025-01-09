@@ -1,4 +1,4 @@
-import { pocketbase } from "../../shared/pocketbase";
+import { pocketbase } from "../../shared/api/pocketbase";
 
 export const index_loader = async () => {
   const issues = await pocketbase.collection("posts").getFullList();
