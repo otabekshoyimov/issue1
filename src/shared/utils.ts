@@ -11,8 +11,3 @@ export const format_date = (dateString: string) => {
   }
   return date_formatter.format(date);
 };
-
-export const OK = 200 ;
-export const CREATED = 201;
-export const BAD_REQUEST = 400;
-export const SERVER_ERROR = 500;

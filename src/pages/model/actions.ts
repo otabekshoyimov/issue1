@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs } from "react-router-dom";
 import { pocketbase } from "../../shared/pocketbase";
-import { OK } from "../../shared/utils";
+import { HTTP_STATUS } from "../../shared/constants/http-status";
+
 
 export const index_action = async ({ request }: ActionFunctionArgs) => {
   const form_data = await request.formData();
@@ -29,7 +30,7 @@ export const index_action = async ({ request }: ActionFunctionArgs) => {
       pocketbase.collection("posts").delete(id),
     );
       await Promise.all(delete_promises);
-      return { status: OK };
+      return { status: HTTP_STATUS.OK };
     
   };
 
