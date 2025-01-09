@@ -9,9 +9,11 @@ export const ErrorPage = () => {
     return (
       <section className="flex min-h-screen w-full flex-col items-center justify-center">
         <div>
-          <h2 className="pb-20 underline decoration-red-500 decoration-wavy">
+          <h2 className="pb-4 underline decoration-red-500 decoration-wavy">
             Application error
           </h2>
+          <p>{error.message}</p>
+    
           <Link to={"/"}>Return home →</Link>
         </div>
       </section>
