@@ -1,7 +1,7 @@
-import type { IconName } from "../icons";
+import type { IconName } from "./icons";
 import type { SVGProps } from "react";
 const spriteHref = "/sprite.svg";
-export const DoneSVG = ({
+export const CircleDashedIcon = ({
   name,
   ...props
 }: SVGProps<SVGSVGElement> & {

@@ -1,8 +1,7 @@
-import type { IconName } from "../icons";
+import type { IconName } from "./icons";
 import type { SVGProps } from "react";
-
 const spriteHref = "/sprite.svg";
-export const CloseSVG = ({
+export const InboxIcon = ({
   name,
   ...props
 }: SVGProps<SVGSVGElement> & {

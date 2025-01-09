@@ -1,7 +1,7 @@
-import type { IconName } from "../icons";
+import type { IconName } from "./icons";
 import type { SVGProps } from "react";
 const spriteHref = "/sprite.svg";
-export const ViewsSVG = ({
+export const TodoIcon = ({
   name,
   ...props
 }: SVGProps<SVGSVGElement> & {
