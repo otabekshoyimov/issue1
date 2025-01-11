@@ -7,6 +7,7 @@ import {
   useLoaderData,
   useOutletContext
 } from "react-router-dom";
+import type { Outlet_Context } from "react-router-dom";
 
 import { DeleteIssueButton } from "../features/issue/delete-issue/delete-issue-button";
 import type { Issue_Item } from "../features/issue/issue-item/model/types";
@@ -15,12 +16,10 @@ import { IssuesContainer } from "../features/issue/issues-list/ui/issues-contain
 import { IssuesHeader } from "../features/issue/issues-list/ui/issues-header";
 import { IssuesList } from "../features/issue/issues-list/ui/issues-list";
 import { IssuesListHeader } from "../features/issue/issues-list/ui/issues-list-header";
-import type { OutletContext } from "./root";
-
 
 export const IndexPage = () => {
   const issues_async = useLoaderData() as Issue_Item[];
-  const outlet_context = useOutletContext<OutletContext>();
+  const outlet_context = useOutletContext<Outlet_Context>();
   const [selected_issues, set_selected_issues] = useState<string[]>([]);
 
   const handle_issue_selection = (issueId: string) => {
@@ -38,10 +37,10 @@ export const IndexPage = () => {
         </IssuesHeader>
         <IssuesListHeader/>
         <IssuesList>
-          {outlet_context.filteredResults ? (
+          {outlet_context.filtered_results ? (
             <IssueItem
-              issue={outlet_context.filteredResults}
-              key={outlet_context.filteredResults.id}
+              issue={outlet_context.filtered_results}
+              key={outlet_context.filtered_results.id}
               selectedIssue={selected_issues}
               onIssueSelect={handle_issue_selection}
             />

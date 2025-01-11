@@ -1,12 +1,12 @@
 import { Link, useNavigation, useOutletContext } from "react-router-dom";
-import type { OutletContext } from "../../../../pages/root";
+import type { Outlet_Context } from "react-router-dom";
 import type { ReactNode } from "react";
 import { OpenNavIcon } from "../../../../shared/ui/icons/open-nav-icon";
 import { Spinner } from "../../../../shared/ui/spinner";
 
 export const IssuesHeader = (props: { children?: ReactNode }) => {
   const navigation = useNavigation();
-  const outletContext = useOutletContext<OutletContext>();
+  const outlet_context = useOutletContext<Outlet_Context>();
 
   return (
     <>
@@ -14,7 +14,7 @@ export const IssuesHeader = (props: { children?: ReactNode }) => {
         <div className="flex items-center justify-center gap-10">
           <button
             onClick={() => {
-              outletContext.toggleSidebar();
+              outlet_context.toggle_sidebar();
             }}
             className="flex items-center hover:bg-gray-300 p-1 rounded-md nav-btn z-[97] relative lg:hidden"
           >

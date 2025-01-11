@@ -18,7 +18,7 @@ export const root_loader = async ({ request }: { request: Request }) => {
 };
 
 
-type Post = {
+export type Issue_Item = {
   id: string;
   collectionId: string;
   collectionName: string;
@@ -29,9 +29,4 @@ type Post = {
   title: string;
   checked: boolean;
   updated: string;
-};
-export type OutletContext = {
-  toggleSidebar: () => void;
-  setIsSidebarVisible: (value: boolean) => void;
-  filteredResults: Post | null;
 };
