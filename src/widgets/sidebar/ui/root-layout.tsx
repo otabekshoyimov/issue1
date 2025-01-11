@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Outlet, useLoaderData} from "react-router-dom";
 import type { Outlet_Context } from "react-router-dom";
 import { RootSidebar } from "./root-sidebar";
-import type { Issue_Item } from "../../../pages/root";
+import type { Issue_Item } from "../../../features/issue/issue-item/model/types";
+
 
 declare module 'react-router-dom' {
   export interface Outlet_Context  {
