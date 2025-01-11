@@ -1,36 +1,35 @@
-import { useFetcher, useOutletContext } from "react-router-dom";
-import type { OutletContext } from "../../../../pages/root";
-import { useEffect, useState } from "react";
+import { useFetcher } from "react-router-dom";
+import { useEffect } from "react";
+import type {RefObject} from 'react'
 import { UserIcon } from "../../../../shared/ui/icons/user-icon";
 import { CloseIcon } from "../../../../shared/ui/icons/close-icon";
 
-export const CreateIssueDialog = () => {
+export const CreateIssueDialog = (props: { dialog_ref: RefObject<HTMLDialogElement> }) => {
   const fetcher = useFetcher();
-  const outlet_context = useOutletContext<OutletContext>();
-  const [is_submitting, set_is_submitting] = useState(false);
+
+  const close_dialog = () => {
+    if (props.dialog_ref.current) {
+      props.dialog_ref.current.close();
+    }
+  };
+  const close_on_backdrop = (e: React.MouseEvent) => {
+    if (e.target === props.dialog_ref.current) {
+      props.dialog_ref.current?.close();
+    }
+  };
 
   useEffect(() => {
-    if (fetcher.state === "submitting") {
-      set_is_submitting(true);
-    } else if (fetcher.state === "idle") {
-      set_is_submitting(false);
+    if (fetcher.state === "idle" && fetcher.data) {
+      props.dialog_ref.current?.close();
     }
-  }, [fetcher.state]);
+  }, [fetcher.state, fetcher.data]);
 
-  useEffect(() => {
-    if (fetcher.state === "idle" && !is_submitting) {
-      if (outlet_context.dialogRef.current) {
-        outlet_context.dialogRef.current.close();
-      }
-    }
-  }, [fetcher.state, is_submitting, outlet_context.dialogRef]);
-  
   return (
     <>
       <dialog
         id="dialog"
-        ref={outlet_context.dialogRef}
-        onClick={outlet_context.closeDialogOnBackdropClick}
+        ref={props.dialog_ref}
+        onClick={close_on_backdrop}
         className="shadow-lg animate-fadeInUp"
       >
         <div id="dialog-inner" onClick={(e) => e.stopPropagation()}>
@@ -43,11 +42,7 @@ export const CreateIssueDialog = () => {
             </div>
 
             <button
-              onClick={() => {
-                if (outlet_context.dialogRef.current) {
-                  outlet_context.dialogRef.current.close();
-                }
-              }}
+              onClick={close_dialog}
               className="flex justify-end hover:bg-gray-200 hover:rounded-md"
             >
               <span className=" rounded-md px-1 text-sm leading-none py-1">
@@ -57,18 +52,10 @@ export const CreateIssueDialog = () => {
           </header>
           <main>
             <div className="pb-2 pt-2">
-              <fetcher.Form
-                className="flex flex-col gap-2"
-                role="form"
-                method="post"
-              >
-                  <input type="text" name="title" placeholder="Issue title" />
-                  <input
-                    type="text"
-                    name="description"
-                    placeholder="Add description"
-                  />
-                  <input type="hidden" name="status" value="Backlog"/>
+              <fetcher.Form className="flex flex-col gap-2" role="form" method="post">
+                <input type="text" name="title" placeholder="Issue title" />
+                <input type="text" name="description" placeholder="Add description" />
+                <input type="hidden" name="status" value="Backlog" />
                 <footer>
                   <span className="flex justify-end ">
                     <button

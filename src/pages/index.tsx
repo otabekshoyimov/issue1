@@ -8,7 +8,6 @@ import {
   useOutletContext
 } from "react-router-dom";
 
-import { CreateIssueDialog } from "../features/issue/create-issue/ui/create-issue-dialog";
 import { DeleteIssueButton } from "../features/issue/delete-issue/delete-issue-button";
 import type { Issue_Item } from "../features/issue/issue-item/model/types";
 import { IssueItem } from "../features/issue/issue-item/ui/issue-item";
@@ -37,7 +36,6 @@ export const IndexPage = () => {
         <IssuesHeader>
           <DeleteIssueButton selectedIssues={selected_issues} />
         </IssuesHeader>
-        <CreateIssueDialog />
         <IssuesListHeader/>
         <IssuesList>
           {outlet_context.filteredResults ? (

@@ -1,17 +1,19 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Root, root_loader } from "./root";
+import {  root_loader } from "./root";
 import { ErrorPage } from "./error/error-page";
 import { IndexPage } from ".";
 import { issue_detail_loader, IssueDetail } from "./issue-detail/issue-detail";
 import { index_loader } from "./model/loaders";
-import { index_action } from "./model/actions";
+import { index_action, root_action } from "./model/actions";
+import { RootLayout } from "../widgets/sidebar/ui/root-layout";
 
 
 export const router = createBrowserRouter([
   {
     path: `/`,
-    element: <Root />,
+    element: <RootLayout />,
     loader: root_loader,
+    action: root_action,
     errorElement: <ErrorPage />,
     children: [
       {
