@@ -1,22 +1,3 @@
-import { pocketbase } from "../shared/api/pocketbase";
-
-export const root_loader = async ({ request }: { request: Request }) => {
-  const url = new URL(request.url);
-  const searchParams = url.searchParams.get("search");
-
-  if (!searchParams) return null;
-
-  const filteredResults = await pocketbase
-      .collection("posts")
-      .getFirstListItem(`title ~ "${searchParams}"`, {
-        $cancelKey: `posts_${searchParams}`
-      });
-
-  console.log(filteredResults);
-  return filteredResults;
-  
-};
-
 
 export type Issue_Item = {
   id: string;

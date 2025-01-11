@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
-import {  root_loader } from "./root";
+
 import { ErrorPage } from "./error/error-page";
 import { IndexPage } from ".";
 import { issue_detail_loader, IssueDetail } from "./issue-detail/issue-detail";
-import { index_loader } from "./model/loaders";
+import { index_loader, root_loader } from "./model/loaders";
 import { index_action, root_action } from "./model/actions";
 import { RootLayout } from "../widgets/sidebar/ui/root-layout";
 
