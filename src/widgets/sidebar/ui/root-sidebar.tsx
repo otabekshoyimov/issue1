@@ -7,17 +7,15 @@ import { IssuesIcon } from "../../../shared/ui/icons/issues-icon";
 import { NewIssueIcon } from "../../../shared/ui/icons/new-issue-icon";
 import { SearchIcon } from "../../../shared/ui/icons/search-icon";
 import { ViewsIcon } from "../../../shared/ui/icons/views-icon";
+import { ChevronLeft } from "lucide-react";
 
-export const RootSidebar = (props: {
-  isNavVisible: boolean;
-}) => {
-  
+export const RootSidebar = (props: { isNavVisible: boolean }) => {
   const dialog_ref = useRef<HTMLDialogElement>(null);
   const open_dialog = () => {
-    if(dialog_ref.current) {
+    if (dialog_ref.current) {
       dialog_ref.current.showModal();
     }
-  }
+  };
   return (
     <>
       <div className="lg:w-[255px] md:0px"></div>
@@ -29,16 +27,22 @@ export const RootSidebar = (props: {
         <nav
           className={` min-w-[220px] max-w-[255px] h-dvh border-0 border-r border-solid border-gray-300 text-sm nav-global bg-[#ececec] flex flex-col relative `}
         >
-          <header className="max-lg:pt-10 flex gap-1 justify-between items-center px-4 min-[360px]:pt-10 lg:pt-3 pb-3">
-            <button className="hover:bg-[#e1e1e1]">
-              <div className="p-1">
-                <Link to={"/"}>
-                  <div className="bg-green-600 text-white rounded-md ">
-                    <span className="px-1 ">O</span>
-                  </div>
-                </Link>
-              </div>
-            </button>
+          <header className="max-lg:pt-10  gap-1 justify-between  px-4 min-[360px]:pt-10 lg:pt-3 pb-3">
+
+                <div className=" flex items-center justify-between">
+                  <Link
+                    className="items-center flex hover:bg-[#e1e1e1] rounded-md py-1 pr-1 max-w-fit text-blue-400"
+                    to={"https://otabeks.vercel.app"}
+                  >
+                    <ChevronLeft className="mr-1 " color="#5fa6fa" />
+                    Portfolio
+                  </Link>
+                  <Link className="hover:bg-[#e1e1e1] p-2 rounded-md" to={"/"}>
+                  <button className=" bg-green-600 text-white rounded-md">
+                    <span className="px-1 w-1">O</span>
+                  </button>
+                  </Link>
+                </div>
           </header>
           <main className="pt-2 flex-grow">
             <div className="px-4">
@@ -54,8 +58,7 @@ export const RootSidebar = (props: {
                 />
                 New issue
               </button>
-              <CreateIssueDialog  dialog_ref={dialog_ref}/>
-             
+              <CreateIssueDialog dialog_ref={dialog_ref} />
             </div>
             <ul className="flex flex-col gap-1 px-4 mb-5">
               <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 outline outline-1 outline-gray-300 rounded-md group ">
@@ -111,9 +114,7 @@ export const RootSidebar = (props: {
               </li>
             </ul>
             <details className="px-4 pb-5" open>
-              <summary className="hover:bg-gray-300 rounded-md px-3 leading-6">
-                Your team
-              </summary>
+              <summary className="hover:bg-gray-300 rounded-md px-3 leading-6">Your team</summary>
               <ul className="mt-4">
                 <li className="hover:bg-[#e1e1e1] hover:rounded-md group ">
                   <a href="" className="flex items-center gap-3 pl-6 h-7">
@@ -153,5 +154,20 @@ export const RootSidebar = (props: {
         </nav>
       </div>
     </>
+  );
+};
+
+const BackButtonSvg = () => {
+  return (
+    <svg viewBox="0 0 16 16">
+      <path
+        d="M25.64,58.83L2.56,30.04,25.64,1.25"
+        fill="black"
+        fill-rule="evenodd"
+        stroke-miterlimit="10"
+        width={16}
+        height={16}
+      ></path>
+    </svg>
   );
 };
