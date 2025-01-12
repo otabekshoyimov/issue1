@@ -156,18 +156,3 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
     </>
   );
 };
-
-const BackButtonSvg = () => {
-  return (
-    <svg viewBox="0 0 16 16">
-      <path
-        d="M25.64,58.83L2.56,30.04,25.64,1.25"
-        fill="black"
-        fill-rule="evenodd"
-        stroke-miterlimit="10"
-        width={16}
-        height={16}
-      ></path>
-    </svg>
-  );
-};
