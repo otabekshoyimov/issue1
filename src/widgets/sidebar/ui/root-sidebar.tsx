@@ -30,7 +30,7 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
           <header className="max-lg:pt-10  gap-1 justify-between  px-4 min-[360px]:pt-10 lg:pt-3 pb-3">
             <div className=" flex items-center justify-between">
               <Link
-                className="items-center flex hover:bg-[#e1e1e1] rounded-md py-1 pr-1 max-w-fit text-blue-400"
+                className="items-center flex hover:bg-[#e1e1e1] rounded-md py-1 pr-1 max-w-fit text-blue-400 font-medium text-[13px]"
                 to={"https://otabeks.vercel.app"}
               >
                 <ChevronLeft className="mr-1 " color="#5fa6fa" />

@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Select, SelectValue, Button as ReactAriaButton, Popover, ListBox, ListBoxItem } from "react-aria-components";
+import {
+  Select,
+  SelectValue,
+  Button as ReactAriaButton,
+  Popover,
+  ListBox,
+  ListBoxItem,
+} from "react-aria-components";
 import { Link, useFetcher } from "react-router-dom";
 
 import { ISSUE_STATUSES } from "../model/constants";
@@ -29,10 +36,7 @@ export const IssueItem = (props: {
           className="w-4 h-4"
         />
 
-        <Link
-          className="flex justify-between flex-grow"
-          to={`${props.issue.id}`}
-        >
+        <Link className="flex justify-between flex-grow items-center" to={`${props.issue.id}`}>
           <Select
             defaultSelectedKey={selectedKey}
             onOpenChange={(isOpen) => setIsOpen(isOpen)}
@@ -50,14 +54,10 @@ export const IssueItem = (props: {
             className={`flex  gap-1 w-fit pr-5 }`}
           >
             <ReactAriaButton>
-              <SelectValue
-                className={`flex items-center gap-2 ${isOpen ? "" : ""}`}
-              >
+              <SelectValue className={`flex items-center gap-2 ${isOpen ? "" : ""}`}>
                 {selectedStatus && (
                   <>
-                    <span className="flex gap-2 items-center">
-                      {selectedStatus.icon}
-                    </span>
+                    <span className="flex gap-2 items-center">{selectedStatus.icon}</span>
 
                     {isOpen && (
                       <span className={`text-sm ${isOpen ? "hidden" : ""}`}>
@@ -77,10 +77,7 @@ export const IssueItem = (props: {
                 items={ISSUE_STATUSES}
               >
                 {ISSUE_STATUSES.map((status) => (
-                  <ListBoxItem
-                    key={status.key}
-                    className="px-2 flex gap-2 items-center "
-                  >
+                  <ListBoxItem key={status.key} className="px-2 flex gap-2 items-center ">
                     <span>{status.icon}</span>
 
                     {isOpen && (
@@ -99,9 +96,7 @@ export const IssueItem = (props: {
           </Select>
           <div className="flex-grow justify-between flex items-center">
             <header>{props.issue.title}</header>
-            <span className="text-gray-500 text-sm">
-              {format_date(props.issue.date)}
-            </span>
+            <span className="text-gray-500 text-sm">{format_date(props.issue.date)}</span>
           </div>
         </Link>
       </li>
