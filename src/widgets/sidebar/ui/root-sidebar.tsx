@@ -1,6 +1,6 @@
 import { MarkGithubIcon } from "@primer/octicons-react";
 import { useRef } from "react";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, NavLink } from "react-router-dom";
 import { CreateIssueDialog } from "../../../features/issue/create-issue/ui/create-issue-dialog";
 import { InboxIcon } from "../../../shared/ui/icons/inbox-icon";
 import { IssuesIcon } from "../../../shared/ui/icons/issues-icon";
@@ -25,24 +25,23 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
         } ${props.isNavVisible ? "animate-fadeInLeft" : ""}`}
       >
         <nav
-          className={` min-w-[220px] max-w-[255px] h-dvh border-0 border-r border-solid border-gray-300 text-sm nav-global bg-[#ececec] flex flex-col relative `}
+          className={` min-w-[220px] max-w-[255px] h-dvh border-0 border-r border-solid border-gray-300 text-sm nav-global bg-[#f5f5f5] flex flex-col relative `}
         >
           <header className="max-lg:pt-10  gap-1 justify-between  px-4 min-[360px]:pt-10 lg:pt-3 pb-3">
-
-                <div className=" flex items-center justify-between">
-                  <Link
-                    className="items-center flex hover:bg-[#e1e1e1] rounded-md py-1 pr-1 max-w-fit text-blue-400"
-                    to={"https://otabeks.vercel.app"}
-                  >
-                    <ChevronLeft className="mr-1 " color="#5fa6fa" />
-                    Portfolio
-                  </Link>
-                  <Link className="hover:bg-[#e1e1e1] p-2 rounded-md" to={"/"}>
-                  <button className=" bg-green-600 text-white rounded-md">
-                    <span className="px-1 w-1">O</span>
-                  </button>
-                  </Link>
-                </div>
+            <div className=" flex items-center justify-between">
+              <Link
+                className="items-center flex hover:bg-[#e1e1e1] rounded-md py-1 pr-1 max-w-fit text-blue-400"
+                to={"https://otabeks.vercel.app"}
+              >
+                <ChevronLeft className="mr-1 " color="#5fa6fa" />
+                Portfolio
+              </Link>
+              <Link className="hover:bg-[#e1e1e1] p-2 rounded-md" to={"/"}>
+                <button className=" bg-green-600 text-white rounded-md">
+                  <span className="px-1 w-1">O</span>
+                </button>
+              </Link>
+            </div>
           </header>
           <main className="pt-2 flex-grow">
             <div className="px-4">
@@ -60,8 +59,8 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
               </button>
               <CreateIssueDialog dialog_ref={dialog_ref} />
             </div>
-            <ul className="flex flex-col gap-1 px-4 mb-5">
-              <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 outline outline-1 outline-gray-300 rounded-md group ">
+            <ul className="flex flex-col gap-1 px-4 mb-5 text-[13px] font-medium">
+              <li className="p-1 mb-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 outline outline-1 outline-gray-300 rounded-md group ">
                 <Form
                   role="search"
                   className="flex items-center gap-2 focus-within:ring-2 focus-within:ring-blue-500 rounded-md"
@@ -79,37 +78,42 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
                   />
                 </Form>
               </li>
-              <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md items-center  group ">
-                <a href="" className="w-full flex gap-2">
+              <li className="  hover:bg-[#e1e1e1] hover:rounded-md items-center  group ">
+                <NavLink
+                  to="/"
+                  className={(isActive) =>
+                    `w-full p-1 pl-2 rounded items-center flex gap-2 ${isActive ? "bg-[#e8e8e8]" : ""}`
+                  }
+                >
                   <InboxIcon
                     name="Inbox"
                     width={16}
                     height={16}
                     className="group-hover:text-black text-[#575859]"
                   />
-                  Inbox
-                </a>
+                  <span>Inbox</span>
+                </NavLink>
               </li>
               <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 group ">
-                <a href="" className="flex gap-2 w-full">
+                <a href="" className="items-center flex gap-2 w-full">
                   <IssuesIcon
                     name="Issues"
                     width={16}
                     height={16}
-                    className="group-hover:text-black text-[#575859]"
+                    className=" group-hover:text-black text-[#575859]"
                   />
-                  Issues
+                  <span>Issues</span>
                 </a>
               </li>
               <li className="p-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2  group">
-                <a href="" className="flex gap-2 w-full">
+                <a href="" className="flex gap-2 w-full items-center">
                   <ViewsIcon
                     name="Views"
                     width={16}
                     height={16}
                     className="group-hover:text-black text-[#575859]"
                   />
-                  Views
+                  <span>Views</span>
                 </a>
               </li>
             </ul>
