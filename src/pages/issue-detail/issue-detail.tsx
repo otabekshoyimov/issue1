@@ -32,7 +32,7 @@ export const IssueDetail = () => {
       <section className="px-6 pt-4 bg-white leading-8 text-base mt-3">
         <header className="text-2xl font-medium pb-5">{issue.title}</header>
         <p>{issue.description}</p>
-        <span className=" block">{format_date(issue.date)}</span>
+        <span className="block text-[13px]">{format_date(issue.date)}</span>
       </section>
     </>
   );

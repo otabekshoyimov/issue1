@@ -33,7 +33,7 @@ export const IssueItem = (props: {
           onChange={() => {
             props.onIssueSelect(props.issue.id);
           }}
-          className="w-4 h-4"
+          className="w-3 h-3"
         />
 
         <Link className="flex justify-between flex-grow items-center" to={`${props.issue.id}`}>
@@ -95,8 +95,8 @@ export const IssueItem = (props: {
             </Popover>
           </Select>
           <div className="flex-grow justify-between flex items-center">
-            <header>{props.issue.title}</header>
-            <span className="text-gray-500 text-sm">{format_date(props.issue.date)}</span>
+            <span className="text-[13px] font-medium">{props.issue.title}</span>
+            <span className="text-gray-500 text-[13px]">{format_date(props.issue.date)}</span>
           </div>
         </Link>
       </li>

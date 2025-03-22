@@ -20,7 +20,10 @@ export const IssuesHeader = (props: { children?: ReactNode }) => {
           >
             <OpenNavIcon name="OpenNav" width={20} height={20} />
           </button>
-          <Link to="/" className="hover:bg-gray-200 px-2 p-1 rounded">
+          <Link
+            to="/"
+            className="hover:bg-gray-200 px-2 p-1 rounded text-[13px] font-medium text-gray-700"
+          >
             All issues
           </Link>
           {navigation.state === "loading" && <Spinner />}

@@ -8,62 +8,27 @@ export const ISSUE_STATUSES = [
   {
     key: "Backlog",
     text: "Backlog",
-    icon: (
-      <BacklogIcon
-        name="Backlog"
-        width={20}
-        height={20}
-        className="flex items-center"
-      />
-    ),
+    icon: <BacklogIcon name="Backlog" width={14} height={14} className="flex items-center" />,
   },
   {
     key: "Todo",
     text: "Todo",
-    icon: (
-      <TodoIcon
-        name="Todo"
-        width={20}
-        height={20}
-        className="flex items-center"
-      />
-    ),
+    icon: <TodoIcon name="Todo" width={14} height={14} className="flex items-center" />,
   },
   {
     key: "InProgress",
     text: "In Progress",
-    icon: (
-      <InProgressIcon
-        name="InProgress"
-        width={20}
-        height={20}
-        className="flex items-center"
-      />
-    ),
+    icon: <InProgressIcon name="InProgress" width={14} height={14} className="flex items-center" />,
   },
   {
     key: "Done",
     text: "Done",
-    icon: (
-      <DoneIcon
-        name="Done"
-        width={20}
-        height={20}
-        className="flex items-center"
-      />
-    ),
+    icon: <DoneIcon name="Done" width={14} height={14} className="flex items-center" />,
   },
   {
     key: "Cancelled",
     text: "Cancelled",
-    icon: (
-      <CancelledIcon
-        name="Cancelled"
-        width={20}
-        height={20}
-        className="flex items-center"
-      />
-    ),
+    icon: <CancelledIcon name="Cancelled" width={14} height={14} className="flex items-center" />,
   },
 ] as const;
 

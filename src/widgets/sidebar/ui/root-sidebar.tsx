@@ -16,6 +16,7 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
       dialog_ref.current.showModal();
     }
   };
+
   return (
     <>
       <div className="lg:w-[255px] md:0px"></div>
@@ -30,10 +31,10 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
           <header className="max-lg:pt-10  gap-1 justify-between  px-4 min-[360px]:pt-10 lg:pt-3 pb-3">
             <div className=" flex items-center justify-between">
               <Link
-                className="items-center flex hover:bg-[#e1e1e1] rounded-md py-1 pr-1 max-w-fit text-blue-400 font-medium text-[13px]"
+                className="items-center flex hover:bg-blue-100 rounded-md py-1 pr-1 max-w-fit text-blue-500 font-medium text-[13px]"
                 to={"https://otabeks.vercel.app"}
               >
-                <ChevronLeft className="mr-1 " color="#5fa6fa" />
+                <ChevronLeft className="mr-1" color="#5fa6fa" />
                 Portfolio
               </Link>
               <Link className="hover:bg-[#e1e1e1] p-2 rounded-md" to={"/"}>
@@ -51,14 +52,15 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
               >
                 <NewIssueIcon
                   name="NewIssue"
-                  width={16}
-                  height={16}
+                  width={14}
+                  height={14}
                   className="group-hover:text-black text-[#575859]"
                 />
-                New issue
+                <span className="text-[13px] font-medium text-gray-700"> New issue</span>
               </button>
               <CreateIssueDialog dialog_ref={dialog_ref} />
             </div>
+
             <ul className="flex flex-col gap-1 px-4 mb-5 text-[13px] font-medium">
               <li className="p-1 mb-1 pl-2 hover:bg-[#e1e1e1] hover:rounded-md flex items-center gap-2 outline outline-1 outline-gray-300 rounded-md group ">
                 <Form
@@ -67,13 +69,13 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
                 >
                   <SearchIcon
                     name="Search"
-                    width={16}
-                    height={16}
+                    width={14}
+                    height={14}
                     className="group-hover:text-black text-[#575859]"
                   />
                   <input
                     name="search"
-                    className="w-full flex gap-2 bg-transparent leading-4  outline-none text-base"
+                    className="w-full flex gap-2 bg-transparent leading-4  outline-none text-[13px] font-medium text-gray-700"
                     placeholder="Search"
                   />
                 </Form>
