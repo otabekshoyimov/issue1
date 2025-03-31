@@ -24,7 +24,7 @@ export const IssueItem = (props: {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <li className=" animate-fadeInUp hover:bg-[#e1e1e1] hover:rounded-md flex gap-4 px-5 border-0 border-solid border-b border-gray-300  leading-8 items-center">
+      <li className="flex animate-fadeInUp items-center gap-4 border-0 border-b border-solid border-gray-300 px-5 leading-8 hover:rounded-md hover:bg-[#e8e8e8]">
         <input
           type="checkbox"
           name="checkbox"
@@ -33,10 +33,10 @@ export const IssueItem = (props: {
           onChange={() => {
             props.onIssueSelect(props.issue.id);
           }}
-          className="w-3 h-3"
+          className="h-3 w-3"
         />
 
-        <Link className="flex justify-between flex-grow items-center" to={`${props.issue.id}`}>
+        <Link className="flex flex-grow items-center justify-between" to={`${props.issue.id}`}>
           <Select
             defaultSelectedKey={selectedKey}
             onOpenChange={(isOpen) => setIsOpen(isOpen)}
@@ -51,13 +51,13 @@ export const IssueItem = (props: {
               );
               setIsOpen(false);
             }}
-            className={`flex  gap-1 w-fit pr-5 }`}
+            className={`} flex w-fit gap-1 pr-5`}
           >
             <ReactAriaButton>
               <SelectValue className={`flex items-center gap-2 ${isOpen ? "" : ""}`}>
                 {selectedStatus && (
                   <>
-                    <span className="flex gap-2 items-center">{selectedStatus.icon}</span>
+                    <span className="flex items-center gap-2">{selectedStatus.icon}</span>
 
                     {isOpen && (
                       <span className={`text-sm ${isOpen ? "hidden" : ""}`}>
@@ -70,19 +70,19 @@ export const IssueItem = (props: {
             </ReactAriaButton>
             <Popover
               placement="bottom"
-              className="overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5 data-[entering]:animate-in entering:fade-in exiting:animate-out exiting:fade-out"
+              className="entering:fade-in exiting:animate-out exiting:fade-out overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5 data-[entering]:animate-in"
             >
               <ListBox
-                className="flex flex-col gap-2 shadow-2xl px-2 py-2 data-[selected]:hidden"
+                className="flex flex-col gap-2 px-2 py-2 shadow-2xl data-[selected]:hidden"
                 items={ISSUE_STATUSES}
               >
                 {ISSUE_STATUSES.map((status) => (
-                  <ListBoxItem key={status.key} className="px-2 flex gap-2 items-center ">
+                  <ListBoxItem key={status.key} className="flex items-center gap-2 px-2">
                     <span>{status.icon}</span>
 
                     {isOpen && (
                       <span
-                        className={`data-[selected]:hidden data-[pressed]:hidden data-[focused]:hidden [data-focus-visible]:hidden text-sm ${
+                        className={`[data-focus-visible]:hidden text-sm data-[focused]:hidden data-[pressed]:hidden data-[selected]:hidden ${
                           isOpen ? "" : ""
                         }`}
                       >
@@ -94,9 +94,9 @@ export const IssueItem = (props: {
               </ListBox>
             </Popover>
           </Select>
-          <div className="flex-grow justify-between flex items-center">
+          <div className="flex flex-grow items-center justify-between">
             <span className="text-[13px] font-medium">{props.issue.title}</span>
-            <span className="text-gray-500 text-[13px]">{format_date(props.issue.date)}</span>
+            <span className="text-[13px] text-gray-500">{format_date(props.issue.date)}</span>
           </div>
         </Link>
       </li>

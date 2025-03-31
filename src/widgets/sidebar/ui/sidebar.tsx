@@ -35,7 +35,7 @@ export const Sidebar = (props: { isNavVisible: boolean }) => {
                 className="flex max-w-fit items-center rounded-md py-1 pr-1 text-[13px] font-medium text-blue-500 hover:bg-blue-100"
                 to={"https://otabeks.vercel.app"}
               >
-                <ChevronLeft className="mr-1" color="#5fa6fa" />
+                <ChevronLeft className="mr-1" size={20} color="#5fa6fa" />
                 Portfolio
               </Link>
               <Link className="rounded-md p-2 hover:bg-[#e8e8e8]" to={"/"}>
@@ -90,8 +90,8 @@ export const Sidebar = (props: { isNavVisible: boolean }) => {
                 >
                   <InboxIcon
                     name="Inbox"
-                    width={16}
-                    height={16}
+                    width={14}
+                    height={14}
                     className="text-[#575859] group-hover:text-black"
                   />
                   <span>Inbox</span>
@@ -101,8 +101,8 @@ export const Sidebar = (props: { isNavVisible: boolean }) => {
                 <NavLink to="" className="flex w-full items-center gap-2 p-1 pl-2">
                   <IssuesIcon
                     name="Issues"
-                    width={16}
-                    height={16}
+                    width={14}
+                    height={14}
                     className="text-[#575859] group-hover:text-black"
                   />
                   <span>Issues</span>
@@ -112,8 +112,8 @@ export const Sidebar = (props: { isNavVisible: boolean }) => {
                 <NavLink to="" className="flex w-full items-center gap-2 p-1 pl-2">
                   <ViewsIcon
                     name="Views"
-                    width={16}
-                    height={16}
+                    width={14}
+                    height={14}
                     className="text-[#575859] group-hover:text-black"
                   />
                   <span>Views</span>
@@ -121,14 +121,16 @@ export const Sidebar = (props: { isNavVisible: boolean }) => {
               </SidebarNavlinkListItem>
             </ul>
             <details className="px-4 pb-5" open>
-              <summary className="rounded-md px-3 leading-6 hover:bg-[#e8e8e8]">Your team</summary>
+              <summary className="rounded-md px-3 text-[13px] leading-6 hover:bg-[#e8e8e8]">
+                Your team
+              </summary>
               <ul className="mt-4">
                 <SidebarNavlinkListItem>
                   <a href="" className="flex h-7 items-center gap-3 pl-6">
                     <IssuesIcon
                       name="Issues"
-                      width={16}
-                      height={16}
+                      width={14}
+                      height={14}
                       className="text-[#575859] group-hover:text-black"
                     />
                     Issues
