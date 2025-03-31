@@ -156,7 +156,7 @@ export const Sidebar = (props: { isNavVisible: boolean }) => {
               href="https://github.com/otabekshoyimov/not-linear"
               className="flex items-center gap-2 rounded p-1 pl-2 hover:bg-[#e8e8e8]"
             >
-              <MarkGithubIcon size="small" className="text-[#575859]" />
+              <MarkGithubIcon size={14} className="text-[#575859]" />
               Link to Github
             </a>
           </footer>
