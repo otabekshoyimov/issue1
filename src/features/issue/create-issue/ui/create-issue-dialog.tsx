@@ -1,6 +1,6 @@
 import { useFetcher } from "react-router-dom";
 import { useEffect } from "react";
-import type {RefObject} from 'react'
+import type { RefObject } from "react";
 import { UserIcon } from "../../../../shared/ui/icons/user-icon";
 import { CloseIcon } from "../../../../shared/ui/icons/close-icon";
 
@@ -30,22 +30,23 @@ export const CreateIssueDialog = (props: { dialog_ref: RefObject<HTMLDialogEleme
         id="dialog"
         ref={props.dialog_ref}
         onClick={close_on_backdrop}
-        className="shadow-lg animate-fadeInUp"
+        className="animate-fadeInUp shadow-lg"
       >
         <div id="dialog-inner" onClick={(e) => e.stopPropagation()}>
-          <header className="flex justify-between items-center ">
-            <div className="flex items-center justify-center gap-1 text-sm text-gray-500">
-              <span className="flex items-center  rounded-sm">
+          <header className="flex items-center justify-between">
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+              <span className="flex items-center rounded-sm">
                 <UserIcon name="User" color="#00ae28" width={16} height={16} />
               </span>
-              New Issue
+
+              <span className="text-[13px] font-medium">New Issue</span>
             </div>
 
             <button
               onClick={close_dialog}
-              className="flex justify-end hover:bg-gray-200 hover:rounded-md"
+              className="flex justify-end hover:rounded-md hover:bg-gray-200"
             >
-              <span className=" rounded-md px-1 text-sm leading-none py-1">
+              <span className="rounded-md px-1 py-1 text-sm leading-none">
                 <CloseIcon name="CloseButton" width={16} height={16} />
               </span>
             </button>
@@ -53,22 +54,34 @@ export const CreateIssueDialog = (props: { dialog_ref: RefObject<HTMLDialogEleme
           <main>
             <div className="pb-2 pt-2">
               <fetcher.Form className="flex flex-col gap-2" role="form" method="post">
-                <input type="text" name="title" placeholder="Issue title" />
-                <input type="text" name="description" placeholder="Add description" />
+                <input
+                  type="text"
+                  name="title"
+                  placeholder="Issue title"
+                  className="placeholder:text-xl placeholder:font-medium"
+                />
+                <input
+                  type="text"
+                  name="description"
+                  className="font-medium"
+                  placeholder="Add description..."
+                />
                 <input type="hidden" name="status" value="Backlog" />
                 <footer>
-                  <span className="flex justify-end ">
+                  <span className="flex justify-end">
                     <button
                       type="submit"
                       name="intent"
                       value="create"
                       disabled={fetcher.state === "submitting"}
-                      className="bg-green-600 rounded-md px-2 text-white text-sm py-1"
+                      className="rounded-md bg-green-600 px-2 py-1 text-sm text-white"
                     >
                       {fetcher.state === "submitting" ? (
-                        <span className="loading-ellipsis">Creating</span>
+                        <span className="loading-ellipsis text-[13px] font-medium">
+                          Creating issue
+                        </span>
                       ) : (
-                        <span>Create</span>
+                        <span className="text-[13px] font-medium">Create issue</span>
                       )}
                     </button>
                   </span>
