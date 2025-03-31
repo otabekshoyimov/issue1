@@ -8,9 +8,9 @@ import { NewIssueIcon } from "../../../shared/ui/icons/new-issue-icon";
 import { SearchIcon } from "../../../shared/ui/icons/search-icon";
 import { ViewsIcon } from "../../../shared/ui/icons/views-icon";
 import { ChevronLeft } from "lucide-react";
-import { RootSidebarNavlinkListItem } from "./root-sidebar-navlink-item";
+import { SidebarNavlinkListItem } from "./sidebar-navlink-item";
 
-export const RootSidebar = (props: { isNavVisible: boolean }) => {
+export const Sidebar = (props: { isNavVisible: boolean }) => {
   const dialog_ref = useRef<HTMLDialogElement>(null);
   const open_dialog = () => {
     if (dialog_ref.current) {
@@ -81,7 +81,7 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
             </div>
 
             <ul className="mb-5 flex flex-col gap-1 px-4 text-[13px] font-medium">
-              <RootSidebarNavlinkListItem>
+              <SidebarNavlinkListItem>
                 <NavLink
                   to="/"
                   className={(isActive) =>
@@ -96,8 +96,8 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
                   />
                   <span>Inbox</span>
                 </NavLink>
-              </RootSidebarNavlinkListItem>
-              <RootSidebarNavlinkListItem>
+              </SidebarNavlinkListItem>
+              <SidebarNavlinkListItem>
                 <NavLink to="" className="flex w-full items-center gap-2 p-1 pl-2">
                   <IssuesIcon
                     name="Issues"
@@ -107,8 +107,8 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
                   />
                   <span>Issues</span>
                 </NavLink>
-              </RootSidebarNavlinkListItem>
-              <RootSidebarNavlinkListItem>
+              </SidebarNavlinkListItem>
+              <SidebarNavlinkListItem>
                 <NavLink to="" className="flex w-full items-center gap-2 p-1 pl-2">
                   <ViewsIcon
                     name="Views"
@@ -118,12 +118,12 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
                   />
                   <span>Views</span>
                 </NavLink>
-              </RootSidebarNavlinkListItem>
+              </SidebarNavlinkListItem>
             </ul>
             <details className="px-4 pb-5" open>
               <summary className="rounded-md px-3 leading-6 hover:bg-[#e8e8e8]">Your team</summary>
               <ul className="mt-4">
-                <RootSidebarNavlinkListItem>
+                <SidebarNavlinkListItem>
                   <a href="" className="flex h-7 items-center gap-3 pl-6">
                     <IssuesIcon
                       name="Issues"
@@ -133,7 +133,7 @@ export const RootSidebar = (props: { isNavVisible: boolean }) => {
                     />
                     Issues
                   </a>
-                </RootSidebarNavlinkListItem>
+                </SidebarNavlinkListItem>
                 <div className="ml-8 flex flex-col gap-1 border-0 border-l border-solid border-gray-300 pl-4">
                   <li className="hover:rounded-md hover:bg-[#e8e8e8]">
                     <a href="" className="flex h-7 items-center gap-2 pl-1">

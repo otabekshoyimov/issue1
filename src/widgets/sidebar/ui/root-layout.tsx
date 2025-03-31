@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { Outlet, useLoaderData} from "react-router-dom";
+import { Outlet, useLoaderData } from "react-router-dom";
 import type { Outlet_Context } from "react-router-dom";
-import { RootSidebar } from "./root-sidebar";
+import { Sidebar } from "./sidebar";
 import type { Issue_Item } from "../../../features/issue/issue-item/model/types";
 
-
-declare module 'react-router-dom' {
-  export interface Outlet_Context  {
+declare module "react-router-dom" {
+  export interface Outlet_Context {
     toggle_sidebar: () => void;
     filtered_results: Issue_Item | null;
   }
@@ -15,25 +14,21 @@ declare module 'react-router-dom' {
 export const RootLayout = () => {
   const filtered_results = useLoaderData() as Issue_Item | null;
   const [is_sidebar_visible, set_is_sidebar_visible] = useState(false);
-  
+
   const outlet_context: Outlet_Context = {
     toggle_sidebar: () => {
       set_is_sidebar_visible((prevState) => !prevState);
     },
-    filtered_results
+    filtered_results,
   };
   return (
     <>
-      <div className="flex flex-row w-full h-full min-h-full">
+      <div className="flex h-full min-h-full w-full flex-row">
         <div>
-          <RootSidebar
-            isNavVisible={is_sidebar_visible}
-          />
+          <Sidebar isNavVisible={is_sidebar_visible} />
         </div>
-        <div className="root-outlet flex-col flex-shrink-0 basis-0 min-w-0 ">
-          <Outlet
-            context={outlet_context}
-          />
+        <div className="root-outlet min-w-0 flex-shrink-0 basis-0 flex-col">
+          <Outlet context={outlet_context} />
         </div>
       </div>
     </>
