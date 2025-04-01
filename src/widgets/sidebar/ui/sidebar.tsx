@@ -1,13 +1,13 @@
 import { MarkGithubIcon } from "@primer/octicons-react";
+import { ChevronLeft } from "lucide-react";
 import { useRef } from "react";
-import { Form, Link, NavLink, useOutletContext, type Outlet_Context } from "react-router-dom";
+import { Form, Link, NavLink } from "react-router-dom";
 import { CreateIssueDialog } from "../../../features/issue/create-issue/ui/create-issue-dialog";
 import { InboxIcon } from "../../../shared/ui/icons/inbox-icon";
 import { IssuesIcon } from "../../../shared/ui/icons/issues-icon";
 import { NewIssueIcon } from "../../../shared/ui/icons/new-issue-icon";
 import { SearchIcon } from "../../../shared/ui/icons/search-icon";
 import { ViewsIcon } from "../../../shared/ui/icons/views-icon";
-import { ChevronLeft } from "lucide-react";
 import { SidebarNavlinkListItem } from "./sidebar-navlink-item";
 
 export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => void }) => {
@@ -158,7 +158,7 @@ export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => vo
               href="https://github.com/otabekshoyimov/not-linear"
               className="flex items-center gap-2 rounded p-1 pl-2 hover:bg-[#e8e8e8]"
             >
-              <MarkGithubIcon size={14} className="text-[#575859]" />
+              <MarkGithubIcon size={14} className="text-[13px] font-medium text-[#575859]" />
               Link to Github
             </a>
           </footer>
