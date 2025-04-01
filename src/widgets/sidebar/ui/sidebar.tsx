@@ -33,17 +33,11 @@ export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => vo
         >
           <header className="justify-between gap-1 px-4 pb-3 max-lg:pt-10 min-[360px]:pt-10 lg:pt-3">
             <div className="flex items-center justify-between">
-              <Link
-                className="flex max-w-fit items-center rounded-md py-1 pr-1 text-[13px] font-medium text-blue-500 hover:bg-blue-100"
-                to={"https://otabeks.vercel.app"}
-              >
-                <ChevronLeft className="mr-1" size={20} color="#5fa6fa" />
-                Portfolio
-              </Link>
-              <Link className="rounded-md p-2 hover:bg-[#e8e8e8]" to={"/"}>
+              <Link className="flex gap-2 rounded-md p-2 hover:bg-[#e8e8e8]" to={"/"}>
                 <button className="rounded-md bg-green-600 text-white">
                   <span className="w-1 px-1">O</span>
                 </button>
+                <span>Otabek</span>
               </Link>
             </div>
           </header>
@@ -161,6 +155,13 @@ export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => vo
               <MarkGithubIcon size={14} className="text-[13px] font-medium text-[#575859]" />
               Link to Github
             </a>
+            <Link
+              className="flex max-w-fit items-center rounded-md py-1 pr-1 text-[13px] font-medium text-blue-500 hover:bg-blue-100"
+              to={"https://otabeks.vercel.app"}
+            >
+              <ChevronLeft className="mr-1" size={20} color="#5fa6fa" />
+              Portfolio
+            </Link>
           </footer>
         </nav>
       </div>
