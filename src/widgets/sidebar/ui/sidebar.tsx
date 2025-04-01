@@ -1,6 +1,6 @@
 import { MarkGithubIcon } from "@primer/octicons-react";
 import { useRef } from "react";
-import { Form, Link, NavLink } from "react-router-dom";
+import { Form, Link, NavLink, useOutletContext, type Outlet_Context } from "react-router-dom";
 import { CreateIssueDialog } from "../../../features/issue/create-issue/ui/create-issue-dialog";
 import { InboxIcon } from "../../../shared/ui/icons/inbox-icon";
 import { IssuesIcon } from "../../../shared/ui/icons/issues-icon";
@@ -10,11 +10,13 @@ import { ViewsIcon } from "../../../shared/ui/icons/views-icon";
 import { ChevronLeft } from "lucide-react";
 import { SidebarNavlinkListItem } from "./sidebar-navlink-item";
 
-export const Sidebar = (props: { isNavVisible: boolean }) => {
+export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => void }) => {
   const dialog_ref = useRef<HTMLDialogElement>(null);
+
   const open_dialog = () => {
     if (dialog_ref.current) {
       dialog_ref.current.showModal();
+      props.toggle_sidebar();
     }
   };
 
