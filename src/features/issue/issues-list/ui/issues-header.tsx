@@ -10,19 +10,19 @@ export const IssuesHeader = (props: { children?: ReactNode }) => {
 
   return (
     <>
-      <section className=" flex px-4 h-9 justify-between items-center text-sm border-0 border-b border-solid border-gray-300 bg-white">
-        <div className="flex items-center justify-center gap-10">
+      <section className="flex h-9 items-center justify-between border-0 border-b border-solid border-gray-300 bg-white px-4 text-sm">
+        <div className="flex items-center justify-center">
           <button
             onClick={() => {
               outlet_context.toggle_sidebar();
             }}
-            className="flex items-center hover:bg-gray-300 p-1 rounded-md nav-btn z-[97] relative lg:hidden"
+            className="nav-btn relative z-[97] flex items-center rounded-md p-1 hover:bg-gray-300 lg:hidden"
           >
             <OpenNavIcon name="OpenNav" width={20} height={20} />
           </button>
           <Link
             to="/"
-            className="hover:bg-gray-200 px-2 p-1 rounded text-[13px] font-medium text-gray-700"
+            className="rounded p-1 px-2 text-[13px] font-medium text-gray-700 hover:bg-gray-200"
           >
             All issues
           </Link>
