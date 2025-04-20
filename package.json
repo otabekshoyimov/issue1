@@ -8,12 +8,7 @@
     "knip": "knip"
   },
   "dependencies": {
-    "@phosphor-icons/react": "^2.1.7",
     "@primer/octicons-react": "^19.14.0",
-    "@react-aria/dialog": "^3.5.21",
-    "@react-aria/focus": "^3.19.1",
-    "@react-aria/overlays": "^3.25.0",
-    "@tanstack/react-query": "^5.64.2",
     "lucide-react": "^0.474.0",
     "pocketbase": "^0.21.4",
     "react": "^18.3.1",
