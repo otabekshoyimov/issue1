@@ -84,8 +84,12 @@ export const IssueItem = (props: {
             </Popover>
           </Select>
           <div className="flex flex-grow items-center justify-between">
-            <span className="text-[13px] font-medium">{props.issue.title}</span>
-            <span className="text-[13px] text-gray-500">{format_date(props.issue.date)}</span>
+            <span className="max-w-60 truncate text-ellipsis text-[13px] font-medium md:max-w-full">
+              {props.issue.title}
+            </span>
+            <span className="truncate text-[13px] text-gray-500">
+              {format_date(props.issue.date)}
+            </span>
           </div>
         </Link>
       </li>
