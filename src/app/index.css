@@ -166,3 +166,13 @@ dialog {
     margin-left: -140px;
   }
 } */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg)
+  }
+}
+
+.animate-spinner {
+  animation: spin 1s infinite;
+}

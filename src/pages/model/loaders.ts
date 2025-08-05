@@ -18,6 +18,7 @@ export const root_loader = async ({ request }: { request: Request }) => {
 
 
 export const index_loader = async () => {
+
   const issues = await pocketbase.collection("posts").getFullList();
   return issues;
 };

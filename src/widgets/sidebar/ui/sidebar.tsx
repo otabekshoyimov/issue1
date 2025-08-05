@@ -1,7 +1,7 @@
 import { MarkGithubIcon } from "@primer/octicons-react";
 import { ChevronLeft } from "lucide-react";
 import { useRef } from "react";
-import { Form, Link, NavLink } from "react-router-dom";
+import { Form, Link, NavLink, useNavigation } from "react-router-dom";
 import { CreateIssueDialog } from "../../../features/issue/create-issue/ui/create-issue-dialog";
 import { InboxIcon } from "../../../shared/ui/icons/inbox-icon";
 import { IssuesIcon } from "../../../shared/ui/icons/issues-icon";
@@ -9,8 +9,10 @@ import { NewIssueIcon } from "../../../shared/ui/icons/new-issue-icon";
 import { SearchIcon } from "../../../shared/ui/icons/search-icon";
 import { ViewsIcon } from "../../../shared/ui/icons/views-icon";
 import { SidebarNavlinkListItem } from "./sidebar-navlink-item";
+import { Spinner } from "../../../shared/ui/spinner";
 
 export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => void }) => {
+  const navigation = useNavigation();
   const dialog_ref = useRef<HTMLDialogElement>(null);
 
   const open_dialog = () => {
@@ -33,12 +35,20 @@ export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => vo
         >
           <header className="justify-between gap-1 px-4 pb-3 max-lg:pt-10 min-[360px]:pt-10 lg:pt-3">
             <div className="flex items-center justify-between">
-              <Link className="flex gap-2 rounded-md p-2 hover:bg-[#e8e8e8]" to={"/"}>
+              <Link
+                className="flex justify-between gap-2 rounded-md p-2 hover:bg-[#e8e8e8]"
+                to={"/"}
+              >
                 <button className="rounded-md bg-green-600 text-white">
                   <span className="w-1 px-1">O</span>
                 </button>
                 <span>Otabek</span>
               </Link>
+              {navigation.state === "loading" && (
+                <span>
+                  <Spinner />
+                </span>
+              )}
             </div>
           </header>
           <main className="flex-grow pt-2">

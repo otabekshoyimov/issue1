@@ -1,11 +1,9 @@
-import { Link, useNavigation, useOutletContext } from "react-router-dom";
-import type { Outlet_Context } from "react-router-dom";
 import type { ReactNode } from "react";
+import type { Outlet_Context } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { OpenNavIcon } from "../../../../shared/ui/icons/open-nav-icon";
-import { Spinner } from "../../../../shared/ui/spinner";
 
 export const IssuesHeader = (props: { children?: ReactNode }) => {
-  const navigation = useNavigation();
   const outlet_context = useOutletContext<Outlet_Context>();
 
   return (
@@ -26,7 +24,6 @@ export const IssuesHeader = (props: { children?: ReactNode }) => {
           >
             All issues
           </Link>
-          {navigation.state === "loading" && <Spinner />}
         </div>
         {props.children}
       </section>
