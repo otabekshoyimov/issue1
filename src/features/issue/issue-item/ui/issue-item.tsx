@@ -20,9 +20,7 @@ export const IssueItem = (props: {
 }) => {
   const fetcher = useFetcher();
   const [selected_key, set_selected_key] = useState(props.issue.status);
-  console.log("key", selected_key, "issue", props.issue);
   const selected_status = ISSUE_STATUSES.find((status) => status.key === selected_key);
-  console.log("selected stat", selected_status);
   return (
     <>
       <li className="flex animate-fadeInUp items-center gap-4 border-0 border-b border-solid border-gray-300 px-5 leading-8 hover:rounded-md hover:bg-[#e8e8e8]">
@@ -41,17 +39,19 @@ export const IssueItem = (props: {
           <Select
             selectedKey={selected_key}
             onSelectionChange={(selected) => {
-              set_selected_key(String(selected));
+              const new_key = String(selected);
+              console.log("selected key", new_key);
+              set_selected_key(new_key);
               fetcher.submit(
                 {
                   id: props.issue.id,
-                  status: selected,
+                  status: new_key,
                   intent: "updateStatus",
                 },
                 { method: "post" },
               );
             }}
-            className={`flex w-fit gap-1 pr-5`}
+            className={`flex w-fit gap-1 pr-2`}
           >
             <ReactAriaButton>
               <SelectValue className={`flex items-center gap-2`}>
@@ -71,7 +71,11 @@ export const IssueItem = (props: {
                 items={ISSUE_STATUSES}
               >
                 {ISSUE_STATUSES.map((status) => (
-                  <ListBoxItem key={status.key} className="flex items-center gap-2 px-2">
+                  <ListBoxItem
+                    key={status.key}
+                    id={status.key}
+                    className="flex items-center gap-2 px-2"
+                  >
                     <span>{status.icon}</span>
                     <span className="text-[13px] font-medium">{status.label}</span>
                   </ListBoxItem>
