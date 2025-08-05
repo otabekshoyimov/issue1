@@ -14,10 +14,12 @@ import { Spinner } from "../../../shared/ui/spinner";
 export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => void }) => {
   const navigation = useNavigation();
   const dialog_ref = useRef<HTMLDialogElement>(null);
+  const dialog_input_ref = useRef<HTMLInputElement>(null);
 
   const open_dialog = () => {
     if (dialog_ref.current) {
       dialog_ref.current.showModal();
+      dialog_input_ref.current?.focus();
       props.toggle_sidebar();
     }
   };
@@ -65,7 +67,7 @@ export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => vo
                 />
                 <span className="text-[13px] font-medium text-gray-700"> New issue</span>
               </button>
-              <CreateIssueDialog dialog_ref={dialog_ref} />
+              <CreateIssueDialog dialog_ref={dialog_ref} input_ref={dialog_input_ref} />
               <div className="group mb-1 flex items-center gap-2 rounded-md p-1 pl-2 outline outline-1 outline-gray-300 hover:rounded-md hover:bg-[#e8e8e8]">
                 <Form
                   role="search"

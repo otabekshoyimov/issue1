@@ -4,7 +4,10 @@ import type { RefObject } from "react";
 import { UserIcon } from "../../../../shared/ui/icons/user-icon";
 import { CloseIcon } from "../../../../shared/ui/icons/close-icon";
 
-export const CreateIssueDialog = (props: { dialog_ref: RefObject<HTMLDialogElement> }) => {
+export const CreateIssueDialog = (props: {
+  dialog_ref: RefObject<HTMLDialogElement>;
+  input_ref: RefObject<HTMLInputElement>;
+}) => {
   const fetcher = useFetcher();
 
   const close_dialog = () => {
@@ -57,6 +60,7 @@ export const CreateIssueDialog = (props: { dialog_ref: RefObject<HTMLDialogEleme
                 <input
                   type="text"
                   name="title"
+                  ref={props.input_ref}
                   placeholder="Issue title"
                   className="placeholder:text-xl placeholder:font-medium"
                 />
