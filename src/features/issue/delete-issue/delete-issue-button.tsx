@@ -1,8 +1,19 @@
 import { TrashIcon } from "@primer/octicons-react";
+import { useEffect } from "react";
 import { useFetcher } from "react-router-dom";
 
-export const DeleteIssueButton = (props: { selectedIssues: string[] }) => {
+export const DeleteIssueButton = (props: {
+  selectedIssues: string[];
+  clear_selected_issues: () => void;
+}) => {
   const fetcher = useFetcher();
+
+  useEffect(() => {
+    if (fetcher.state == "idle" && fetcher.data?.deleted_issue_ids) {
+      props.clear_selected_issues();
+    }
+  }, [fetcher.state, fetcher.data]);
+
   return (
     <fetcher.Form method="post">
       <input type="hidden" name="selectedIssueIds" value={props.selectedIssues.join(",")} />

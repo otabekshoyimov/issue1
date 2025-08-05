@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs } from "react-router-dom";
 import { pocketbase } from "../../shared/api/pocketbase";
-import { HTTP_STATUS } from "../../shared/constants/http-status";
 
 export const root_action = async ({request}: ActionFunctionArgs)=> {
 const form_data =  await request.formData()
@@ -38,8 +37,8 @@ export const index_action = async ({ request }: ActionFunctionArgs) => {
     const delete_promises = selected_issue_ids.map((id) =>
       pocketbase.collection("posts").delete(id),
     );
-      await Promise.all(delete_promises);
-      return { status: HTTP_STATUS.OK };
+    const success =  await Promise.all(delete_promises);
+    return success ? { deleted_issue_ids: selected_issue_ids }: {error: 'failed to delete issues'};
     
   };
 

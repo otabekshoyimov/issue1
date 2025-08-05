@@ -11,6 +11,7 @@ import { IssuesList } from "../features/issue/issues-list/ui/issues-list";
 
 export const IndexPage = () => {
   const issues_async = useLoaderData() as Issue_Item[];
+
   const outlet_context = useOutletContext<Outlet_Context>();
   const [selected_issues, set_selected_issues] = useState<string[]>([]);
 
@@ -18,6 +19,10 @@ export const IndexPage = () => {
     set_selected_issues((prev) =>
       prev.includes(issueId) ? prev.filter((id) => id !== issueId) : [...prev, issueId],
     );
+  };
+
+  const clear_selected_issues = () => {
+    set_selected_issues([]);
   };
 
   const grouped_issues: Record<string, Issue_Item[]> = {};
@@ -30,7 +35,10 @@ export const IndexPage = () => {
     <>
       <IssuesContainer>
         <IssuesHeader>
-          <DeleteIssueButton selectedIssues={selected_issues} />
+          <DeleteIssueButton
+            selectedIssues={selected_issues}
+            clear_selected_issues={clear_selected_issues}
+          />
         </IssuesHeader>
 
         <IssuesList>
