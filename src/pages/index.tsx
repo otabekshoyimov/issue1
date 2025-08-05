@@ -1,14 +1,6 @@
-import {
-  useState,
-} from "react";
-
-import {
-  Outlet,
-  useLoaderData,
-  useOutletContext
-} from "react-router-dom";
+import { useState } from "react";
 import type { Outlet_Context } from "react-router-dom";
-
+import { Outlet, useLoaderData, useOutletContext } from "react-router-dom";
 import { DeleteIssueButton } from "../features/issue/delete-issue/delete-issue-button";
 import type { Issue_Item } from "../features/issue/issue-item/model/types";
 import { IssueItem } from "../features/issue/issue-item/ui/issue-item";
@@ -22,11 +14,9 @@ export const IndexPage = () => {
   const outlet_context = useOutletContext<Outlet_Context>();
   const [selected_issues, set_selected_issues] = useState<string[]>([]);
 
-  const handle_issue_selection = (issueId: string) => {
+  const handle_issue_select = (issueId: string) => {
     set_selected_issues((prev) =>
-      prev.includes(issueId)
-        ? prev.filter((id) => id !== issueId)
-        : [...prev, issueId],
+      prev.includes(issueId) ? prev.filter((id) => id !== issueId) : [...prev, issueId],
     );
   };
   return (
@@ -35,14 +25,14 @@ export const IndexPage = () => {
         <IssuesHeader>
           <DeleteIssueButton selectedIssues={selected_issues} />
         </IssuesHeader>
-        <IssuesListHeader/>
+        <IssuesListHeader />
+
         <IssuesList>
-          {outlet_context.filtered_results ? (
+          {outlet_context.search_results ? (
             <IssueItem
-              issue={outlet_context.filtered_results}
-              key={outlet_context.filtered_results.id}
-              selectedIssue={selected_issues}
-              onIssueSelect={handle_issue_selection}
+              issue={outlet_context.search_results}
+              selectedIssues={selected_issues}
+              onIssueSelect={handle_issue_select}
             />
           ) : (
             <ul>
@@ -50,8 +40,8 @@ export const IndexPage = () => {
                 <IssueItem
                   issue={issue}
                   key={issue.id}
-                  selectedIssue={selected_issues}
-                  onIssueSelect={handle_issue_selection}
+                  selectedIssues={selected_issues}
+                  onIssueSelect={handle_issue_select}
                 />
               ))}
             </ul>

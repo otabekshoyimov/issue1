@@ -26,9 +26,10 @@ export const IssueDetail = () => {
   return (
     <>
       <IssuesHeader />
-      <section className="px-6 pt-4 bg-white leading-8 text-base mt-3">
-        <header className="text-2xl font-medium pb-5">{issue.title}</header>
+      <section className="mt-3 bg-white px-6 pt-4 text-base leading-8">
+        <header className="pb-5 text-2xl font-medium">{issue.title}</header>
         <p>{issue.description}</p>
+
         <span className="block text-[13px]">{format_date(issue.date)}</span>
       </section>
     </>

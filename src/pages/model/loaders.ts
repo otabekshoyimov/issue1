@@ -6,13 +6,13 @@ export const root_loader = async ({ request }: { request: Request }) => {
 
   if (!search_params) return null;
 
-  const filtered_results = await pocketbase
+  const search_results = await pocketbase
       .collection("posts")
       .getFirstListItem(`title ~ "${search_params}"`, {
         $cancelKey: `posts_${search_params}`
       });
 
-  return filtered_results;
+  return search_results;
   
 };
 

@@ -1,13 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
-
-
-import { RootLayout } from "../widgets/sidebar/ui/root-layout";
-import { index_loader, root_loader } from "../pages/model/loaders";
 import { IndexPage } from "../pages";
-import { IssueDetail, issue_detail_loader } from "../pages/issue-detail/issue-detail";
-import { root_action, index_action } from "../pages/model/actions";
 import { ErrorPage } from "../pages/error/error-page";
-
+import { IssueDetail, issue_detail_loader } from "../pages/issue-detail/issue-detail";
+import { index_action, root_action } from "../pages/model/actions";
+import { index_loader, root_loader } from "../pages/model/loaders";
+import { RootLayout } from "../widgets/sidebar/ui/root-layout";
 
 export const router = createBrowserRouter([
   {

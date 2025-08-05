@@ -7,12 +7,12 @@ import type { Issue_Item } from "../../../features/issue/issue-item/model/types"
 declare module "react-router-dom" {
   export interface Outlet_Context {
     toggle_sidebar: () => void;
-    filtered_results: Issue_Item | null;
+    search_results: Issue_Item | null;
   }
 }
 
 export const RootLayout = () => {
-  const filtered_results = useLoaderData() as Issue_Item | null;
+  const search_results = useLoaderData() as Issue_Item | null;
   const [is_sidebar_visible, set_is_sidebar_visible] = useState(false);
 
   const toggle_sidebar = () => {
@@ -21,7 +21,7 @@ export const RootLayout = () => {
 
   const outlet_context: Outlet_Context = {
     toggle_sidebar,
-    filtered_results,
+    search_results,
   };
   return (
     <>

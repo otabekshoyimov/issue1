@@ -15,13 +15,14 @@ import { format_date } from "../../../../shared/utils/date/format-date";
 
 export const IssueItem = (props: {
   issue: Issue_Item;
-  selectedIssue: string[];
+  selectedIssues: string[];
   onIssueSelect: (issueId: string) => void;
 }) => {
   const fetcher = useFetcher();
-  const [selectedKey] = useState(props.issue.status);
-  const selectedStatus = ISSUE_STATUSES.find((status) => status.key === selectedKey);
-  const [isOpen, setIsOpen] = useState(false);
+  const [selected_key, set_selected_key] = useState(props.issue.status);
+  console.log("key", selected_key, "issue", props.issue);
+  const selected_status = ISSUE_STATUSES.find((status) => status.key === selected_key);
+  console.log("selected stat", selected_status);
   return (
     <>
       <li className="flex animate-fadeInUp items-center gap-4 border-0 border-b border-solid border-gray-300 px-5 leading-8 hover:rounded-md hover:bg-[#e8e8e8]">
@@ -29,7 +30,7 @@ export const IssueItem = (props: {
           type="checkbox"
           name="checkbox"
           value={String(props.issue.checked)}
-          checked={props.selectedIssue.includes(props.issue.id)}
+          checked={props.selectedIssues.includes(props.issue.id)}
           onChange={() => {
             props.onIssueSelect(props.issue.id);
           }}
@@ -38,9 +39,9 @@ export const IssueItem = (props: {
 
         <Link className="flex flex-grow items-center justify-between" to={`${props.issue.id}`}>
           <Select
-            defaultSelectedKey={selectedKey}
-            onOpenChange={(isOpen) => setIsOpen(isOpen)}
+            selectedKey={selected_key}
             onSelectionChange={(selected) => {
+              set_selected_key(String(selected));
               fetcher.submit(
                 {
                   id: props.issue.id,
@@ -49,21 +50,14 @@ export const IssueItem = (props: {
                 },
                 { method: "post" },
               );
-              setIsOpen(false);
             }}
-            className={`} flex w-fit gap-1 pr-5`}
+            className={`flex w-fit gap-1 pr-5`}
           >
             <ReactAriaButton>
-              <SelectValue className={`flex items-center gap-2 ${isOpen ? "" : ""}`}>
-                {selectedStatus && (
+              <SelectValue className={`flex items-center gap-2`}>
+                {selected_status && (
                   <>
-                    <span className="flex items-center gap-2">{selectedStatus.icon}</span>
-
-                    {isOpen && (
-                      <span className={`text-sm ${isOpen ? "hidden" : ""}`}>
-                        {selectedStatus.text}
-                      </span>
-                    )}
+                    <span className="flex items-center gap-2">{selected_status.icon}</span>
                   </>
                 )}
               </SelectValue>
@@ -79,16 +73,7 @@ export const IssueItem = (props: {
                 {ISSUE_STATUSES.map((status) => (
                   <ListBoxItem key={status.key} className="flex items-center gap-2 px-2">
                     <span>{status.icon}</span>
-
-                    {isOpen && (
-                      <span
-                        className={`[data-focus-visible]:hidden text-sm data-[focused]:hidden data-[pressed]:hidden data-[selected]:hidden ${
-                          isOpen ? "" : ""
-                        }`}
-                      >
-                        {status.text}
-                      </span>
-                    )}
+                    <span className="text-[13px] font-medium">{status.label}</span>
                   </ListBoxItem>
                 ))}
               </ListBox>
