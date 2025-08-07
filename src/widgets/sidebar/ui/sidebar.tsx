@@ -8,8 +8,8 @@ import { IssuesIcon } from "../../../shared/ui/icons/issues-icon";
 import { NewIssueIcon } from "../../../shared/ui/icons/new-issue-icon";
 import { SearchIcon } from "../../../shared/ui/icons/search-icon";
 import { ViewsIcon } from "../../../shared/ui/icons/views-icon";
+import { Spinner2 } from "../../../shared/ui/spinner2";
 import { SidebarNavlinkListItem } from "./sidebar-navlink-item";
-import { Spinner } from "../../../shared/ui/spinner";
 
 export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => void }) => {
   const navigation = useNavigation();
@@ -48,7 +48,7 @@ export const Sidebar = (props: { isNavVisible: boolean; toggle_sidebar: () => vo
               </Link>
               {navigation.state === "loading" && (
                 <span>
-                  <Spinner />
+                  <Spinner2 />
                 </span>
               )}
             </div>
